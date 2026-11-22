@@ -27,11 +27,12 @@
 ## Sincronia Studio Core & Gates de Transição do Caldeiral (C1 → C5 — Adendo B)
 - [x] **Fase 2 — Sincronia Studio Core (`gates-v1.0` / `bf214100`, commit `5361900`):** `validate_visual.py`, `validate_gltf.py`, `run_visual_gates.py`, `Fab3dImporter.cs`, fixture `fixture_biped_deitado` (`exit 1`), `studio-scene-director`, `studio-strict-reviewer`, `LICENSES-ARTE.md`, BAN LIST verbatim no `AGENTS.md`, relatório diagnóstico da Porca (`evidence/validation/validate_visual_porca_report.json`) e smoke test `prop_caixote` no `game-concerto` (`evidence/captures/fab3d_prop_caixote_20261122_163054.png`).
 - [x] **Adendo A + B + E:** `CAMINHOS CONGELADOS`, gate de aprovação em `PROGRESS.md` e protocolo de sync registrados em `AGENTS.md`.
-- [ ] **Pré-requisito C2 — Adendo C (`validate_scene.py` Android URP budget + fixture de cena estourada):** pendente (obrigatório antes de C2).
-- [ ] **Pré-requisito C2 — Adendo D (Baseline PlayMode M1–M2 em `evidence/tests/`):** pendente (obrigatório antes de C2).
+- [x] **Pré-requisito C2 — Adendo C (`validate_scene.py` Android URP budget + fixture de cena estourada):** validado (`Calibration.unity` exit 0, `tests/fixtures/scene_gate/fixture_scene_overbudget.unity` exit 1 acusando os 5 limites, commit `d644359` sincronizado de `gamedev-setup-ia@41610c98`).
+- [x] **Pré-requisito C2 — Adendo D (Baseline PlayMode M1–M2 em `evidence/tests/`):** validado (**2/2 PASSED**, 0 exceções, `evidence/tests/baseline_playmode_m1_m2.xml` + `.json`).
+- [x] **Rastreabilidade Mecânica (§1.1 de `caldeiral_c1.md`, commit `43f42d2`):** 3 células VERDES (`InteractionSystem.cs`, `DialoguePresenter.cs`, `CutscenePlayer.cs`), 5 células VERMELHAS ajustadas na planta (rampas transitáveis `0m↔+3.5m↔+7.0m`, ponte sobre vão `6.5m`, passarela ao longo dos paredões, inimigos não-bloqueantes em C2).
 - **Status dos Estágios de Cenário (C1 → C5):**
   - **C1 APROVADO por Bruno em 2026-11-22 — Caldeiral = ambiente introdutório; futuros ambientes usarão o mesmo método** (`docs/level-design/caldeiral_c1.md` + `evidence/concepts/caldeiral_c1_topdown.png`).
-  - **C2 (Greybox Fechado):** BLOQUEADO *(exige Rastreabilidade Mecânica + Adendo C + Adendo D verdes).*
+  - **C2 (Greybox Fechado Z1→Z5):** DESBLOQUEADO (pré-requisitos 3, 4 e 5 verdes — iniciando por **Z1: Oficina da Sucata**).
   - **C3 (Kit CC0 + PBR World-Scale):** BLOQUEADO *(exige C2 aprovado).*
   - **C4 (Composição & Câmeras CS01):** BLOQUEADO *(exige C3 aprovado).*
   - **C5 (Props & Heróis Fábrica 3D):** BLOQUEADO *(exige C4 aprovado).*
