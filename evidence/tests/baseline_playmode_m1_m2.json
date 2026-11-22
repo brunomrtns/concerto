@@ -1,24 +1,20 @@
 {
-  "baseline": "Adendo D — PlayMode M1-M2 (CONCERTO)",
-  "timestamp": "2026-11-22T17:16:10.394384+00:00",
+  "stage": "C3_consolidated",
+  "timestamp_utc": "2026-11-22T19:24:45.858316+00:00",
   "result": "Passed",
   "total": 2,
   "passed": 2,
   "failed": 0,
-  "skipped": 0,
-  "xml_report": "evidence/tests/baseline_playmode_m1_m2.xml",
   "tests": [
     {
       "name": "PlayMode_Baseline_M1Objective_CompletesViaInteractionSystem",
-      "fullname": "Studio.Tests.PlayMode.ConcertoM1M2BaselinePlayModeTests.PlayMode_Baseline_M1Objective_CompletesViaInteractionSystem",
       "result": "Passed",
-      "duration": 0.105667
+      "duration": "0.110290"
     },
     {
       "name": "PlayMode_Baseline_SceneLoads_PlayerSpawns_ZeroExceptions",
-      "fullname": "Studio.Tests.PlayMode.ConcertoM1M2BaselinePlayModeTests.PlayMode_Baseline_SceneLoads_PlayerSpawns_ZeroExceptions",
       "result": "Passed",
-      "duration": 0.005711
+      "duration": "0.005935"
     }
   ]
 }

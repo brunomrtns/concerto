@@ -1,0 +1,20 @@
+{
+  "stage": "C3_consolidated",
+  "timestamp_utc": "2026-11-22T19:24:45.858316+00:00",
+  "result": "Passed",
+  "total": 2,
+  "passed": 2,
+  "failed": 0,
+  "tests": [
+    {
+      "name": "PlayMode_Baseline_M1Objective_CompletesViaInteractionSystem",
+      "result": "Passed",
+      "duration": "0.110290"
+    },
+    {
+      "name": "PlayMode_Baseline_SceneLoads_PlayerSpawns_ZeroExceptions",
+      "result": "Passed",
+      "duration": "0.005935"
+    }
+  ]
+}

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CONCERTO — Revisão Consolidada C3 (Caldeiral)</title>
+  <style>
+    :root {
+      --bg: #0f1115;
+      --card: #171a21;
+      --border: #2a2f3a;
+      --text: #e8ecf2;
+      --muted: #9aa4b2;
+      --accent: #f59e0b;
+      --ok: #22c55e;
+      --pending: #eab308;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(15, 17, 21, 0.94);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    header h1 { margin: 0; font-size: 18px; font-weight: 700; }
+    header h1 span { color: var(--accent); }
+    nav { display: flex; flex-wrap: wrap; gap: 8px; }
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 13px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--card);
+      border: 1px solid var(--border);
+    }
+    nav a:hover { border-color: var(--accent); background: #202530; }
+    main {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+    .metric {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+    }
+    .metric .label { font-size: 12px; color: var(--muted); }
+    .metric .val { font-size: 18px; font-weight: 700; color: #4ade80; margin-top: 2px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .card-head {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .card-head h2 { margin: 0; font-size: 17px; }
+    .badge {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+    .badge.ok { background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.4); }
+    .badge.pending { background: rgba(234,179,8,0.15); color: #facc15; border: 1px solid rgba(234,179,8,0.4); }
+    .media-wrap {
+      background: #090a0d;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px;
+    }
+    .media-wrap img {
+      max-width: 100%;
+      max-height: 74vh;
+      border-radius: 6px;
+      cursor: zoom-in;
+      display: block;
+    }
+    .media-wrap video {
+      width: 100%;
+      max-height: 74vh;
+      border-radius: 6px;
+      background: #000;
+    }
+    .notes {
+      padding: 14px 20px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .notes strong { color: var(--text); }
+    .decisions ul { margin: 8px 0 0; padding-left: 20px; }
+    .decisions li { margin-bottom: 8px; }
+    #lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.92);
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+      cursor: zoom-out;
+    }
+    #lightbox.open { display: flex; }
+    #lightbox img { max-width: 96vw; max-height: 94vh; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><span>CONCERTO</span> — Revisão Consolidada C3 (Refinamento Arquitetônico do Layout)</h1>
+    <nav>
+      <a href="#video">▶ Vídeo C3</a>
+      <a href="#z1">Z1</a>
+      <a href="#z2">Z2</a>
+      <a href="#z3">Z3</a>
+      <a href="#z4">Z4</a>
+      <a href="#z5">Z5</a>
+      <a href="#mirante">Mirante→Z1</a>
+      <a href="#sheet">Folha 4×4</a>
+      <a href="#fila">Fila de Decisões</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="metrics">
+      <div class="metric"><div class="label">validate_scene.py --strict</div><div class="val">PASS (exit 0)</div></div>
+      <div class="metric"><div class="label">Luzes Reais URP</div><div class="val">5 / 5</div></div>
+      <div class="metric"><div class="label">Tris Estimados</div><div class="val">70.500 / 150.000</div></div>
+      <div class="metric"><div class="label">Draw Calls</div><div class="val">20 / 120</div></div>
+      <div class="metric"><div class="label">Static Batching</div><div class="val">90.8% (≥50%)</div></div>
+      <div class="metric"><div class="label">Textura VRAM</div><div class="val">0.75 / 128 MB (0 novas)</div></div>
+      <div class="metric"><div class="label">Baseline PlayMode M1–M2</div><div class="val">2 / 2 PASSED</div></div>
+    </section>
+
+    <section class="card" id="video">
+      <div class="card-head">
+        <h2>▶ Walkthrough Completo C3 (Z1 → Z2 → Z3 → Z4 → Z5 → Mirante sobre Z1)</h2>
+        <span class="badge pending">AGUARDANDO APROVAÇÃO DO BRUNO</span>
+      </div>
+      <div class="media-wrap">
+        <video controls preload="metadata" poster="walkthrough_c3_loop_contact_sheet.png">
+          <source src="walkthrough_c3_loop_completo.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <div class="notes">
+        <strong>Restrição respeitada:</strong> SEM arte final e SEM textura final — refinamento puro de arquitetura, proporções, leitura de espaço (pórticos, guarda-corpos vazados, dutos-guia, nervuras da cúpula, dutos das 3 válvulas ligados à Sirene-Mestra) e composição de visadas.
+      </div>
+    </section>
+
+    <section class="card" id="z1">
+      <div class="card-head"><h2>Z1 — Oficina da Sucata</h2><span class="badge pending">C3 CONSOLIDADO</span></div>
+      <div class="media-wrap"><img src="c3_z1_oficina_sucata_20261122_192357.png" alt="C3 Z1" onclick="openZoom(this.src)" /></div>
+      <div class="notes">Pilastras escalonadas, estante em 3 níveis, painel traseiro na Bancada I1 com duto-guia subindo ao teto, arquivolta dupla emoldurando a visada para a rampa e mezanino da Z2, e janelão do Mirante Z5 no alto da parede Norte.</div>
+    </section>
+
+    <section class="card" id="z2">
+      <div class="card-head"><h2>Z2 — Passarela da Bigorna</h2><span class="badge pending">C3 CONSOLIDADO</span></div>
+      <div class="media-wrap"><img src="c3_z2_passarela_bigorna_20261122_192357.png" alt="C3 Z2" onclick="openZoom(this.src)" /></div>
+      <div class="notes">4 pórticos industriais ritmando a nave, guarda-corpos vazados na rampa 16.9° e no Mezanino +3.5m (E2 legível), toldo estrutural enquadrando a banca do Tio Horário, bases chanfradas nos pilares de cobertura e dutos aéreos apontando para o Arco Z3.</div>
+    </section>
+
+    <section class="card" id="z3">
+      <div class="card-head"><h2>Z3 — Pátio das Sirenes + Galeria de Fumaça</h2><span class="badge pending">C3 CONSOLIDADO</span></div>
+      <div class="media-wrap"><img src="c3_z3_patio_sirenes_20261122_192357.png" alt="C3 Z3" onclick="openZoom(this.src)" /></div>
+      <div class="notes">Pórticos monumentais de 14 m, pilares sob a passarela lateral de 4 m, guarda-corpos vazados em toda a travessia e na ponte sobre o fosso de vapor (3 dutos no fundo do fosso), paredões de 8 m emoldurados e Arco elevado Z3→Z4.</div>
+    </section>
+
+    <section class="card" id="z4">
+      <div class="card-head"><h2>Z4 — Câmara Octogonal do Caldeiral Central</h2><span class="badge pending">C3 CONSOLIDADO</span></div>
+      <div class="media-wrap"><img src="c3_z4_camara_caldeiral_20261122_192357.png" alt="C3 Z4" onclick="openZoom(this.src)" /></div>
+      <div class="notes">8 colunas monumentais de 18 m + nervuras de cúpula convergindo sobre a Sirene-Mestra, frisos horizontais marcando +7 m e +12 m, plinto octogonal de 2 degraus + 3 dutos radiais ligando I2/I3/I4 à torre central, guarda-corpos vazados ao redor do Nó I5 e Arco Oeste Z4→Z5.</div>
+    </section>
+
+    <section class="card" id="z5">
+      <div class="card-head"><h2>Z5 — Galeria de Retorno Sync</h2><span class="badge pending">C3 CONSOLIDADO</span></div>
+      <div class="media-wrap"><img src="c3_z5_galeria_retorno_20261122_192357.png" alt="C3 Z5" onclick="openZoom(this.src)" /></div>
+      <div class="notes">4 pórticos estruturais emoldurando em perspectiva a Catraca de Saída Sync I6 e dutos superiores guiando até o corredor do Mirante.</div>
+    </section>
+
+    <section class="card" id="mirante">
+      <div class="card-head"><h2>Z5 → Z1 — Visada do Mirante Fechando o Loop</h2><span class="badge ok">NOVA VISADA C3</span></div>
+      <div class="media-wrap"><img src="c3_z5_mirante_visada_z1_20261122_192357.png" alt="C3 Mirante visada Z1" onclick="openZoom(this.src)" /></div>
+      <div class="notes">Do alto do Mirante (+3.5 m) pelo guarda-corpo vazado, o jogador vê diretamente a Oficina da Sucata Z1 (Bancada I1, Dez + Porca e Arco Z1→Z2) lá embaixo, fechando o loop arquitetônico com 0% void.</div>
+    </section>
+
+    <section class="card" id="sheet">
+      <div class="card-head"><h2>Folha de Contato 4×4 do Walkthrough C3</h2><span class="badge pending">RESUMO VISUAL</span></div>
+      <div class="media-wrap"><img src="walkthrough_c3_loop_contact_sheet.png" alt="Folha 4x4 C3" onclick="openZoom(this.src)" /></div>
+    </section>
+
+    <section class="card decisions" id="fila">
+      <div class="card-head"><h2>📋 Fila de Decisões do Diretor (Para o Bruno decidir quando quiser)</h2><span class="badge pending">PENDENTE</span></div>
+      <div class="notes">
+        <ul>
+          <li><strong>[Infra / Sem urgência]</strong> Renomear <code>3dprinter-setup-ia</code> → <code>3dcreator-setup-ia</code> (registrado conforme pedido; não executado).</li>
+          <li><strong>[Level Design / Atalho Z5→Z1]</strong> O Mirante da Z5 agora abre visada direta sobre Z1. Manter apenas como mirante panorâmico de encerramento do Vertical Slice, ou prever no futuro um atalho físico (escada/elevador) descendo de Z5 para Z1?</li>
+          <li><strong>[Level Design / Nível +7.0 m em Z4]</strong> Como a mecânica de Rebote está congelada, o nível <code>+7.0 m</code> em Z4 está marcado apenas como friso arquitetônico superior. Manter assim até o Rebote entrar ou adicionar uma segunda rampa <code>+3.5 m → +7.0 m</code>?</li>
+          <li><strong>[Level Design / Passarela Z3]</strong> Quando o Wall-Run C# for implementado no futuro, a passarela lateral de 4 m em Z3 fica como rota segura/acessibilidade permanente ou será removida para obrigar o wall-run?</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <div id="lightbox" onclick="closeZoom()"><img id="lightbox-img" src="" alt="Zoom" /></div>
+  <script>
+    function openZoom(src) { document.getElementById('lightbox-img').src = src; document.getElementById('lightbox').classList.add('open'); }
+    function closeZoom() { document.getElementById('lightbox').classList.remove('open'); }
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeZoom(); });
+  </script>
+</body>
+</html>

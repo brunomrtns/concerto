@@ -39,6 +39,6 @@
     - **C2-Z4 (`Câmara do Caldeiral Central`):** APROVADO (`2026-11-22`, `director_review/2026-11-22_c2_z4_camara_caldeiral/`, commit `9f89b3f`).
     - **C2-Z5 (`Galeria de Retorno Sync + Mirante sobre Z1`):** APROVADO (`2026-11-22`, `director_review/2026-11-22_c2_z5_galeria_retorno/`).
     - **C2-Walkthrough (`Loop Completo Z1→Z5`):** APROVADO (`2026-11-22`, `director_review/2026-11-22_c2_walkthrough_loop/`).
-  - **C3 (Refinamento Arquitetônico do Layout — sem arte final e sem textura):** LIBERADO EM 2026-11-22 (EM CONSTRUÇÃO — checkpoint consolidado único).
+  - **C3 (Refinamento Arquitetônico do Layout — sem arte final e sem textura):** CONSTRUÍDO — AGUARDANDO APROVAÇÃO DO BRUNO (`director_review/2026-11-22_c3_caldeiral_consolidado/`; `validate_scene.py --strict` exit 0: 5/5 luzes, ~70.5k/150k tris, ~20/120 draw calls, ~0.75/128 MB tex, 90.8% static batching; Baseline PlayMode M1–M2 2/2 PASSED).
   - **C4 (Composição & Câmeras CS01):** BLOQUEADO *(exige C3 aprovado).*
   - **C5 (Props & Heróis Fábrica 3D):** BLOQUEADO *(exige C4 aprovado).*
