@@ -30,8 +30,8 @@
 - [ ] **Pré-requisito C2 — Adendo C (`validate_scene.py` Android URP budget + fixture de cena estourada):** pendente (obrigatório antes de C2).
 - [ ] **Pré-requisito C2 — Adendo D (Baseline PlayMode M1–M2 em `evidence/tests/`):** pendente (obrigatório antes de C2).
 - **Status dos Estágios de Cenário (C1 → C5):**
-  - **C1 (Diagrama Top-Down `docs/level-design/caldeiral_c1.md` + PNG):** ENTREGUE — *AGUARDANDO APROVAÇÃO DO BRUNO* *(gravar `C1 APROVADO por Bruno em <YYYY-MM-DD>` após OK).*
-  - **C2 (Greybox Fechado):** BLOQUEADO *(exige C1 aprovado + Adendo C + Adendo D).*
+  - **C1 APROVADO por Bruno em 2026-11-22 — Caldeiral = ambiente introdutório; futuros ambientes usarão o mesmo método** (`docs/level-design/caldeiral_c1.md` + `evidence/concepts/caldeiral_c1_topdown.png`).
+  - **C2 (Greybox Fechado):** BLOQUEADO *(exige Rastreabilidade Mecânica + Adendo C + Adendo D verdes).*
   - **C3 (Kit CC0 + PBR World-Scale):** BLOQUEADO *(exige C2 aprovado).*
   - **C4 (Composição & Câmeras CS01):** BLOQUEADO *(exige C3 aprovado).*
   - **C5 (Props & Heróis Fábrica 3D):** BLOQUEADO *(exige C4 aprovado).*
