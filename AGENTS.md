@@ -54,6 +54,13 @@ Este documento é a autoridade central e vinculante para qualquer agente de IA (
 ### Protocolo de Sync Studio Core ↔ `game-concerto` (Adendo E)
 - Qualquer atualização futura da **BAN LIST**, dos validadores (`tools/validation/`, `tools/qa/`) ou das skills (`.agents/skills/`) no Studio Core (`gamedev-setup-ia`) tem como parte obrigatória do DoD a sincronização imediata para o `game-concerto` no mesmo ciclo, atualizando a nota de proveniência com o novo hash do Studio Core.
 
+### Leis de Higiene & Pasta Canônica de Decisões (Vigentes Permanentemente)
+- **Lei 6a (Captura Limpa de Gate):** Captura de ferramenta/gate usa **SEMPRE `Calibration.unity`** (ou cena neutra isolada). **Zero** cenário de outros jogos.
+- **Lei 6b (Isolamento de Outros Jogos):** Assets do Neon District só entram item a item, com OK explícito do Bruno e linha em `LICENSES-ARTE.md` — nunca em lote. Código, cenas e design do Neon District: **NUNCA**.
+- **Lei 6c (Linha AMBIENTE na Fábrica 3D):** A Fábrica 3D cobre também **AMBIENTE** (chão/tiles, módulos arquitetônicos, props estruturais grandes, horizonte/skybox) rumo a mundo 100% IA local. `CC0/Kenney` é andaime temporário com mesmos pivôs, escalas e snap para substituição sem retrabalho.
+- **Lei 6d (Decisão vs. Engenharia):** **PROIBIDO** enviar fixtures/capturas de engenharia ao Bruno — apenas artefatos de decisão de diretor.
+- **Lei 7 (Pasta Canônica `director_review`):** Toda imagem que exige veredito do Bruno vai para `C:\Users\Bruno\workspace\game-concerto\director_review\<YYYY-MM-DD>_<nome>\` contendo a imagem + `LEIA-ME.txt` de 3 linhas (`O QUE É` / `O QUE VOCÊ DECIDE` / `O QUE ACONTECE DEPOIS`), com o caminho completo sempre citado no checkpoint do chat.
+
 ---
 
 ## 2. Estrutura Canônica de Diretórios
