@@ -1,0 +1,12 @@
+{
+  "asset_name": "ferrugem_coletora_placeholder",
+  "category": "drone",
+  "preset": "prop",
+  "texture_size": 512,
+  "astc": "ASTC_6x6",
+  "collider": "none",
+  "max_tris": 3500,
+  "tris_final": 308,
+  "rigged": false,
+  "source_mode": "greybox_placeholder_cc0"
+}

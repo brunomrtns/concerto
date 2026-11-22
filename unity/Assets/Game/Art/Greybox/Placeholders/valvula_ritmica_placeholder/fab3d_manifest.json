@@ -1,0 +1,12 @@
+{
+  "asset_name": "valvula_ritmica_placeholder",
+  "category": "small_prop_item",
+  "preset": "prop",
+  "texture_size": 512,
+  "astc": "ASTC_6x6",
+  "collider": "box",
+  "max_tris": 600,
+  "tris_final": 204,
+  "rigged": false,
+  "source_mode": "greybox_placeholder_cc0"
+}

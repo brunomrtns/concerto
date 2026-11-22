@@ -1,0 +1,3 @@
+O QUE É: Captura do blockout greybox C2 da Zona Z3 (Pátio das Sirenes + Galeria de Fumaça — teto 14m, Vó Segunda no patamar +3.5m, passarela lateral 4m ao longo dos paredões 8m e ponte âmbar sobre o fosso de vapor 6.5m).
+O QUE VOCÊ DECIDE: Aprovar a legibilidade da travessia Z3 com os deltas mecânicos (passarela + ponte transitável a pé) e escala dos paredões de 8m.
+O QUE ACONTECE DEPOIS: Com seu OK no consolidado C2, Z3 segue para vestimenta modular CC0 + PBR no C3.

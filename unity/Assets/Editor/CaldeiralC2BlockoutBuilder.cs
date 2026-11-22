@@ -21,7 +21,7 @@ namespace Studio.Editor
     ///   - <= 5 luzes reais simultaneas (budget Android URP)
     ///   - Captura datada por zona salva em evidence/captures/ e director_review/
     /// </summary>
-    public static class CaldeiralC2BlockoutBuilder
+    public static partial class CaldeiralC2BlockoutBuilder
     {
         private const string ScenePath = "Assets/Game/Scenes/Caldeiral.unity";
         private const string GreyboxMeshDir = "Assets/Game/Art/Meshes/Greybox";
@@ -199,12 +199,15 @@ namespace Studio.Editor
         /// Rampa industrial <= 18 deg (16.9 deg) ate Mezanino +3.5m, Tio Horario + InteractableBase,
         /// E1/E2 A-pose nao-bloqueantes e Arco Leste 4m apontando para Z3.
         /// </summary>
-        public static void BuildZ2PassarelaBigorna()
+        public static void BuildZ2PassarelaBigorna(bool closeZ2EndBulkhead = true, bool captureZ2 = true, bool addZ2GuideLight = true)
         {
             var lightsRoot = GameObject.Find("Lighting")?.transform ?? new GameObject("Lighting").transform;
-            // Luzes Z2: total acumulado na cena = 4/5 luzes reais (dentro do limite Android URP)
+            // Luzes Z2: total acumulado na cena = <= 5 luzes reais (dentro do limite Android URP)
             CreatePointLight(lightsRoot, "L2_Z2_Passarela_Key", new Vector3(-9.0f, 7.2f, -18.0f), new Color(0.95f, 0.82f, 0.68f), 24f, 22f);
-            CreatePointLight(lightsRoot, "L3_Z2_Arco_Z3_Guide", new Vector3(2.2f, 4.2f, -18.0f), new Color(0.62f, 0.90f, 0.96f), 14f, 16f);
+            if (addZ2GuideLight)
+            {
+                CreatePointLight(lightsRoot, "L3_Z2_Arco_Z3_Guide", new Vector3(2.2f, 4.2f, -18.0f), new Color(0.62f, 0.90f, 0.96f), 14f, 16f);
+            }
 
             var z2Root = new GameObject("Z2_Passarela_da_Bigorna").transform;
 
@@ -237,7 +240,10 @@ namespace Studio.Editor
             CreateWorldBox("Z2_TunnelZ3_Ceiling", z2Root, new Vector3(3f, 4.75f, -18f), new Vector3(6f, 0.5f, 4f), _matCeiling, isStatic: true, addCollider: false);
             CreateWorldBox("Z2_TunnelZ3_WallS", z2Root, new Vector3(3f, 2.25f, -20.25f), new Vector3(6f, 4.5f, 0.5f), _matWall, isStatic: true, addCollider: true);
             CreateWorldBox("Z2_TunnelZ3_WallN", z2Root, new Vector3(3f, 2.25f, -15.75f), new Vector3(6f, 4.5f, 0.5f), _matWall, isStatic: true, addCollider: true);
-            CreateWorldBox("Z2_TunnelZ3_Bulkhead", z2Root, new Vector3(6.25f, 2.25f, -18f), new Vector3(0.5f, 4.5f, 4.5f), _matWall, isStatic: true, addCollider: true);
+            if (closeZ2EndBulkhead)
+            {
+                CreateWorldBox("Z2_TunnelZ3_Bulkhead", z2Root, new Vector3(6.25f, 2.25f, -18f), new Vector3(0.5f, 4.5f, 4.5f), _matWall, isStatic: true, addCollider: true);
+            }
 
             // === MEZANINO +3.5m (X: -6.0..0.0, Z: -14.5..-11.0, topo em Y=+3.5m) + RAMPA <= 18 deg (16.9 deg) ===
             CreateWorldBox("Z2_Mezzanine_Deck", z2Root, new Vector3(-3.0f, 3.3f, -12.75f), new Vector3(6.0f, 0.4f, 3.5f), _matFloor, isStatic: true, addCollider: true);
@@ -287,14 +293,17 @@ namespace Studio.Editor
             AssetDatabase.SaveAssets();
             EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene(), ScenePath);
 
-            CaptureZoneScreenshot(
-                cam,
-                "c2_z2_passarela_bigorna",
-                "O QUE É: Captura do blockout greybox C2 da Zona Z2 (Passarela da Bigorna — 18m x 14m, teto 10m, rampa 16.9° até Mezanino +3.5m, Tio Horário + banca, E1/E2 A-pose não-bloqueantes e Arco Z3).\n" +
-                "O QUE VOCÊ DECIDE: Aprovar escala, inclinação da rampa (<=18°), posicionamento dos placeholders A-pose e composição guiando o olhar para Z3.\n" +
-                "O QUE ACONTECE DEPOIS: Com seu OK, avançamos para o blockout C2 da Zona Z3 (Pátio das Sirenes + Galeria de Fumaça) mantendo todos os gates verdes.\n"
-            );
-            Debug.Log("[CaldeiralC2] Z2 Passarela da Bigorna construida, salva e capturada com sucesso.");
+            if (captureZ2)
+            {
+                CaptureZoneScreenshot(
+                    cam,
+                    "c2_z2_passarela_bigorna",
+                    "O QUE É: Captura do blockout greybox C2 da Zona Z2 (Passarela da Bigorna — 18m x 14m, teto 10m, rampa 16.9° até Mezanino +3.5m, Tio Horário + banca, E1/E2 A-pose não-bloqueantes e Arco Z3).\n" +
+                    "O QUE VOCÊ DECIDE: Aprovar escala, inclinação da rampa (<=18°), posicionamento dos placeholders A-pose e composição guiando o olhar para Z3.\n" +
+                    "O QUE ACONTECE DEPOIS: Com seu OK, avançamos para o blockout C2 da Zona Z3 (Pátio das Sirenes + Galeria de Fumaça) mantendo todos os gates verdes.\n"
+                );
+            }
+            Debug.Log("[CaldeiralC2] Z2 Passarela da Bigorna construida.");
         }
 
         private static GameObject InstantiatePlaceholderFbx(string assetName, string instanceName, Transform parent, Vector3 pos, Quaternion rot, Material mat)
