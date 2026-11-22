@@ -255,7 +255,7 @@ def main():
             f"static_batch={metrics['static_batching_ratio']*100:.1f}%"
         )
     if report_path:
-        rel = report_path.relative_to(ROOT).as_posix() if report_path.resolve().is_relative_to(ROOT) else str(report_path)
+        rel = report_path.resolve().relative_to(ROOT).as_posix() if report_path.resolve().is_relative_to(ROOT) else str(report_path)
         print(f"[validate_scene] Relatório salvo em: {rel}")
 
     for w in warnings:
