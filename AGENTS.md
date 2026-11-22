@@ -40,6 +40,20 @@ Este documento é a autoridade central e vinculante para qualquer agente de IA (
 4. **Placeholders só de fonte padronizada CC0/Kenney:** Todo greybox e blocagem modular utiliza exclusivamente `Kenney Prototype Textures` (grid 1 tile = 1 m), kits modulares CC0 (`Kenney City Kit (Industrial)`, `Quaternius UAL`) e materiais PBR CC0 (`Poly Haven` / `AmbientCG`) registrados em `LICENSES-ARTE.md`.
 5. **Regra Anti-Improviso:** Proibido criar script paralelo de conversão/eixo enquanto existir ponte canônica (`fab3d_bridge.py` / `fbx_canonical.py`); se a ponte não atender, abrir ADR em `docs/decisions/`, não gambiarra.
 
+### CAMINHOS CONGELADOS — Intocáveis sem Instrução Explícita do Bruno (Adendo A)
+- `unity/Assets/Game/Audio/` (BGM, SFX e VOs XTTS-v2 já validados)
+- `voices/` (amostras de referência de voz validadas)
+- Scripts de mecânica core aprovados em `unity/Assets/Game/Scripts/` (`InteractionSystem.cs`, `DialoguePresenter.cs`, `CutscenePlayer.cs` e scripts de gameplay validados no baseline)
+- **Regra:** nenhum agente pode alterar, "refatorar" ou "melhorar por fora" qualquer arquivo nesses caminhos sem autorização **explícita** do Bruno. Na dúvida, **PARE e pergunte**.
+
+### Aprovação como Artefato — Gate de Transição C1 → C2 → C3 → C4 → C5 (Adendo B)
+- Toda transição de estágio de cenário (`C1 → C2`, `C2 → C3`, `C3 → C4`, `C4 → C5`) exige uma linha explícita gravada em `PROGRESS.md` no formato:
+  `C<N> APROVADO por Bruno em <YYYY-MM-DD>`
+- **Sem a linha gravada em `PROGRESS.md`, é proibido avançar para o estágio seguinte** — trata-se de gate formal com o mesmo peso dos validadores determinísticos.
+
+### Protocolo de Sync Studio Core ↔ `game-concerto` (Adendo E)
+- Qualquer atualização futura da **BAN LIST**, dos validadores (`tools/validation/`, `tools/qa/`) ou das skills (`.agents/skills/`) no Studio Core (`gamedev-setup-ia`) tem como parte obrigatória do DoD a sincronização imediata para o `game-concerto` no mesmo ciclo, atualizando a nota de proveniência com o novo hash do Studio Core.
+
 ---
 
 ## 2. Estrutura Canônica de Diretórios

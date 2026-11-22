@@ -18,6 +18,20 @@
 - [ ] **S-char-05 (Ferrugens):** 3 famílias ≤ 3.5k + FSM Patrulha→Perseguição→Ataque.
 
 ## Marco M2 — Vozes, Cutscene CS01 & 1º Fuso (Caldeiral)
-- [ ] **Vozes (`voices/`):** gravar/definir as 7 amostras `.wav` (começando por `narrador`, `juno`, `dez` para CS01) e validar com `validate_voice_samples.py`.
+- [x] **Vozes (`voices/`):** 7 amostras `.wav` validadas (`evidence/audio/voice_samples_concerto.json`, PASS 7/7) + VO XTTS-v2 + BGM/SFX em `unity/Assets/Game/Audio/` (**CAMINHO CONGELADO**).
 - [ ] **CS01 (`cs01_abertura`):** adaptar `dialogues.yaml` + `cutscene_01_abertura.yaml` → VO via `tts_bridge.py` → `CutsceneBuilder.cs` com `audio_clips_bound == 6`.
 - [ ] **Caldeiral (Vertical Slice jogável):** kit de oficina (desync/sync) + texturas tileáveis + Re-Sincronia + combate Contratempo.
+
+---
+
+## Sincronia Studio Core & Gates de Transição do Caldeiral (C1 → C5 — Adendo B)
+- [x] **Fase 2 — Sincronia Studio Core (`gates-v1.0` / `bf214100`, commit `5361900`):** `validate_visual.py`, `validate_gltf.py`, `run_visual_gates.py`, `Fab3dImporter.cs`, fixture `fixture_biped_deitado` (`exit 1`), `studio-scene-director`, `studio-strict-reviewer`, `LICENSES-ARTE.md`, BAN LIST verbatim no `AGENTS.md`, relatório diagnóstico da Porca (`evidence/validation/validate_visual_porca_report.json`) e smoke test `prop_caixote` no `game-concerto` (`evidence/captures/fab3d_prop_caixote_20261122_163054.png`).
+- [x] **Adendo A + B + E:** `CAMINHOS CONGELADOS`, gate de aprovação em `PROGRESS.md` e protocolo de sync registrados em `AGENTS.md`.
+- [ ] **Pré-requisito C2 — Adendo C (`validate_scene.py` Android URP budget + fixture de cena estourada):** pendente (obrigatório antes de C2).
+- [ ] **Pré-requisito C2 — Adendo D (Baseline PlayMode M1–M2 em `evidence/tests/`):** pendente (obrigatório antes de C2).
+- **Status dos Estágios de Cenário (C1 → C5):**
+  - **C1 (Diagrama Top-Down `docs/level-design/caldeiral_c1.md` + PNG):** ENTREGUE — *AGUARDANDO APROVAÇÃO DO BRUNO* *(gravar `C1 APROVADO por Bruno em <YYYY-MM-DD>` após OK).*
+  - **C2 (Greybox Fechado):** BLOQUEADO *(exige C1 aprovado + Adendo C + Adendo D).*
+  - **C3 (Kit CC0 + PBR World-Scale):** BLOQUEADO *(exige C2 aprovado).*
+  - **C4 (Composição & Câmeras CS01):** BLOQUEADO *(exige C3 aprovado).*
+  - **C5 (Props & Heróis Fábrica 3D):** BLOQUEADO *(exige C4 aprovado).*
