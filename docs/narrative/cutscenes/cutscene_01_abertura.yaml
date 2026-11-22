@@ -1,0 +1,138 @@
+# cutscene_01_abertura.yaml — "O Concerto que Quebrou o Mundo" (v1) [NOVO]
+# Fonte declarativa para o CutsceneBuilder.cs (pilar 7): monta Unity Timeline + Cinemachine,
+# puxa VO de dialogues.yaml, grava capturas por shot em evidence/captures/cs01/.
+
+meta:
+  id: cs01_abertura
+  title: { "pt-BR": "O Concerto que Quebrou o Mundo", "en": "The Repair That Broke the World" }
+  duration_s: 165
+  aspect: adaptive            # 16:9 desktop / 19.5:9 mobile crop-safe
+  skippable_after_s: 8
+  subtitle_lang: ["pt-BR", "en"]
+  captures_dir: evidence/captures/cs01/
+
+music:
+  track: music/concerto_tema_quebrado
+  layers: [A, B]              # A: coro mecânico  B: marchinha incompleta
+  tempo_bpm: 96
+  fades:
+    - { at_s: 91.0, action: duck_to_20, dur_s: 0.3 }   # silêncio assinatura
+    - { at_s: 91.3, action: restore,   dur_s: 1.2 }
+
+sets:
+  grande_relogio_noite:
+    scene: Sets/GrandeRelogio/Noite
+    lighting: preset_dramatico
+  oficina_interna:
+    scene: Sets/GrandeRelogio/OficinaInterna
+    lighting: preset_quente_oficina
+  patio_sucata:
+    scene: Sets/PatioSucata/Manha
+    lighting: preset_estatico_desync
+
+actors:
+  dez:
+    prefab: Characters/Dez
+    pose_ref: poses/dez/repair_kneel
+  juno:
+    prefab: Characters/Juno
+    pose_ref: poses/juno/explain
+    fx: motion_trail_half_second
+  censor_elite:
+    prefab: Characters/CensorHeavy
+    pose_ref: poses/censor/heavy_idle
+
+shots:
+  - id: s01
+    start_s: 0.0
+    dur_s: 8.0
+    camera: { type: dolly, from: [0, 2, 8], to: [0, 2, 5], look_at: pendulo_mor, lens_mm: 35, dof: true }
+    action: { fx: coro_mecanico_visual }
+    vo: cs01_narr_01
+
+  - id: s02
+    start_s: 8.0
+    dur_s: 10.0
+    camera: { type: closeup, target: juno.mao, lens_mm: 50 }
+    action: { actor: juno, anim: handoff_spring, fx: sparks_small }
+    vo: cs01_juno_01
+
+  - id: s03
+    start_s: 18.0
+    dur_s: 12.0
+    camera: { type: orbit, target: dez, radius_m: 2.2, height_m: 1.2, speed_deg_s: 12 }
+    action: { actor: dez, anim: repair_multitask_4arms }
+    vo: cs01_juno_02
+
+  - id: s04
+    start_s: 30.0
+    dur_s: 10.0
+    camera: { type: static, pos: [1.5, 1.0, 2.5], look_at: dez.rosto, lens_mm: 65 }
+    action: { actor: juno, anim: smile_warm, fx: motion_trail_half_second }
+    vo: null
+
+  - id: s05
+    start_s: 40.0
+    dur_s: 12.0
+    camera: { type: dolly, from: [0, 1.2, 4], to: [0, 1.4, 2.2], look_at: escapamento_slot, lens_mm: 40 }
+    action: { actor: dez, anim: install_forbidden_spring, fx: gauge_red_warning }
+    vo: null
+
+  - id: s06
+    start_s: 52.0
+    dur_s: 12.0
+    camera: { type: closeup, target: manometro, lens_mm: 50, shake_intensity: 0.3 }
+    action: { actor: dez, anim: brace_impact, fx: spring_snap }
+    vo: null
+    audio_rule: { silence_full_from_s: 91.0 }
+
+  - id: s07
+    start_s: 64.0
+    dur_s: 11.0
+    camera: { type: crane, from: [0, 6, 10], to: [0, 12, 4], look_at: ceu_rachando, lens_mm: 28 }
+    action: { fx: fracture_light_ceiling }
+    vo: cs01_narr_02
+
+  - id: s08
+    start_s: 75.0
+    dur_s: 12.0
+    camera: { type: orbit, target: seis_fragmentos, radius_m: 8, height_m: 4, speed_deg_s: 18 }
+    action: { fx: six_fragments_flight }
+    vo: null
+
+  - id: s09
+    start_s: 87.0
+    dur_s: 10.0
+    camera: { type: closeup, target: juno.corpo, lens_mm: 85, dof: true }
+    action: { actor: juno, anim: dissolve_half_second, fx: motion_trail_dissolve }
+    vo: cs01_dez_01
+
+  - id: s10
+    start_s: 97.0
+    dur_s: 18.0
+    camera: { type: static, pos: [0, 0.8, 3], look_at: dez, lens_mm: 50 }
+    action: { actor: dez, anim: wake_scrapyard, fx: bis_first_tick }
+    set: patio_sucata
+    vo: cs01_dez_02
+
+  - id: s11
+    start_s: 115.0
+    dur_s: 12.0
+    camera: { type: dolly, from: [0, 2, 6], to: [0, 2, 3], look_at: bis_pulso_closeup, lens_mm: 65 }
+    action: { actor: dez, anim: bis_wind_reverse }
+    vo: null
+
+  - id: s12_titulo
+    start_s: 127.0
+    dur_s: 38.0
+    camera: { type: static, pos: [0, 0, 8], look_at: titulo, lens_mm: 50 }
+    action: { fx: title_card_CONCERTO, music_stop_compass_2 }
+    vo: null
+
+subtitles:
+  - { at_s: 91.0, text: { "pt-BR": "A mola cedeu.", "en": "The spring gave in." }, style: whisper }
+  - { at_s: 158.0, text: { "pt-BR": "CONCERTO", "en": "CONCERTO" }, style: title }
+
+post:
+  cutscenes_next: [vinheta_caldeiral]
+  first_gameplay_scene: scenes/fusos/caldeiral/zona_01

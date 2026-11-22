@@ -1,0 +1,113 @@
+# ---------- Unity (project lives in unity/) ----------
+unity/[Ll]ibrary/
+unity/[Tt]emp/
+unity/[Oo]bj/
+unity/[Bb]uild/
+unity/[Bb]uilds/
+unity/[Ll]ogs/
+unity/[Uu]ser[Ss]ettings/
+unity/[Mm]emoryCaptures/
+unity/[Rr]ecordings/
+unity/.utmp/
+unity/.vs/
+unity/.vscode/
+unity/.idea/
+unity/*.csproj
+unity/*.sln
+unity/*.slnx
+unity/*.user
+unity/*.pidb
+unity/*.booproj
+unity/*.svd
+unity/*.pdb
+unity/*.mdb
+unity/*.opendb
+unity/*.VC.db
+unity/sysinfo.txt
+unity/crashlytics-build.properties
+unity/Assets/Plugins/Editor/JetBrains*
+unity/Assets/StreamingAssets/aa*
+unity/Assets/AddressableAssetsData/*/*.bin*
+# Throwaway Unity projects used by validations / worktrees
+.studio/worktrees/
+.studio/tmp/
+sandbox/
+
+# ---------- Assets Vault (large raw packages and uncompressed caches) ----------
+assets_vault/**
+!assets_vault/README.md
+!assets_vault/catalog.json
+
+# ---------- Build outputs ----------
+builds/
+*.apk
+*.aab
+*.symbols.zip
+
+# ---------- Studio runtime (state is versioned; locks/logs are not) ----------
+.studio/*.lock
+.studio/runs/*/raw/
+.studio/logs/
+
+# ---------- Evidence: keep reports, drop huge raw logs ----------
+evidence/**/editor-full.log
+
+# ---------- Node / Python / tooling ----------
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+tools/art/TripoSR/
+*.log
+
+# ---------- OS / editors ----------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------- Secrets ----------
+.env
+.env.*
+!.env.example
+*.ulf
+*.alf
+
+# Third-party raw packs (vaulted under assets_vault/)
+unity/Assets/Package/
+unity/free-world-city-game/
+
+# Junk do Unity dentro de Assets (nunca versionar)
+unity/Assets/Temp*
+unity/Assets/_Recovery/
+unity/evidence/
+unity/*.xml
+nul
+%TEMP%*
+
+# Pacote Quaternius baixado (regenerável via tools/art/import_quaternius_pack.py)
+unity/Assets/Game/Art/Characters/Quaternius/Models/
+unity/Assets/Game/Art/Characters/Quaternius/Animations/
+unity/Assets/Game/Art/Characters/Quaternius/Textures/
+unity/Assets/Versatile Studio Assets/Demo City By Versatile Studio/Scenes/demo_city_night/LightingData.asset
+**/LightingData.asset
+
+# ---------- Vendor packs (nunca versionar — reinstaláveis) ----------
+unity/Assets/#NVJOB Dynamic Sky/
+unity/Assets/POLYGON city pack/
+unity/Assets/JMO Assets/
+unity/Assets/Mirza Beig/
+unity/Assets/Awbmecreations/
+unity/Assets/Versatile Studio Assets/
+unity/Assets/Zacxophone/
+unity/Assets/npc_casual_set_00/
+unity/Assets/Fantasy Forest Environment Free Sample/
+unity/Assets/SportCar/
+unity/Assets/Weapons_ChamferZone/
+unity/Assets/VirtualButtonsForUnity/
+unity/Assets/TutorialInfo/
+unity/Assets/_TerrainAutoUpgrade/
+unity/Assets/Game/Art/Characters/Quaternius/
+unity/Assets/Resources/
+unity/Assets/PROMETEO - Car Controller/

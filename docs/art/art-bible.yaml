@@ -1,0 +1,153 @@
+# art-bible.yaml — Contrato de Direção de Arte (v1) [NOVO]
+# Dono: agente Art Director (pilar 8 do estúdio). Consumidores: ComfyUI (concept_bridge.py) e Fábrica 3D (TRELLIS/forja).
+# Regra de ouro: nenhum prompt solto por asset — sempre prompt_base + modificadores daqui.
+
+meta:
+  game: CONCERTO
+  series: ORA
+  style: "stylized detailed clockwork-whimsy"
+  description: >-
+    Mecânica de relógio a calores de oficina de família: latão, cobre, molas à mostra,
+    remendos coloridos, etiquetas escritas a mao. Silhueta legivel em 3 segundos;
+    detalhe somente com funcao mecanica visivel (parafuso, medidor, cano).
+
+shape_language:
+  faction_livre:      # Oficina/Livre (Dez, fusos restaurados)
+    form: rounded, organic-mechanical, rivets and bubbles
+    materials: [brass, copper, wood, blown glass]
+  faction_sincronato: # Regime
+    form: straight, angular, grid-repeated
+    materials: [blue steel, cold enamel, frosted glass]
+  faction_desincronia: # Corrupcao temporal
+    form: time-melted edges, motion-trail silhouettes
+    materials: [rusted metal, cracked glass]
+
+palettes:
+  caldeiral:
+    desync:  ["#6e5a4a", "#3d342c", "#8c5a2b"]
+    sync:    ["#e8a13c", "#b3542c", "#2e2419"]
+    accent_energy: "#ffb454"
+  vitralha:
+    desync:  ["#4a6a6a", "#2c4044"]
+    sync:    ["#7ad0a8", "#d8e8a0", "#5a7a5a"]
+    accent_energy: "#35c98e"
+  maresia:
+    desync:  ["#3a4a5e", "#5e7a8a"]
+    sync:    ["#2c6a7a", "#e8d8a0", "#8a5a3a"]
+    accent_energy: "#58d0d8"
+  ecodia:
+    desync:  ["#2c3444", "#444e5e"]
+    sync:    ["#e85a3a", "#d8c8a0", "#3a4460"]
+    accent_energy: "#ff8a5a"
+  retrogrado:
+    desync:  ["#d8b878", "#8a6a4a"]
+    sync:    ["#c89858", "#4a6878", "#e8e0c8"]
+    accent_energy: "#e8c88a"
+  corona:
+    broken: ["#1a2438"]
+    synced: ["#24384e"]
+    alive:  ["#d8e8f8"]
+    accent_energy: "#c8e8ff"
+  combat_colors:      # 3 cores funcionais do combate (04-mecanicas 2)
+    damage: "#ff5a3c"
+    defense: "#58d0d8"
+    resync: "#ffb454"
+
+characters:
+  dez:
+    prompt_mod: >-
+      small alien mechanic, bipedal, 4 arms (2 main + 2 small back arms from tool belt),
+      warm oxidized-brass skin, glowing freckles, patched fireproof jumpsuit (copper),
+      oversized tool belt, wrist-mounted brass turnstile device, friendly expressive face
+  iria:
+    prompt_mod: >-
+      tall elegant conductor antagonist, blue-steel long coat with staff-tail,
+      clock-face mask with working dial eyes, baton of coiled springs, serene posture
+  porca:
+    prompt_mod: >-
+      small floating brass sphere maintenance drone, single lens eye, magnetic claw,
+      riveted panels, small propeller fins
+  juno:
+    prompt_mod: >-
+      tall female clockwork engineer, ivory enamel overalls, half-second motion trail,
+      warm amber goggles, precise calm expression
+  vo_segunda:
+    prompt_mod: >-
+      elderly alien clockmaker grandmother, warm bronze skin, layered woven shawl with
+      brass clasps, wooden pocket-watch cane, round brass spectacles, gentle wise smile,
+      cozy workshop silhouette
+  tio_horario:
+    prompt_mod: >-
+      stocky cheerful alien merchant mechanic, oversized patched leather apron filled with
+      springs and gauges, brass monocle, wide copper backpack overflowing with clock parts,
+      expressive eyebrows
+  censor:
+    prompt_mod: >-
+      imposing angular enforcer of the Sincronato regime, straight blue-steel armor plates,
+      frosted glass clock-face helmet with glowing hands, rigid symmetrical posture,
+      energized tuning-fork halberd
+  ferrugem_trabalhadora:
+    prompt_mod: >-
+      corrupted rusted clockwork worker automaton, asymmetrical heavy claw arm, exposed
+      jammed gears leaking warm rust dust, cracked glass chest gauge, hunched mechanical stance
+  ferrugem_espelho:
+    prompt_mod: >-
+      corrupted rusted mirror-shield automaton, tall fractured brass frame, cracked reflective
+      clock-dial torso, flickering temporal distortion edges, floating gear fragments
+  ferrugem_coletora:
+    prompt_mod: >-
+      corrupted spider-like clockwork scavenger bot, four riveted copper legs, vacuum bell
+      snout, cracked amber collection jar on back, rusted metallic shell
+
+prompt_base:  # UNICO para concept_bridge.py (sdxl-turbo WSL) — sempre + 1 prompt_mod ou fuso
+  text: >-
+    stylized detailed 3d game concept art, clockwork-whimsy, brass and copper clockwork,
+    mechanical details with visible function (gears, rivets, gauges), warm workshop glow,
+    clean silhouette readable in 3 seconds, hand-painted texture feel, strong shape language,
+    single subject, neutral studio background
+  negative: >-
+    photo, photorealistic, gore, blood, text, watermark, letters, signature,
+    neon cyberpunk, military tech, gritty realism, cluttered details, low contrast
+  params:
+    steps: 4
+    sampler: euler
+    cfg: 1.0
+    resolution_ref: 1024
+    seed_policy: "seed registrado no provenance por asset"
+
+reference_image_standard:  # imagem de entrada do TRELLIS (Fábrica 3D)
+  background: neutral_light_gray
+  lighting: "3-point stylized, no rim light"
+  scale_ruler: required_for_characters   # régua de escala na imagem
+  turntable: optional_4_views_for_kits
+  no_text_in_image: true
+
+budgets:  # tris máximos por classe (forja/validador)
+  small_prop_item: 600
+  kit_piece: 1500
+  enemy: 3500
+  elite_censor: 8000
+  npc: 4000
+  hero_dez: 8000
+  boss: 12000
+
+states_rule:  # peças de kit existem sempre nos 2 estados
+  per_kit_piece_states: [desync, sync]
+  geometry_identical: true          # só material/textura muda
+  lighting_desync: "frozen shadows, no flicker"
+  lighting_sync: "breathing light, subtle candle flicker"
+
+texture_rules:
+  tileables: { size: 1024, seam_check: required }
+  character_atlas: { dez: 1024, others: 512 }
+  bosses: { size: 1024, emissive: true }
+  icon_family: { stroke_px: 2, corner_rivet: true }
+
+review_checklist:  # Strict Reviewer (pilar 8)
+  - silhouette_readable_3s
+  - detail_has_function
+  - single_energy_color_per_fuso
+  - two_states_per_kit_piece
+  - scale_ruler_on_character_refs
+  - no_ai_generated_text
+  - palette_from_this_file_only

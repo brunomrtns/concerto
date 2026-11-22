@@ -1,0 +1,237 @@
+# dialogues.yaml — Fonte única de VO para o tts_bridge.py (v1) [NOVO]
+# Alinhado ao pilar 5 do estúdio: lê este arquivo, exporta .wav/.ogg + durações/legendas
+# para Assets/Game/Audio/VO/. IDs são estáveis — nunca renomear.
+
+meta:
+  lang_default: "pt-BR"
+  langs: ["pt-BR", "en"]
+  output_dir: "Assets/Game/Audio/VO/"
+  formats: ["ogg", "wav"]
+  sidecar: "json_timings"          # para legendas sincronizadas e lip-sync fake
+  normalize: { lufs: -16, true_peak_dbtp: -1 }
+  retry_policy: "se max_duration_ms estourar: re-gerar com speed +0.05 (max 3x), senão FAIL job"
+
+voices:
+  dez:        { engine: xtts-v2,  ref: "voices/dez/*.wav",     speed: 1.05 }
+  iria:       { engine: xtts-v2,  ref: "voices/iria/*.wav",    speed: 0.92, fx: [room_large] }
+  porca:      { engine: kokoro-82m, speed: 1.15, pitch_shift_st: 6, formant: 1.2, fx: [speaker_small] }
+  vo_segunda: { engine: f5-tts,   ref: "voices/vosegunda/*.wav", speed: 0.88 }
+  tio_horario: { engine: f5-tts,  ref: "voices/tiohorario/*.wav", speed: 1.0 }
+  juno:       { engine: xtts-v2,  ref: "voices/juno/*.wav",   speed: 0.95, fx: [echo_220ms, lowpass_3k] }
+  narrador:   { engine: f5-tts,   speed: 1.0 }
+
+# ------------------------------------------------------------------
+# CS01 — ABERTURA (cutscene_01_abertura.yaml referencia estes ids)
+# ------------------------------------------------------------------
+lines:
+  - id: cs01_narr_01
+    scene: cs01/abertura
+    character: narrador
+    voice: narrador
+    emotion: neutro
+    max_duration_ms: 7000
+    text: "Ora não media o tempo. Ora o sustentava. E toda máquina sustentada por mãos pode quebrar por uma mola."
+    subtitles: { "pt-BR": "Ora não media o tempo. Ora o sustentava.", "en": "Ora didn't measure time. Ora held it up." }
+
+  - id: cs01_juno_01
+    scene: cs01/abertura
+    character: juno
+    voice: juno
+    emotion: amoroso
+    max_duration_ms: 5000
+    text: "Mão-de-obra: essa aqui é a única mola que não se troca sem revisão. Prometa."
+    subtitles: { "pt-BR": "A única mola que não se troca sem revisão. Prometa.", "en": "The one spring you never swap without a review. Promise me." }
+
+  - id: cs01_juno_02
+    scene: cs01/abertura
+    character: juno
+    voice: juno
+    emotion: firme
+    max_duration_ms: 4500
+    text: "Peça nova, mundo novo. Vai ser um bom amanhã, Dez."
+    subtitles: { "pt-BR": "Peça nova, mundo novo.", "en": "New part, new world." }
+
+  - id: cs01_narr_02
+    scene: cs01/abertura
+    character: narrador
+    voice: narrador
+    emotion: neutro
+    max_duration_ms: 6000
+    text: "A mola cedeu. O mundo rachou em seis momentos. E uma irmã ficou perdida no meio do tempo."
+    subtitles: { "pt-BR": "Uma irmã ficou perdida no meio do tempo.", "en": "A sister got lost halfway through time." }
+
+  - id: cs01_dez_01
+    scene: cs01/abertura
+    character: dez
+    voice: dez
+    emotion: triste
+    max_duration_ms: 5000
+    text: "Juno? ...Juno, me responde. O relógio... onde fica o relógio, Juno?"
+    subtitles: { "pt-BR": "Onde fica o relógio, Juno?", "en": "Where does the clock go, Juno?" }
+
+  - id: cs01_dez_02
+    scene: cs01/abertura
+    character: dez
+    voice: dez
+    emotion: urgente
+    max_duration_ms: 4000
+    text: "Eu conserto isso. Eu conserto o que eu quebrei. Eu juro."
+    subtitles: { "pt-BR": "Eu conserto o que eu quebrei.", "en": "I fix what I broke." }
+
+  # ------------------------------------------------------------------
+  # CALDEIRAL — Ato 1
+  # ------------------------------------------------------------------
+  - id: cal_tuto_parry_01
+    scene: caldeiral/tutorial
+    character: dez
+    voice: dez
+    emotion: ironico
+    max_duration_ms: 4000
+    text: "Parry no contratempo, Porca. Não no meio — no contratempo."
+    subtitles: { "pt-BR": "No contratempo, Porca. Não no meio.", "en": "On the off-beat, Nut. Not the middle." }
+
+  - id: cal_porca_manual_01
+    scene: caldeiral/tutorial
+    character: porca
+    voice: porca
+    emotion: orgulhoso
+    max_duration_ms: 4000
+    text: "Manual de Boas Práticas de Fraturas Temporais, terceira edição: nunca provoque a sirene durante o turno."
+    subtitles: { "pt-BR": "Nunca provoque a sirene durante o turno.", "en": "Never provoke the siren during a shift." }
+
+  - id: cal_vo_patro_02
+    scene: caldeiral/patio_sirenes
+    character: vo_segunda
+    voice: vo_segunda
+    emotion: brincalhao
+    max_duration_ms: 5000
+    text: "Aqui o tempo anda de lado, menino. Anda correndo pelo cano, que é mais rápido."
+    subtitles: { "pt-BR": "O tempo anda de lado por aqui.", "en": "Time walks sideways around here." }
+
+  - id: cal_puzzle_01
+    scene: caldeiral/sirene_mestra
+    character: porca
+    voice: porca
+    emotion: alarmado
+    max_duration_ms: 4500
+    text: "Três válvulas! Escute a ordem das batidas! Isso é... isso é música, Dez!"
+    subtitles: { "pt-BR": "Escute a ordem das batidas!", "en": "Listen to the order of the beats!" }
+
+  - id: cal_boss_intro_01
+    scene: caldeiral/contramestre
+    character: dez
+    voice: dez
+    emotion: ironico
+    max_duration_ms: 5000
+    text: "Bom dia, chefe. Vim pedir demissão... e devolver o turno."
+    subtitles: { "pt-BR": "Vim pedir demissão.", "en": "I came to resign." }
+
+  - id: cal_resync_01
+    scene: caldeiral/resincronia
+    character: dez
+    voice: dez
+    emotion: feliz
+    max_duration_ms: 5000
+    text: "Olha isso, Porca... a fumaça tá caindo como neve. O turno... acabou. O turno acabou!"
+    subtitles: { "pt-BR": "O turno acabou!", "en": "The shift is over!" }
+
+  - id: cal_fuga_01
+    scene: caldeiral/fuga
+    character: porca
+    voice: porca
+    emotion: alarmado
+    max_duration_ms: 4000
+    text: "Censores! Correndo! Muito correndo! Manual não cobre correr tanto!"
+    subtitles: { "pt-BR": "Manual não cobre correr tanto!", "en": "The manual does not cover this much running!" }
+
+  # ------------------------------------------------------------------
+  # VITRALHA — exemplo do Ato 2
+  # ------------------------------------------------------------------
+  - id: vit_chegada_01
+    scene: vitralha/chegada
+    character: narrador
+    voice: narrador
+    emotion: neutro
+    max_duration_ms: 6000
+    text: "Vitralha. Uma primavera que parou no meio do passo — e aprendeu a esperar."
+    subtitles: { "pt-BR": "Uma primavera parada no meio do passo.", "en": "A spring frozen mid-step." }
+
+  - id: vit_vo_vo2_01
+    scene: vitralha/mirante
+    character: vo_segunda
+    voice: vo_segunda
+    emotion: sério
+    max_duration_ms: 6000
+    text: "O rio também tá preso no vidro, menino. E rio que não corre, um dia corta."
+    subtitles: { "pt-BR": "Rio que não corre, um dia corta.", "en": "A river that doesn't flow one day cuts." }
+
+  - id: vit_boss_intro_01
+    scene: vitralha/estufa
+    character: porca
+    voice: porca
+    emotion: alarmado
+    max_duration_ms: 4500
+    text: "A estufa tá viva! Tecnicamente! Botanicamente! De algum jeito que o manual nega!"
+    subtitles: { "pt-BR": "A estufa tá viva!", "en": "The greenhouse is alive!" }
+
+  - id: vit_conseq_01
+    scene: vitralha/consequencia
+    character: dez
+    voice: dez
+    emotion: triste
+    max_duration_ms: 5000
+    text: "O rio voltou. E tá indo... direto pras cavernas de Marésia. Ai, ai. Consertei um lado e molhei o outro."
+    subtitles: { "pt-BR": "Consertei um lado e molhei o outro.", "en": "I fixed one side and soaked the other." }
+
+  # ------------------------------------------------------------------
+  # A OFERTA (CS02) — amostra
+  # ------------------------------------------------------------------
+  - id: cs02_iria_01
+    scene: cs02/oferta
+    character: iria
+    voice: iria
+    emotion: ameaçador-suave
+    max_duration_ms: 7000
+    text: "Eu guardo todos os tempos, mecânico. Guardo também o dela. Devolva minhas relíquias... e devolvo sua irmã."
+    subtitles: { "pt-BR": "Devolva minhas relíquias... e devolvo sua irmã.", "en": "Give me my relics back... and I give you back your sister." }
+
+  - id: cs02_dez_01
+    scene: cs02/oferta
+    character: dez
+    voice: dez
+    emotion: urgente
+    max_duration_ms: 4000
+    text: "Você tá... você tá guardando ela? Tudo esse tempo? Onde? ONDE?"
+    subtitles: { "pt-BR": "Onde você tá guardando ela?", "en": "Where are you keeping her?" }
+
+  # ------------------------------------------------------------------
+  # BARKS (pool de gameplay)
+  # ------------------------------------------------------------------
+  - id: bark_dez_dash_01
+    scene: barks
+    character: dez
+    voice: dez
+    emotion: neutro
+    max_duration_ms: 1500
+    text: "Sopro!"
+  - id: bark_dez_parry_01
+    scene: barks
+    character: dez
+    voice: dez
+    emotion: feliz
+    max_duration_ms: 1500
+    text: "No ritmo!"
+  - id: bark_dez_resync_01
+    scene: barks
+    character: dez
+    voice: dez
+    emotion: feliz
+    max_duration_ms: 1800
+    text: "Gira, catraca!"
+  - id: bark_porca_eco_01
+    scene: barks
+    character: porca
+    voice: porca
+    emotion: neutro
+    max_duration_ms: 2000
+    text: "O Bis disse 'tíque-tíque'. Tradução: perigo. Ou fome. Uma das duas."
