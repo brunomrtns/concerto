@@ -25,7 +25,7 @@ Este documento é a autoridade central e vinculante para qualquer agente de IA (
 
 ## 1.1. Regras de Visibilidade do Agente (Unity MCP) & Institucionalização de Arte (BAN LIST) — Inegociáveis
 
-> **Provenance (Fase 2 — Sincronia Studio Core `gates-v1.0` / `bf214100`):** Cópia **verbatim** adotada intencionalmente (em vez de link externo) para que qualquer agente de IA que abra o repositório `game-concerto` isoladamente receba imediatamente a BAN LIST, as regras de visibilidade Unity MCP e a Etapa 0 sem pontos cegos de leitura cross-repo.
+> **Provenance (Protocolo E — Sincronia Studio Core `gates-v1.0` / `498531a8`):** Cópia **verbatim** adotada intencionalmente (em vez de link externo) para que qualquer agente de IA que abra o repositório `game-concerto` isoladamente receba imediatamente a BAN LIST, as regras de visibilidade Unity MCP e a Etapa 0 sem pontos cegos de leitura cross-repo.
 
 ### Regras de Visibilidade do Agente (Unity MCP) — inegociáveis
 1. O agente DEVE usar a ferramenta de screenshot do Unity MCP após TODA operação que altere cena, transform, material ou prefab. Nunca confiar em exit 0 como prova de qualidade visual.
