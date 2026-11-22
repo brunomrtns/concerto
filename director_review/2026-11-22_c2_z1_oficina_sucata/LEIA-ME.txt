@@ -1,0 +1,3 @@
+O QUE É: Captura do blockout greybox C2 da Zona Z1 (Oficina da Sucata — 14m x 12m, teto 8m, grid 1 tile = 1m, Dez + Porca placeholder, Bancada I1 e Arco 4m).
+O QUE VOCÊ DECIDE: Aprovar escala, proporção, fechamento espacial (zero void) e leitura da Z1 antes de construir a Zona Z2 (Passarela da Bigorna).
+O QUE ACONTECE DEPOIS: Com seu OK, avançamos para o blockout C2 da Z2 mantendo o baseline PlayMode e validate_scene.py verdes.
