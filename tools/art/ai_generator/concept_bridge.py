@@ -126,10 +126,11 @@ def main():
             bible["fuso_mod"],
         ]
     else:
+        # Sujeito PRIMEIRO (evita truncamento dos 77 tokens do CLIP no sdxl-turbo)
         parts = [
-            bible["style_prefix"],
             bible["character_mod"],
             args.prompt,
+            bible["style_prefix"],
             bible["fuso_mod"],
             bible["style_suffix"],
         ]
