@@ -1,0 +1,3 @@
+O QUE É: Checkpoint consolidado da Fase 4.1 — Caldeiral vestido (Z1..Z5 + Mirante sobre Z1 + walkthrough MP4 + folha 4x4) usando o Kit 4.0 aprovado (36 instâncias TripoSG+Hunyuan PBR + materiais PBR world-scale 1 tile = 1.25-2.0m + iluminação real 5/5 luzes URP).
+O QUE VOCÊ DECIDE: Aprovar a vestimenta visual e iluminação do conjunto Z1..Z5 para liberar o estágio C5 (substituição in-place dos heróis/props pela Fábrica 3D) e ajustar a densidade de peças/m² se desejar.
+O QUE ACONTECE DEPOIS: Com C4 aprovado em PROGRESS.md, iniciamos o C5 substituindo Porca, Dez, Sirene-Mestra, Válvulas, Nó e inimigos no mesmo transform.

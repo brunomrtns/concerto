@@ -1,0 +1,18 @@
+{
+  "mode": "tileable",
+  "model": "stabilityai/sdxl-turbo",
+  "device": "cuda",
+  "size": [
+    512,
+    512
+  ],
+  "steps": 4,
+  "seed": 420,
+  "circular_layers": 115,
+  "elapsed_sec": 28.74,
+  "output_png": "/mnt/c/Users/Bruno/workspace/game-concerto/unity/Assets/Game/Art/Textures/Generated/caldeiral_teto_ferro_albedo.png",
+  "prompt": "seamless tileable top-down PBR albedo texture, flat even lighting, no shadows, dark cast iron and gunmetal riveted industrial boiler plates with heavy structural seams and subtle brass bolts, matte dark metal, caldeiral palette (#e8a13c, #b3542c, #2e2419, #6e5a4a, #3d342c)",
+  "name": "caldeiral_teto_ferro",
+  "art_bible": "docs/art/art-bible.yaml",
+  "output_win": "C:\\Users\\Bruno\\workspace\\game-concerto\\unity\\Assets\\Game\\Art\\Textures\\Generated\\caldeiral_teto_ferro_albedo.png"
+}

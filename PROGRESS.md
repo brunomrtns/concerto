@@ -42,7 +42,7 @@
   - **C3 APROVADO por Bruno em 2026-11-22 — refinamento arquitetônico sem textura confirmado como esperado** (`director_review/2026-11-22_c3_caldeiral_consolidado/`, commit `4f8bc46`).
   - **C4 (Direção de Arte, Vestimenta Visual & Câmeras):** LIBERADO EM 2026-11-22
     - **Kit 4.0 APROVADO por Bruno em 2026-11-22 — linguagem visual oficial: latão/cobre/ferro escuro, rebitado, clockwork-industrial; motor de forma oficial = TripoSG via pipeline 3dprinter-setup-ia (run_asset.py → Hunyuan3D-Paint → pack_glb)** (`director_review/2026-11-22_c4_0_kit_direcao_arte/`, commit `73ce70f`).
-    - **Fase 4.1 (Vestimenta Z1→Z5 + Iluminação Real + Walkthrough):** LIBERADA EM 2026-11-22 (EM CONSTRUÇÃO — checkpoint consolidado único).
+    - **Fase 4.1 (Vestimenta Z1→Z5 + Iluminação Real + Walkthrough):** CONSTRUÍDA — AGUARDANDO APROVAÇÃO DO BRUNO (`director_review/2026-11-22_c4_1_caldeiral_vestido/`; 36 instâncias Kit 4.0 + PBR world-scale `1 tile = 1.25–2.0 m`; `validate_scene.py --strict` exit 0: `lights=5/5`, `tris~=70.5k/150k`, `draw_calls~=20/120`, `tex_mb~=5.06/128`, `static_batch=90.8%`; Baseline PlayMode M1–M2 2/2 PASSED).
   - **C5 (Props & Heróis Fábrica 3D):** BLOQUEADO *(exige C4 aprovado).*
 
 ---

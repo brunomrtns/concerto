@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<test-run id="2" testcasecount="2" result="Passed" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-22 21:14:00Z" end-time="2026-11-22 21:14:01Z" duration="0,1629534">
-  <test-suite type="TestSuite" id="1011" name="NeonDistrictServer" fullname="NeonDistrictServer" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-22 21:14:00Z" end-time="2026-11-22 21:14:01Z" duration="0.162953" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+<test-run id="2" testcasecount="2" result="Passed" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-22 21:33:58Z" end-time="2026-11-22 21:33:58Z" duration="0,1558687">
+  <test-suite type="TestSuite" id="1011" name="NeonDistrictServer" fullname="NeonDistrictServer" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-22 21:33:58Z" end-time="2026-11-22 21:33:58Z" duration="0.155869" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
     <properties>
       <property name="platform" value="PlayMode" />
     </properties>
-    <test-suite type="Assembly" id="1004" name="Studio.Tests.PlayMode.dll" fullname="C:/Users/Bruno/workspace/game-concerto/unity/Library/ScriptAssemblies/Studio.Tests.PlayMode.dll" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-22 21:14:00Z" end-time="2026-11-22 21:14:01Z" duration="0.153224" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <test-suite type="Assembly" id="1004" name="Studio.Tests.PlayMode.dll" fullname="C:/Users/Bruno/workspace/game-concerto/unity/Library/ScriptAssemblies/Studio.Tests.PlayMode.dll" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-22 21:33:58Z" end-time="2026-11-22 21:33:58Z" duration="0.147747" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
       <properties>
-        <property name="_PID" value="47224" />
+        <property name="_PID" value="50476" />
         <property name="_APPDOMAIN" value="Unity Child Domain" />
         <property name="platform" value="PlayMode" />
         <property name="EditorOnly" value="False" />
       </properties>
-      <test-suite type="TestSuite" id="1005" name="Studio" fullname="Studio" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-22 21:14:00Z" end-time="2026-11-22 21:14:01Z" duration="0.152025" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <test-suite type="TestSuite" id="1005" name="Studio" fullname="Studio" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-22 21:33:58Z" end-time="2026-11-22 21:33:58Z" duration="0.147304" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
         <properties />
-        <test-suite type="TestSuite" id="1006" name="Tests" fullname="Studio.Tests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-22 21:14:00Z" end-time="2026-11-22 21:14:01Z" duration="0.151444" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <test-suite type="TestSuite" id="1006" name="Tests" fullname="Studio.Tests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-22 21:33:58Z" end-time="2026-11-22 21:33:58Z" duration="0.147069" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
           <properties />
-          <test-suite type="TestSuite" id="1007" name="PlayMode" fullname="Studio.Tests.PlayMode" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-22 21:14:00Z" end-time="2026-11-22 21:14:01Z" duration="0.151117" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <test-suite type="TestSuite" id="1007" name="PlayMode" fullname="Studio.Tests.PlayMode" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-22 21:33:58Z" end-time="2026-11-22 21:33:58Z" duration="0.146803" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
             <properties />
-            <test-suite type="TestFixture" id="1001" name="ConcertoM1M2BaselinePlayModeTests" fullname="Studio.Tests.PlayMode.ConcertoM1M2BaselinePlayModeTests" classname="Studio.Tests.PlayMode.ConcertoM1M2BaselinePlayModeTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-22 21:14:00Z" end-time="2026-11-22 21:14:01Z" duration="0.149029" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <test-suite type="TestFixture" id="1001" name="ConcertoM1M2BaselinePlayModeTests" fullname="Studio.Tests.PlayMode.ConcertoM1M2BaselinePlayModeTests" classname="Studio.Tests.PlayMode.ConcertoM1M2BaselinePlayModeTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-22 21:33:58Z" end-time="2026-11-22 21:33:58Z" duration="0.145679" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
               <properties />
-              <test-case id="1003" name="PlayMode_Baseline_M1Objective_CompletesViaInteractionSystem" fullname="Studio.Tests.PlayMode.ConcertoM1M2BaselinePlayModeTests.PlayMode_Baseline_M1Objective_CompletesViaInteractionSystem" methodname="PlayMode_Baseline_M1Objective_CompletesViaInteractionSystem" classname="Studio.Tests.PlayMode.ConcertoM1M2BaselinePlayModeTests" runstate="Runnable" seed="1726491949" result="Passed" start-time="2026-11-22 21:14:00Z" end-time="2026-11-22 21:14:01Z" duration="0.113842" asserts="0">
+              <test-case id="1003" name="PlayMode_Baseline_M1Objective_CompletesViaInteractionSystem" fullname="Studio.Tests.PlayMode.ConcertoM1M2BaselinePlayModeTests.PlayMode_Baseline_M1Objective_CompletesViaInteractionSystem" methodname="PlayMode_Baseline_M1Objective_CompletesViaInteractionSystem" classname="Studio.Tests.PlayMode.ConcertoM1M2BaselinePlayModeTests" runstate="Runnable" seed="1395375432" result="Passed" start-time="2026-11-22 21:33:58Z" end-time="2026-11-22 21:33:58Z" duration="0.110527" asserts="0">
                 <properties>
                   <property name="_JOINTYPE" value="UnityCombinatorial" />
                   <property name="retryIteration" value="0" />
                   <property name="repeatIteration" value="0" />
                 </properties>
               </test-case>
-              <test-case id="1002" name="PlayMode_Baseline_SceneLoads_PlayerSpawns_ZeroExceptions" fullname="Studio.Tests.PlayMode.ConcertoM1M2BaselinePlayModeTests.PlayMode_Baseline_SceneLoads_PlayerSpawns_ZeroExceptions" methodname="PlayMode_Baseline_SceneLoads_PlayerSpawns_ZeroExceptions" classname="Studio.Tests.PlayMode.ConcertoM1M2BaselinePlayModeTests" runstate="Runnable" seed="1012536697" result="Passed" start-time="2026-11-22 21:14:01Z" end-time="2026-11-22 21:14:01Z" duration="0.017311" asserts="0">
+              <test-case id="1002" name="PlayMode_Baseline_SceneLoads_PlayerSpawns_ZeroExceptions" fullname="Studio.Tests.PlayMode.ConcertoM1M2BaselinePlayModeTests.PlayMode_Baseline_SceneLoads_PlayerSpawns_ZeroExceptions" methodname="PlayMode_Baseline_SceneLoads_PlayerSpawns_ZeroExceptions" classname="Studio.Tests.PlayMode.ConcertoM1M2BaselinePlayModeTests" runstate="Runnable" seed="352365550" result="Passed" start-time="2026-11-22 21:33:58Z" end-time="2026-11-22 21:33:58Z" duration="0.022301" asserts="0">
                 <properties>
                   <property name="_JOINTYPE" value="UnityCombinatorial" />
                   <property name="retryIteration" value="0" />

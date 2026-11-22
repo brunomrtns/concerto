@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CONCERTO — Fase 4.1: Caldeiral Vestido (Z1→Z5 + Walkthrough)</title>
+  <style>
+    :root {
+      --bg: #0f1115;
+      --card: #171a21;
+      --border: #2a2f3a;
+      --text: #e8ecf2;
+      --muted: #9aa4b2;
+      --accent: #f59e0b;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; }
+    header { position: sticky; top: 0; z-index: 20; background: rgba(15, 17, 21, 0.94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+    header h1 { margin: 0; font-size: 18px; }
+    header h1 span { color: var(--accent); }
+    nav { display: flex; flex-wrap: wrap; gap: 8px; }
+    nav a { color: var(--text); text-decoration: none; font-size: 13px; padding: 6px 12px; border-radius: 999px; background: var(--card); border: 1px solid var(--border); }
+    nav a:hover { border-color: var(--accent); }
+    main { max-width: 1280px; margin: 0 auto; padding: 24px; display: flex; flex-direction: column; gap: 24px; }
+    .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 12px; }
+    .metric { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; }
+    .metric .label { font-size: 12px; color: var(--muted); }
+    .metric .val { font-size: 17px; font-weight: 700; color: #4ade80; margin-top: 2px; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .card-head { padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+    .card-head h2 { margin: 0; font-size: 17px; }
+    .badge { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: rgba(234,179,8,0.15); color: #facc15; border: 1px solid rgba(234,179,8,0.4); }
+    .badge.ok { background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.4); }
+    .media-wrap { background: #090a0d; display: flex; justify-content: center; padding: 12px; }
+    .media-wrap img { max-width: 100%; max-height: 74vh; border-radius: 6px; cursor: zoom-in; display: block; }
+    .media-wrap video { width: 100%; max-height: 74vh; border-radius: 6px; background: #000; }
+    .notes { padding: 14px 20px; font-size: 14px; color: var(--muted); }
+    .notes strong { color: var(--text); }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+    th, td { padding: 8px 12px; border-bottom: 1px solid var(--border); text-align: left; }
+    th { color: var(--text); background: #1d212b; }
+    #lightbox { display: none; position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.92); justify-content: center; align-items: center; padding: 24px; cursor: zoom-out; }
+    #lightbox.open { display: flex; }
+    #lightbox img { max-width: 96vw; max-height: 94vh; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><span>CONCERTO</span> — Fase 4.1: Caldeiral Vestido (Kit 4.0 + PBR World-Scale + Iluminação)</h1>
+    <nav>
+      <a href="#video">▶ Vídeo 4.1</a>
+      <a href="#z1">Z1</a>
+      <a href="#z2">Z2</a>
+      <a href="#z3">Z3</a>
+      <a href="#z4">Z4</a>
+      <a href="#z5">Z5</a>
+      <a href="#mirante">Mirante→Z1</a>
+      <a href="#sheet">Folha 4×4</a>
+      <a href="#densidade">Densidade / Decisões</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="metrics">
+      <div class="metric"><div class="label">validate_scene --strict</div><div class="val">PASS (exit 0)</div></div>
+      <div class="metric"><div class="label">Luzes Reais URP</div><div class="val">5 / 5</div></div>
+      <div class="metric"><div class="label">Tris Estimados</div><div class="val">70.500 / 150.000</div></div>
+      <div class="metric"><div class="label">Draw Calls</div><div class="val">20 / 120</div></div>
+      <div class="metric"><div class="label">Static Batching</div><div class="val">90.8% (≥50%)</div></div>
+      <div class="metric"><div class="label">Textura VRAM</div><div class="val">5.06 / 128 MB</div></div>
+      <div class="metric"><div class="label">PlayMode M1–M2</div><div class="val">2 / 2 PASSED</div></div>
+      <div class="metric"><div class="label">Peças Kit 4.0</div><div class="val">36 instâncias</div></div>
+    </section>
+
+    <section class="card" id="video">
+      <div class="card-head">
+        <h2>▶ Walkthrough Completo Fase 4.1 (Z1 → Z2 → Z3 → Z4 → Z5 → Mirante sobre Z1)</h2>
+        <span class="badge">AGUARDANDO APROVAÇÃO DO BRUNO</span>
+      </div>
+      <div class="media-wrap">
+        <video controls preload="metadata" poster="walkthrough_c4_1_contact_sheet.png">
+          <source src="walkthrough_c4_1_loop_completo.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <div class="notes"><strong>Linguagem visual aplicada:</strong> Latão/cobre/ferro escuro rebitado clockwork-industrial, tiling world-scale constante (<code>1 tile = 1.25–2.0 m</code>) com Normal Maps, 36 instâncias dos 4 prefabs do Kit 4.0 (<code>TripoSG + Hunyuan3D-Paint</code>) e 5 luzes reais calibradas.</div>
+    </section>
+
+    <section class="card" id="z1">
+      <div class="card-head"><h2>Z1 — Oficina da Sucata</h2><span class="badge">FASE 4.1</span></div>
+      <div class="media-wrap"><img src="c4_1_z1_oficina_sucata_20261122_213319.png" alt="Z1 Vestida" onclick="openZoom(this.src)" /></div>
+      <div class="notes">Oficina vestida com piso PBR latão/ferro, paredes cobre de caldeira, 2 pilares do Kit 4.0 flanqueando o Arco Z1→Z2, medalhão de piso sob a Bancada I1 e duto de vapor sob o janelão do Mirante Z5.</div>
+    </section>
+
+    <section class="card" id="z2">
+      <div class="card-head"><h2>Z2 — Passarela da Bigorna</h2><span class="badge">FASE 4.1</span></div>
+      <div class="media-wrap"><img src="c4_1_z2_passarela_bigorna_20261122_213319.png" alt="Z2 Vestida" onclick="openZoom(this.src)" /></div>
+      <div class="notes">Nave industrial com toldo em ferro escuro rebitado sobre o Tio Horário, guarda-corpos de latão na rampa e mezanino, 4 pilares e 2 dutos de vapor do Kit 4.0 guiando a composição para o Arco Z3.</div>
+    </section>
+
+    <section class="card" id="z3">
+      <div class="card-head"><h2>Z3 — Pátio das Sirenes + Galeria de Fumaça</h2><span class="badge">FASE 4.1</span></div>
+      <div class="media-wrap"><img src="c4_1_z3_patio_sirenes_20261122_213319.png" alt="Z3 Vestida" onclick="openZoom(this.src)" /></div>
+      <div class="notes">Contraponto de luz fria de vapor sobre os paredões azul-aço rebitados (8 m), passarela de latão, 4 pilares do Kit 4.0 marcando as cabeceiras da ponte sobre o fosso e dutos de vapor.</div>
+    </section>
+
+    <section class="card" id="z4">
+      <div class="card-head"><h2>Z4 — Câmara Octogonal do Caldeiral Central</h2><span class="badge">FASE 4.1</span></div>
+      <div class="media-wrap"><img src="c4_1_z4_camara_caldeiral_20261122_213319.png" alt="Z4 Vestida" onclick="openZoom(this.src)" /></div>
+      <div class="notes">Cúpula octogonal em cobre e ferro escuro com 2 pilares monumentais do Kit 4.0 emoldurando o Nó de Re-Sincronia I5 e a Sirene-Mestra sob a luz zenital âmbar, com dutos do Kit 4.0 ligados às 3 Válvulas.</div>
+    </section>
+
+    <section class="card" id="z5">
+      <div class="card-head"><h2>Z5 — Galeria de Retorno Sync</h2><span class="badge">FASE 4.1</span></div>
+      <div class="media-wrap"><img src="c4_1_z5_galeria_retorno_20261122_213319.png" alt="Z5 Vestida" onclick="openZoom(this.src)" /></div>
+      <div class="notes">Galeria Sync em cobre e ferro escuro com 2 pilares do Kit 4.0 flanqueando a Catraca de Saída I6, medalhão no piso e duto de vapor na parede superior direita.</div>
+    </section>
+
+    <section class="card" id="mirante">
+      <div class="card-head"><h2>Z5 → Z1 — Visada do Mirante Vestido</h2><span class="badge ok">LOOP FECHADO</span></div>
+      <div class="media-wrap"><img src="c4_1_z5_mirante_visada_z1_20261122_213319.png" alt="Mirante Vestido" onclick="openZoom(this.src)" /></div>
+      <div class="notes">Vista do Mirante sobre a Oficina Z1 vestida, com guarda-corpo em latão, duto de vapor em primeiro plano e pilar do Arco Z1→Z2 à esquerda.</div>
+    </section>
+
+    <section class="card" id="sheet">
+      <div class="card-head"><h2>Folha de Contato 4×4 do Walkthrough 4.1</h2><span class="badge">RESUMO VISUAL</span></div>
+      <div class="media-wrap"><img src="walkthrough_c4_1_contact_sheet.png" alt="Folha 4x4 4.1" onclick="openZoom(this.src)" /></div>
+    </section>
+
+    <section class="card" id="densidade">
+      <div class="card-head"><h2>📋 Fila de Decisões do Diretor — Densidade de Vestimenta por Zona</h2><span class="badge">DECISÃO DO DIRETOR</span></div>
+      <div class="notes">
+        <strong>Proposta aplicada na Fase 4.1 (36 instâncias hero do Kit 4.0 em ~1.350 m² ≈ 0.027 peças/m², ~1 ponto de assinatura a cada 6 m):</strong>
+        <table>
+          <thead><tr><th>Zona</th><th>Área Aprox.</th><th>Peças Kit 4.0</th><th>Densidade</th><th>Composição</th></tr></thead>
+          <tbody>
+            <tr><td>Z1 — Oficina da Sucata</td><td>168 m²</td><td>6</td><td>0.036 / m²</td><td>2 pilares + 1 duto + 2 painéis + 1 medalhão</td></tr>
+            <tr><td>Z2 — Passarela da Bigorna</td><td>252 m²</td><td>8</td><td>0.032 / m²</td><td>4 pilares + 2 dutos + 1 painel + 1 medalhão</td></tr>
+            <tr><td>Z3 — Pátio + Galeria Fumaça</td><td>464 m²</td><td>8</td><td>0.017 / m²</td><td>4 pilares + 2 dutos + 1 painel + 1 medalhão</td></tr>
+            <tr><td>Z4 — Câmara Caldeiral Central</td><td>484 m²</td><td>9</td><td>0.019 / m²</td><td>4 pilares + 3 dutos + 1 painel + 1 medalhão</td></tr>
+            <tr><td>Z5 — Galeria Sync + Mirante</td><td>306 m²</td><td>5</td><td>0.016 / m²</td><td>2 pilares + 1 duto + 1 painel + 1 medalhão</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:12px"><strong>Pergunta para o Bruno:</strong> Manter essa densidade equilibrada (100% dentro do budget Android URP, leitura limpa para gameplay) ou adensar mais alguma zona (ex.: Z3/Z4) antes de partir para o C5 (heróis & props autorais da Fábrica 3D)?</p>
+      </div>
+    </section>
+  </main>
+
+  <div id="lightbox" onclick="closeZoom()"><img id="lightbox-img" src="" alt="Zoom" /></div>
+  <script>
+    function openZoom(src) { document.getElementById('lightbox-img').src = src; document.getElementById('lightbox').classList.add('open'); }
+    function closeZoom() { document.getElementById('lightbox').classList.remove('open'); }
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeZoom(); });
+  </script>
+</body>
+</html>

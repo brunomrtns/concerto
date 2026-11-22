@@ -1,6 +1,6 @@
 {
-  "stage": "C3_consolidated",
-  "timestamp_utc": "2026-11-22T19:24:45.858316+00:00",
+  "stage": "C4_1_caldeiral_vestido",
+  "timestamp_utc": "2026-11-22T21:30:05.570462+00:00",
   "result": "Passed",
   "total": 2,
   "passed": 2,
@@ -9,12 +9,12 @@
     {
       "name": "PlayMode_Baseline_M1Objective_CompletesViaInteractionSystem",
       "result": "Passed",
-      "duration": "0.110290"
+      "duration": "0.098729"
     },
     {
       "name": "PlayMode_Baseline_SceneLoads_PlayerSpawns_ZeroExceptions",
       "result": "Passed",
-      "duration": "0.005935"
+      "duration": "0.005350"
     }
   ]
 }
