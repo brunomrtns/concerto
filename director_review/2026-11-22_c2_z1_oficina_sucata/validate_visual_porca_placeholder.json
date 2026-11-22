@@ -1,0 +1,97 @@
+{
+  "validator": "validate_visual.py",
+  "version": "1.1.0",
+  "timestamp": "2026-11-22T17:28:11.776890+00:00",
+  "asset_name": "porca_placeholder",
+  "asset_path": "unity/Assets/Game/Art/Greybox/Placeholders/porca_placeholder/porca_placeholder.fbx",
+  "class": "drone",
+  "is_biped": false,
+  "applied_checks": [
+    "pivot_base_grounded_on_floor",
+    "uniform_scale_identity_transform",
+    "prop_exempt_from_biped_vertical_ratio",
+    "no_ngons",
+    "class_tri_budget",
+    "uv_texel_density_world_scale",
+    "material_basemap",
+    "scale_meters"
+  ],
+  "passed": true,
+  "checks": {
+    "orientation": {
+      "passed": true,
+      "details": {
+        "is_biped": false,
+        "branch": "prop_grounded_uniform_scale",
+        "applied_checks": [
+          "pivot_base_grounded_on_floor",
+          "uniform_scale_identity_transform",
+          "prop_exempt_from_biped_vertical_ratio"
+        ],
+        "identity_transform": true,
+        "uniform_scale": true,
+        "pivot_grounded_on_floor": true,
+        "grounded_y_min": 0.0,
+        "bounds_unity_y_up": {
+          "width_x": 0.64,
+          "height_y": 0.45,
+          "depth_z": 0.485,
+          "y_min": 0.0,
+          "y_max": 0.45
+        },
+        "torso_bounds": null,
+        "aspect_height_over_min_horiz": null,
+        "aspect_height_over_torso_depth": null,
+        "required_biped_aspect": null,
+        "errors": []
+      }
+    },
+    "budget": {
+      "passed": true,
+      "details": {
+        "class": "drone",
+        "tris": 356,
+        "max_tris": 2500,
+        "ngons": 0,
+        "errors": []
+      }
+    },
+    "uv_texel_density": {
+      "passed": true,
+      "details": {
+        "uv_valid": true,
+        "uv_total_area": 4.08906,
+        "uv_inside01": 1.0,
+        "mesh_area_m2": 0.79685,
+        "uv_world_ratio": 5.13154,
+        "allowed_ratio_range": [
+          0.005,
+          50.0
+        ],
+        "errors": []
+      }
+    },
+    "material": {
+      "passed": true,
+      "details": {
+        "material_slots": 1,
+        "basecolor_texture": "unity/Assets/Game/Art/Greybox/Placeholders/porca_placeholder/porca_placeholder_basecolor.png",
+        "unity_material_checked": null,
+        "errors": []
+      }
+    },
+    "scale_meters": {
+      "passed": true,
+      "details": {
+        "reference_dimension_m": 0.64,
+        "allowed_range_m": [
+          0.15,
+          2.5
+        ],
+        "errors": []
+      }
+    }
+  },
+  "errors": [],
+  "warnings": []
+}
