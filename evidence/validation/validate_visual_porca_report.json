@@ -1,0 +1,16 @@
+{
+  "validator": "validate_visual.py",
+  "mode": "REPORT_ONLY_NON_BLOCKING",
+  "timestamp": "2026-11-22T16:28:23.689469+00:00",
+  "asset_name": "porca",
+  "expected_asset_path": "unity/Assets/Game/Art/Generated/porca/porca.fbx",
+  "asset_present_on_disk": false,
+  "class": "drone",
+  "is_biped": false,
+  "target_budget_tris": 2500,
+  "approved_2d_concept": "evidence/concepts/porca_v2_2_concept.png",
+  "diagnostic_status": "MISSING_POST_R1_SURGICAL_CLEANUP",
+  "summary": "Nenhuma malha 3D da Porca existe em disco apos o reset cirurgico R1 (que descartou as malhas TripoSR banidas). Apenas o conceito 2D aprovado (porca_v2_2_concept.png) e as vozes XTTS estao presentes. Nao bloqueia C1/C2 (greybox com placeholder CC0/Kenney); prioridade para Porca v3 em C5 via Fabrica 3D (TRELLIS.2-4B + Hunyuan3D-Paint + pack_glb modo game, <= 2500 tris, hover procedural em C#).",
+  "blocking_gameplay": false,
+  "action_required_now": "NONE (Fase 2 apenas diagnostico; usar placeholder CC0 em C2 e produzir Porca v3 via Fab3D em C5)"
+}
