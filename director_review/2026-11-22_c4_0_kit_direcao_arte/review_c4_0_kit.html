@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CONCERTO — Fase 4.0: Kit de Direção de Arte (Caldeiral)</title>
+  <style>
+    :root {
+      --bg: #0f1115;
+      --card: #171a21;
+      --border: #2a2f3a;
+      --text: #e8ecf2;
+      --muted: #9aa4b2;
+      --accent: #f59e0b;
+      --ok: #22c55e;
+      --pending: #eab308;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(15, 17, 21, 0.94);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    header h1 { margin: 0; font-size: 18px; }
+    header h1 span { color: var(--accent); }
+    main {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .banner {
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      border-radius: 12px;
+      padding: 16px 20px;
+    }
+    .banner h2 { margin: 0 0 6px; font-size: 16px; color: #fbbf24; }
+    .banner p { margin: 0; font-size: 14px; color: var(--text); }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 12px;
+    }
+    .metric {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+    }
+    .metric .label { font-size: 12px; color: var(--muted); }
+    .metric .val { font-size: 17px; font-weight: 700; color: #4ade80; margin-top: 2px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .card-head {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .card-head h2 { margin: 0; font-size: 17px; }
+    .badge {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(34,197,94,0.15);
+      color: #4ade80;
+      border: 1px solid rgba(34,197,94,0.4);
+    }
+    .badge.pending {
+      background: rgba(234,179,8,0.15);
+      color: #facc15;
+      border: 1px solid rgba(234,179,8,0.4);
+    }
+    .media-wrap {
+      background: #090a0d;
+      display: flex;
+      justify-content: center;
+      padding: 12px;
+    }
+    .media-wrap img {
+      max-width: 100%;
+      max-height: 74vh;
+      border-radius: 6px;
+      cursor: zoom-in;
+      display: block;
+    }
+    .grid2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
+      gap: 20px;
+    }
+    .notes { padding: 14px 20px; font-size: 14px; color: var(--muted); }
+    .notes strong { color: var(--text); }
+    #lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.92);
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+      cursor: zoom-out;
+    }
+    #lightbox.open { display: flex; }
+    #lightbox img { max-width: 96vw; max-height: 94vh; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><span>CONCERTO</span> — Fase 4.0: Kit de Direção de Arte do Caldeiral</h1>
+    <span class="badge pending">DECISÃO DE DIREÇÃO — APROVAR ANTES DA FASE 4.1</span>
+  </header>
+
+  <main>
+    <section class="banner">
+      <h2>DECISÃO DE DIREÇÃO: "Esta é a linguagem visual do Caldeiral?"</h2>
+      <p>
+        Os 4 assets abaixo foram produzidos pelo fluxo oficial completo da Fábrica 3D (<code>TripoSG</code> → <code>xatlas</code> → <code>Hunyuan3D-Paint v2-0</code> → <code>patch_repair</code> → <code>PBR MR</code> → <code>pack_glb</code> → <code>fab3d_bridge</code> → <code>Fab3dImporter</code>), todos passando 4/4 nos gates com as classes <code>env_tile</code> e <code>env_structure</code>. Nenhuma zona do <code>Caldeiral.unity</code> foi alterada ainda — a Fase 4.1 só começa após sua aprovação deste kit.
+      </p>
+    </section>
+
+    <section class="metrics">
+      <div class="metric"><div class="label">Pipeline Fábrica 3D</div><div class="val">TripoSG + Hunyuan PBR</div></div>
+      <div class="metric"><div class="label">glTF-Validator</div><div class="val">4 / 4 PASS (0 erros)</div></div>
+      <div class="metric"><div class="label">validate_visual (env_*)</div><div class="val">4 / 4 PASS (exit 0)</div></div>
+      <div class="metric"><div class="label">Fab3dImporter Unity</div><div class="val">4 / 4 Prefabs URP Lit</div></div>
+      <div class="metric"><div class="label">Caldeiral.unity</div><div class="val">Intocado (Fase 4.1 travada)</div></div>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <h2>Showcase Conjunto — Kit Completo Lado a Lado (Iluminação Caldeiral URP)</h2>
+        <span class="badge">4 ASSETS REAIS NO UNITY</span>
+      </div>
+      <div class="media-wrap">
+        <img src="c4_kit_00_showcase_conjunto_20261122_210652.png" alt="Showcase Conjunto" onclick="openZoom(this.src)" />
+      </div>
+      <div class="notes">
+        <strong>O que se vê:</strong> Da esquerda para a direita: Tile de Piso (<code>env_tile</code>), Painel de Parede (<code>env_tile</code>), Pilar Estrutural (<code>env_structure</code>) e Duto de Vapor (<code>env_structure</code>), todos sólidos com PBR metálico quente em latão/cobre/ferro escuro.
+      </div>
+    </section>
+
+    <div class="grid2">
+      <section class="card">
+        <div class="card-head"><h2>1. Tile de Piso (<code>caldeiral_env_floor_tile</code>)</h2><span class="badge">env_tile · 2000 tris</span></div>
+        <div class="media-wrap"><img src="c4_kit_01_caldeiral_env_floor_tile_20261122_210652.png" alt="Floor Tile" onclick="openZoom(this.src)" /></div>
+        <div class="notes"><strong>Observação:</strong> Bloco modular sólido em latão e marfim/creme com anel de engrenagem central; na Fase 4.1 será escalado como laje de piso (ou usado também como textura PBR world-scale nos pisos extensos).</div>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><h2>2. Painel de Parede (<code>caldeiral_env_wall_panel</code>)</h2><span class="badge">env_tile · 2000 tris</span></div>
+        <div class="media-wrap"><img src="c4_kit_02_caldeiral_env_wall_panel_20261122_210652.png" alt="Wall Panel" onclick="openZoom(this.src)" /></div>
+        <div class="notes"><strong>Observação:</strong> Placa de caldeira sólida em cobre/bronze envelhecido com moldura perimetral rebitada (face traseira visível no ângulo 3/4; face frontal traz as engrenagens em relevo).</div>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><h2>3. Pilar Estrutural (<code>caldeiral_env_portal_pillar</code>)</h2><span class="badge">env_structure · 8000 tris</span></div>
+        <div class="media-wrap"><img src="c4_kit_03_caldeiral_env_portal_pillar_20261122_210652.png" alt="Portal Pillar" onclick="openZoom(this.src)" /></div>
+        <div class="notes"><strong>Observação:</strong> Coluna industrial de núcleo em ferro escuro cercado por hastes de latão, engrenagens laterais e base/capitel circulares limpos — zero buracos, leitura imediata.</div>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><h2>4. Duto de Vapor (<code>caldeiral_env_vapor_pipe</code>)</h2><span class="badge">env_structure · 8000 tris</span></div>
+        <div class="media-wrap"><img src="c4_kit_04_caldeiral_env_vapor_pipe_20261122_210652.png" alt="Vapor Pipe" onclick="openZoom(this.src)" /></div>
+        <div class="notes"><strong>Observação:</strong> Tubulação horizontal em latão polido/oxidado com flanges pesados, suportes inferiores, válvulas superiores e tampa vermelha — peça pronta para dutos-guia de Z1→Z5.</div>
+      </section>
+    </div>
+  </main>
+
+  <div id="lightbox" onclick="closeZoom()"><img id="lightbox-img" src="" alt="Zoom" /></div>
+  <script>
+    function openZoom(src) { document.getElementById('lightbox-img').src = src; document.getElementById('lightbox').classList.add('open'); }
+    function closeZoom() { document.getElementById('lightbox').classList.remove('open'); }
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeZoom(); });
+  </script>
+</body>
+</html>

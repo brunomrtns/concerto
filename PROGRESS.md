@@ -40,7 +40,9 @@
     - **C2-Z5 (`Galeria de Retorno Sync + Mirante sobre Z1`):** APROVADO (`2026-11-22`, `director_review/2026-11-22_c2_z5_galeria_retorno/`).
     - **C2-Walkthrough (`Loop Completo Z1→Z5`):** APROVADO (`2026-11-22`, `director_review/2026-11-22_c2_walkthrough_loop/`).
   - **C3 APROVADO por Bruno em 2026-11-22 — refinamento arquitetônico sem textura confirmado como esperado** (`director_review/2026-11-22_c3_caldeiral_consolidado/`, commit `4f8bc46`).
-  - **C4 (Direção de Arte, Vestimenta Visual & Câmeras):** LIBERADO EM 2026-11-22 — **Fase 4.0 (Kit de Direção de Arte via Fábrica 3D Ambiente)** em produção; **Fase 4.1 (Vestimenta Z1→Z5)** BLOQUEADA até aprovação do Kit pelo Bruno.
+  - **C4 (Direção de Arte, Vestimenta Visual & Câmeras):** LIBERADO EM 2026-11-22
+    - **Fase 4.0 (Kit de Direção de Arte via Fábrica 3D — TripoSG + Hunyuan3D-Paint PBR):** CONSTRUÍDA — AGUARDANDO APROVAÇÃO DO BRUNO (`director_review/2026-11-22_c4_0_kit_direcao_arte/`; 4/4 assets `env_tile` / `env_structure` PASS em `glTF-Validator`, `validate_asset`, `validate_visual` e `Fab3dImporter`).
+    - **Fase 4.1 (Vestimenta Z1→Z5 + Iluminação + Walkthrough):** BLOQUEADA *(exige aprovação explícita do Kit 4.0 pelo Bruno).*
   - **C5 (Props & Heróis Fábrica 3D):** BLOQUEADO *(exige C4 aprovado).*
 
 ---

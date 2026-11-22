@@ -1,0 +1,13 @@
+{
+  "asset_name": "caldeiral_env_vapor_pipe",
+  "category": "env_structure",
+  "preset": "prop",
+  "texture_size": 1024,
+  "astc": "ASTC_6x6",
+  "collider": "box",
+  "max_tris": 8000,
+  "tris_final": 8000,
+  "rigged": false,
+  "source_mode": "from_glb",
+  "source_glb": "caldeiral_env_vapor_pipe__pbr_4k.glb"
+}

@@ -1,0 +1,3 @@
+O QUE É: Fase 4.0 — Kit de Direção de Arte do Caldeiral forjado 100% pela Fábrica 3D REAL (microsoft/TRELLIS.2-4B + fab3d_bridge + Fab3dImporter).
+PEÇAS: 1 tile de piso (env_tile), 1 painel de parede (env_tile), 1 pilar/pórtico estrutural (env_structure), 1 duto/tubulação com válvula (env_structure).
+O QUE VOCÊ DECIDE: Aprovar se ESTA é a linguagem visual oficial do Caldeiral ANTES de vestirmos qualquer zona (Z1->Z5) na Fase 4.1.

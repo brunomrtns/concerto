@@ -40,10 +40,13 @@ BPY_SCRIPT = Path(__file__).resolve().parent / "fab3d_glb_to_fbx.py"
 # Sincronizado com docs/art/art-spec.yaml v1.0 (nao parseia YAML para
 # manter o orquestrador stdlib-only). Alterar lá = alterar aqui.
 CATEGORIES = {
-    "small_prop_item":    {"max_tris": 600,  "texture_size": 512,  "astc": "ASTC_6x6", "collider": "box",  "preset": "prop"},
+    "small_prop_item":     {"max_tris": 600,  "texture_size": 512,  "astc": "ASTC_6x6", "collider": "box",  "preset": "prop"},
     "large_prop_building": {"max_tris": 3000, "texture_size": 512,  "astc": "ASTC_6x6", "collider": "box",  "preset": "prop"},
-    "player_character":   {"max_tris": 4500, "texture_size": 1024, "astc": "ASTC_4x4", "collider": "none", "preset": "character"},
-    "enemy_character":    {"max_tris": 2500, "texture_size": 1024, "astc": "ASTC_4x4", "collider": "none", "preset": "character"},
+    "env_tile":            {"max_tris": 2000, "texture_size": 1024, "astc": "ASTC_6x6", "collider": "box",  "preset": "prop"},
+    "env_structure":       {"max_tris": 8000, "texture_size": 1024, "astc": "ASTC_6x6", "collider": "box",  "preset": "prop"},
+    "env_skybox":          {"max_tris": 500,  "texture_size": 1024, "astc": "ASTC_6x6", "collider": "none", "preset": "prop"},
+    "player_character":    {"max_tris": 4500, "texture_size": 1024, "astc": "ASTC_4x4", "collider": "none", "preset": "character"},
+    "enemy_character":     {"max_tris": 2500, "texture_size": 1024, "astc": "ASTC_4x4", "collider": "none", "preset": "character"},
 }
 
 
