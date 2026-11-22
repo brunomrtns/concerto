@@ -1,0 +1,3 @@
+O QUE É: Captura do blockout greybox C2 da Zona Z5 (Galeria de Retorno Sync — 21m x 10m em +3.5m, Catraca de Saída I6 emoldurada em âmbar e corredor do Mirante fechando o loop sobre Z1).
+O QUE VOCÊ DECIDE: Aprovar o fechamento do loop arquitetônico Z4 -> Z5 -> Mirante sobre Z1.
+O QUE ACONTECE DEPOIS: Com o consolidado C2 (Z1..Z5) aprovado, avançamos para C3 (vestimenta CC0 + PBR world-scale).

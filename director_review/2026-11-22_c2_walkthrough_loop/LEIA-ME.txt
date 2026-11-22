@@ -1,0 +1,3 @@
+﻿O QUE É: Walkthrough completo do loop C2 (spawn Z1 -> Z2 -> Z3 -> Z4 -> Z5 -> Mirante sobre Z1) em vídeo MP4 (walkthrough_c2_loop_completo.mp4) + folha de contato 4x4 (walkthrough_c2_loop_contact_sheet.png).
+O QUE VOCÊ DECIDE: Aprovar o fechamento espacial, fluxo de navegação e leitura das 5 zonas do blockout C2 do Caldeiral.
+O QUE ACONTECE DEPOIS: Com sua aprovação gravada em PROGRESS.md, o C2 encerra e libera o estágio C3 (vestimenta com kit CC0 + PBR em escala de mundo).

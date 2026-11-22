@@ -33,7 +33,11 @@
 - **Status dos Estágios de Cenário (C1 → C5):**
   - **C1 APROVADO por Bruno em 2026-11-22 — Caldeiral = ambiente introdutório; futuros ambientes usarão o mesmo método** (`docs/level-design/caldeiral_c1.md` + `evidence/concepts/caldeiral_c1_topdown.png`).
   - **C2-Z1 APROVADO por Bruno em 2026-11-22 — blockout sem textura confirmado como esperado; NOTA: placeholder Dez com braços levemente afastados do corpo — cosmético, placeholder será descartado no C5; o Dez HERO (S-char-02, Fábrica 3D) NÃO deve herdar pose nem proporções do placeholder** (`director_review/2026-11-22_c2_z1_oficina_sucata/`).
-  - **C2 (Greybox Fechado Z1→Z5):** Z1 aprovado; em andamento **Z2: Passarela da Bigorna**.
+  - **C2-Z2 (`Passarela da Bigorna`):** CONSTRUÍDA — AGUARDANDO APROVAÇÃO DO BRUNO (`director_review/2026-11-22_c2_z2_passarela_bigorna/`, commit `926fc87`).
+  - **C2-Z3 (`Pátio das Sirenes + Galeria de Fumaça`):** CONSTRUÍDA — AGUARDANDO APROVAÇÃO DO BRUNO (`director_review/2026-11-22_c2_z3_patio_sirenes/`, commit `421f810`).
+  - **C2-Z4 (`Câmara do Caldeiral Central`):** CONSTRUÍDA — AGUARDANDO APROVAÇÃO DO BRUNO (`director_review/2026-11-22_c2_z4_camara_caldeiral/`, commit `9f89b3f`).
+  - **C2-Z5 (`Galeria de Retorno Sync + Mirante sobre Z1`) + Walkthrough Loop Completo:** CONSTRUÍDA — AGUARDANDO APROVAÇÃO DO BRUNO (`director_review/2026-11-22_c2_z5_galeria_retorno/` + `director_review/2026-11-22_c2_walkthrough_loop/`).
+  - **C3 (Kit CC0 + PBR World-Scale):** BLOQUEADO *(exige aprovação explícita do Bruno no C2 gravada aqui).*
   - **C3 (Kit CC0 + PBR World-Scale):** BLOQUEADO *(exige C2 aprovado).*
   - **C4 (Composição & Câmeras CS01):** BLOQUEADO *(exige C3 aprovado).*
   - **C5 (Props & Heróis Fábrica 3D):** BLOQUEADO *(exige C4 aprovado).*
