@@ -53,3 +53,4 @@
 - **Passarela `4 m` em Z3:** PERMANENTE como rota segura/acessibilidade; wall-run futuro, se aprovado um dia, será atalho opcional, nunca substituto.
 - **Renomear `3dprinter-setup-ia` → `3dcreator-setup-ia`:** Na fila; executar num intervalo natural, não no meio de etapa.
 - **Regra permanente de Git:** Todo commit vai direto na `main` com `git push` imediato.
+- **Motor de Forma 3D da Fábrica:** Motor de forma padrão = TripoSG (dono, 2026-11-22, com base no benchmark Fase C); trellis2 = fallback; trellis(1) e triposr descontinuados para produção de jogo; ban TripoAI-nuvem mantido (ADR-009).

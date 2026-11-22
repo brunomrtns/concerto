@@ -9,5 +9,19 @@
   "tris_final": 2000,
   "rigged": false,
   "source_mode": "from_glb",
-  "source_glb": "caldeiral_env_floor_tile__pbr_4k.glb"
+  "source_glb": "caldeiral_env_floor_tile__pbr_4k.glb",
+  "provenance": {
+    "engine": "triposg",
+    "shape_runner": "3dprinter-setup-ia/tools/generator/triposg_runner.py",
+    "paint_engine": "hunyuan3d-paint-v2.0",
+    "pbr_mr_engine": "trellis2-pbr",
+    "fallback_used": false,
+    "fallback_reason": null,
+    "class": "env_tile",
+    "hf_cache_policy": "shared_local_zero_download",
+    "fbx_sha256": "7c37efe0bee61b4bf50bd88ba35edcb6f749f33cc1236ef04425a9634d7a7b47",
+    "basecolor_sha256": "010f57ed228dace7b7cfc34c4cda1a6ea4a930a2769d16c42ba785f8b8da840c",
+    "mr_sha256": "1c1a30ff135d993ba8881be537ac297a744046a32c6e1b54e51c67d9c6b2496d",
+    "timestamp_utc": "2026-11-22T21:13:35.530670+00:00"
+  }
 }

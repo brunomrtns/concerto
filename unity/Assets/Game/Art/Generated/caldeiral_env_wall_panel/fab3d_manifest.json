@@ -9,5 +9,19 @@
   "tris_final": 2000,
   "rigged": false,
   "source_mode": "from_glb",
-  "source_glb": "caldeiral_env_wall_panel__pbr_4k.glb"
+  "source_glb": "caldeiral_env_wall_panel__pbr_4k.glb",
+  "provenance": {
+    "engine": "triposg",
+    "shape_runner": "3dprinter-setup-ia/tools/generator/triposg_runner.py",
+    "paint_engine": "hunyuan3d-paint-v2.0",
+    "pbr_mr_engine": "trellis2-pbr",
+    "fallback_used": false,
+    "fallback_reason": null,
+    "class": "env_tile",
+    "hf_cache_policy": "shared_local_zero_download",
+    "fbx_sha256": "cf6d70bd26f091d9d4b25895b27a4b86d1dd0549f6a4cf03167fb0a7024b4124",
+    "basecolor_sha256": "0c91eb196a9301b08613e753842168f3746417059e53afd4347127eee33ff34f",
+    "mr_sha256": "7c8d59613be97f9b7c0fef00adbadd29372c738559fa4d13c9a6adf813edbf83",
+    "timestamp_utc": "2026-11-22T21:13:35.534441+00:00"
+  }
 }
