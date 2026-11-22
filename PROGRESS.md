@@ -39,6 +39,15 @@
     - **C2-Z4 (`Câmara do Caldeiral Central`):** APROVADO (`2026-11-22`, `director_review/2026-11-22_c2_z4_camara_caldeiral/`, commit `9f89b3f`).
     - **C2-Z5 (`Galeria de Retorno Sync + Mirante sobre Z1`):** APROVADO (`2026-11-22`, `director_review/2026-11-22_c2_z5_galeria_retorno/`).
     - **C2-Walkthrough (`Loop Completo Z1→Z5`):** APROVADO (`2026-11-22`, `director_review/2026-11-22_c2_walkthrough_loop/`).
-  - **C3 (Refinamento Arquitetônico do Layout — sem arte final e sem textura):** CONSTRUÍDO — AGUARDANDO APROVAÇÃO DO BRUNO (`director_review/2026-11-22_c3_caldeiral_consolidado/`; `validate_scene.py --strict` exit 0: 5/5 luzes, ~70.5k/150k tris, ~20/120 draw calls, ~0.75/128 MB tex, 90.8% static batching; Baseline PlayMode M1–M2 2/2 PASSED).
-  - **C4 (Composição & Câmeras CS01):** BLOQUEADO *(exige C3 aprovado).*
+  - **C3 APROVADO por Bruno em 2026-11-22 — refinamento arquitetônico sem textura confirmado como esperado** (`director_review/2026-11-22_c3_caldeiral_consolidado/`, commit `4f8bc46`).
+  - **C4 (Direção de Arte, Vestimenta Visual & Câmeras):** LIBERADO EM 2026-11-22 — **Fase 4.0 (Kit de Direção de Arte via Fábrica 3D Ambiente)** em produção; **Fase 4.1 (Vestimenta Z1→Z5)** BLOQUEADA até aprovação do Kit pelo Bruno.
   - **C5 (Props & Heróis Fábrica 3D):** BLOQUEADO *(exige C4 aprovado).*
+
+---
+
+## Decisões do Diretor (Registradas em 2026-11-22)
+- **Mirante Z5:** Panorâmico no Vertical Slice; atalho físico Z5→Z1 = candidato para expansão pós-M2 (decidir quando houver conteúdo após M2).
+- **Nível `+7.0 m` em Z4:** Permanece friso arquitetônico; vira alvo de Rebote SE e QUANDO o Bruno aprovar essa mecânica no futuro. Não criar segunda rampa.
+- **Passarela `4 m` em Z3:** PERMANENTE como rota segura/acessibilidade; wall-run futuro, se aprovado um dia, será atalho opcional, nunca substituto.
+- **Renomear `3dprinter-setup-ia` → `3dcreator-setup-ia`:** Na fila; executar num intervalo natural, não no meio de etapa.
+- **Regra permanente de Git:** Todo commit vai direto na `main` com `git push` imediato.
