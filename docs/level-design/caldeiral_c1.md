@@ -94,6 +94,9 @@ Alinhado ao `art-bible.yaml` (`lighting_desync: "frozen shadows, no flicker"` vs
 | `EN_TRAB` | Ferrugem-Trabalhadora (×2) | Z2, Z4 | **`[PLACEHOLDER CC0/Kenney]`** *(bípede CC0 H=1.80 m)* | **`[HERO Fab3D]`** | `enemy_character` | `true` | **≤ 3.500** |
 | `EN_ESP` | Ferrugem-Espelho (×1) | Z2 (+3.5 m) | **`[PLACEHOLDER CC0/Kenney]`** *(bípede CC0 H=1.90 m)* | **`[HERO Fab3D]`** | `enemy_character` | `true` | **≤ 3.500** |
 | `EN_COL` | Ferrugem-Coletora (×1) | Z4 | **`[PLACEHOLDER CC0/Kenney]`** *(quadrúpede/prop-drone CC0 1.2 m)* | **`[HERO Fab3D]`** *(UniRig non-humanoid)* | `drone` (quadrúpede) | `false` | **≤ 3.500** |
+| `ENT_SIRENE` | **Sirene-Mestra / Caldeiral Central (Focal Point, `H = 16 m`)** | Z4 `(0, 0, 7)` | **`[PLACEHOLDER CC0/Kenney]`** *(torre/caldeira modular CC0 H=16 m, pivô na base)* | **`[HERO Fab3D]`** *(Hero piece da Fábrica 3D + normal-map bake)* | `large_prop_building` | `false` | **≤ 12.000** |
+| `ENT_VALVULAS` | **3 Válvulas Rítmicas Interagíveis (`I2, I3, I4`)** | Z4 `(-5.5,0,4)`, `(5.5,0,4)`, `(0,0,12.8)` | **`[PLACEHOLDER CC0/Kenney]`** *(volante/pedestal CC0 com `InteractableBase` + `IkHandTarget`)* | **`[HERO Fab3D]`** *(válvula clockwork da Fábrica 3D nos 2 estados)* | `small_prop_item` | `false` | **≤ 600** *(cada)* |
+| `ENT_NO_RESYNC` | **Nó de Re-Sincronia — Catraca-Cristal (`I5`)** | Z4 `(0, 3.5, 0.5)` | **`[PLACEHOLDER CC0/Kenney]`** *(pedestal/cristal CC0 com `InteractableBase` + onda visual)* | **`[HERO Fab3D]`** *(catraca-cristal da Fábrica 3D com emissão `#ffb454`)* | `small_prop_item` | `false` | **≤ 800** |
 
 ### 5.2. Arquitetura Modular e Props por Zona
 
