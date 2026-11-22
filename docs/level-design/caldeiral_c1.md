@@ -19,6 +19,21 @@ O C1 nasce estritamente das interfaces de código já presentes no repositório 
 | **Movimentação** | `docs/gdd/04-mecanicas.md` §1 | Correr `7 m/s`; Pulo `4.5 m` (patamares em `+3.5 m` garantem folga confortável); Rebote `+3.5 m` (alcança `+7.0 m`); Sopro/Dash `9 m` (vão de vapor em Z3 calibrado em `6.5 m`); Corrimão/Wall-run `2.5 s` (paredões de `8 m` em Z3). |
 | **Combate & Re-Sincronia** | `docs/gdd/04-mecanicas.md` §1–2 | Faísca `12 m`; Contratempo (parry `0.18 s`); Nó de Re-Sincronia alterna bolha `Desync → Sync` em `0.8 s` com onda em anel e atordoamento `1 s`. |
 
+### 1.1. Tabela de Rastreabilidade Mecânica (Código C# Atual vs. Planta C1)
+
+> **Regra vinculante:** *Mecânica congelada; a planta se dobra.* Toda célula sem prova de arquivo + método no código C# atual (`unity/Assets/Game/Scripts/`) é marcada como **VERMELHA** e tem sua geometria em C2 ajustada para usar **exclusivamente mecânica existente**.
+
+| Truque / Elemento da Planta C1 | Zona | Prova no Código C# Atual (`arquivo + método`) | Status | Delta de Ajuste da Planta para C2 (Planta se Dobra) |
+| --- | --- | --- | --- | --- |
+| **Interação da Bancada (`I1`), 3 Válvulas (`I2..I4`), Nó de Re-Sincronia (`I5`) e Catraca (`I6`)** | Z1, Z4, Z5 | `InteractionSystem.cs` → `InteractableBase.Interact(GameObject)`, `InteractableBase.IkHandTarget`, `PlayerInteractor.ScanNearest()` (`interactRadius = 2.4f`), `PlayerInteractor.TryInteractFocused()` | 🟢 **VERDE** | Sem ajuste necessário — alcance `2.4 m` e evento `OnInteracted` já implementados e compilados. |
+| **Diálogos/VO dos NPCs (`Tio Horário`, `Vó Segunda`) e barks da Porca** | Z1, Z2, Z3, Z4 | `DialoguePresenter.cs` → `EnqueueLine(DialogueLineData, AudioClip)`, `TriggerBark(string, string, float, AudioClip)`, `ResolveSubtitle()`, `OnVoiceAmplitude` | 🟢 **VERDE** | Sem ajuste necessário — integra diretamente aos `.wav` congelados em `unity/Assets/Game/Audio/VO/`. |
+| **Rails de Cutscene CS01** | Global | `CutscenePlayer.cs` → `Play()`, `Stop()`, `GetActiveShot(float)` + `CutsceneBuilder.cs` | 🟢 **VERDE** | Sem ajuste necessário — corredores com pé-direito `8–18 m` acomodam os shots sem cortar parede. |
+| **Wall-Run (`Corrimão`, paredões `8 m`)** | Z3 | *Nenhum script C# implementa wall-run na base atual.* | 🔴 **VERMELHA** | **DELTA Z3-A:** Substituir a travessia obrigatória de wall-run por **passarela lateral contínua transitável a pé (`largura 4 m`, inclinação ≤ 18°)** ligando Z2 → Z3 → ponte Z4. Os paredões de `8 m` permanecem como arquitetura lateral prontos para receber o wall-run no futuro. |
+| **Vão de Vapor `6.5 m` (Sopro/Dash `9 m`)** | Z3 | *Nenhum script C# implementa Sopro/Dash na base atual.* | 🔴 **VERMELHA** | **DELTA Z3-B:** Fechar o vão de `6.5 m` em Z3 com **ponte/grade industrial transitável a pé (`largura 4 m`)** acima do fosso de vapor, permitindo atravessar caminhando (o fosso abaixo permanece modelado para o futuro Sopro). |
+| **Mezanino `+3.5 m` (Pulo `4.5 m`)** | Z2, Z3, Z4 | *Nenhum script C# implementa pulo `4.5 m` na base atual.* | 🔴 **VERMELHA** | **DELTA VERT-A:** Conectar todos os patamares `Y = 0.0 m ↔ +3.5 m` (mezanino de Z2, patamar da Vó Segunda em Z3 e anel intermediário de Z4) por **rampas industriais transitáveis a pé (`largura ≥ 3 m`, inclinação ≤ 18°)**. |
+| **Nível `+7.0 m` (Pulo Duplo / Rebote `+3.5 m`)** | Z3, Z4, Z5 | *Nenhum script C# implementa Rebote / pulo duplo na base atual.* | 🔴 **VERMELHA** | **DELTA VERT-B:** Conectar o anel `+3.5 m ↔ +7.0 m` em Z4 e a saída em Z5 por **rampa contínua transitável a pé (`largura 3.5 m`, inclinação ≤ 18°)** até o mirante sobre Z1. |
+| **Combate Contratempo / Parry & FSM Inimigos (`E1..E4`)** | Z2, Z4 | *Nenhum script C# de combate/parry ou FSM existe na base congelada atual.* | 🔴 **VERMELHA** | **DELTA COMB-A:** Manter `E1..E4` como **placeholders posicionados e marcadores de encontro não-bloqueantes** em C2 (sem kill-gate trancando `I1..I6`), garantindo que o fluxo `Spawn Z1 → I1 Bancada → I2..I4 Válvulas → I5 Nó Re-Sincronia → I6 Catraca` complete 100% usando apenas a mecânica existente. |
+
 ---
 
 ## 2. Arquitetura Anti-Caixote (5 Zonas em Loop, 3 Níveis Verticais, 0% Void)
