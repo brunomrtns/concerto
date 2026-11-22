@@ -1,0 +1,12 @@
+{
+  "asset_name": "ferrugem_trabalhadora_placeholder",
+  "category": "enemy_character",
+  "preset": "character",
+  "texture_size": 512,
+  "astc": "ASTC_4x4",
+  "collider": "none",
+  "max_tris": 2500,
+  "tris_final": 340,
+  "rigged": false,
+  "source_mode": "greybox_placeholder_cc0"
+}

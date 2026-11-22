@@ -1,0 +1,3 @@
+O QUE É: Captura do blockout greybox C2 da Zona Z2 (Passarela da Bigorna — 18m x 14m, teto 10m, rampa 16.9° até Mezanino +3.5m, Tio Horário + banca, E1/E2 A-pose não-bloqueantes e Arco Z3).
+O QUE VOCÊ DECIDE: Aprovar escala, inclinação da rampa (<=18°), posicionamento dos placeholders A-pose e composição guiando o olhar para Z3.
+O QUE ACONTECE DEPOIS: Com seu OK, avançamos para o blockout C2 da Zona Z3 (Pátio das Sirenes + Galeria de Fumaça) mantendo todos os gates verdes.

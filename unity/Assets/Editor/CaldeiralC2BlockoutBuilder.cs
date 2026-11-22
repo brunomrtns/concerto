@@ -27,18 +27,20 @@ namespace Studio.Editor
         private const string GreyboxMeshDir = "Assets/Game/Art/Meshes/Greybox";
         private const string GreyboxMatDir = "Assets/Game/Materials/Greybox";
         private const string ProtoTexDir = "Assets/Game/Art/Textures/Prototype";
+        private const string PlaceholderDir = "Assets/Game/Art/Greybox/Placeholders";
 
         private static Material _matFloor;
         private static Material _matWall;
         private static Material _matCeiling;
         private static Material _matAccent;
         private static Material _matPlayer;
+        private static Material _matEnemy;
 
         public static void BuildZ1AndCaptureBatch()
         {
             try
             {
-                BuildZ1OficinaSucata();
+                BuildZ1OficinaSucata(closeZ1EndBulkhead: true, captureZ1: true);
                 EditorApplication.Exit(0);
             }
             catch (Exception ex)
@@ -48,8 +50,28 @@ namespace Studio.Editor
             }
         }
 
+        public static void BuildZ1AndZ2AndCaptureBatch()
+        {
+            try
+            {
+                BuildZ1OficinaSucata(closeZ1EndBulkhead: false, captureZ1: false);
+                BuildZ2PassarelaBigorna();
+                EditorApplication.Exit(0);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[CaldeiralC2] Erro fatal no build Z1+Z2: {ex}");
+                EditorApplication.Exit(1);
+            }
+        }
+
         [MenuItem("Studio/Concerto/C2 Blockout/Build Z1 - Oficina da Sucata")]
-        public static void BuildZ1OficinaSucata()
+        public static void BuildZ1OficinaSucataMenu()
+        {
+            BuildZ1OficinaSucata(closeZ1EndBulkhead: true, captureZ1: true);
+        }
+
+        public static void BuildZ1OficinaSucata(bool closeZ1EndBulkhead = true, bool captureZ1 = true)
         {
             EnsureFolder("Assets/Game/Art/Meshes");
             EnsureFolder(GreyboxMeshDir);
@@ -63,6 +85,7 @@ namespace Studio.Editor
             _matCeiling = EnsureProtoMaterial("Mat_Proto_Ceiling_1m", $"{ProtoTexDir}/proto_grid_ceiling_1m.png", 0.05f, 0.15f);
             _matAccent = EnsureProtoMaterial("Mat_Proto_Accent_1m", $"{ProtoTexDir}/proto_grid_accent_1m.png", 0.35f, 0.55f);
             _matPlayer = EnsureProtoMaterial("Mat_Proto_Player_1m", $"{ProtoTexDir}/proto_grid_player_1m.png", 0.15f, 0.45f);
+            _matEnemy = EnsureProtoMaterial("Mat_Proto_Enemy_1m", $"{ProtoTexDir}/proto_grid_wall_1m.png", 0.20f, 0.35f, new Color(0.92f, 0.42f, 0.34f));
 
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             RenderSettings.ambientMode = AmbientMode.Trilight;
@@ -72,51 +95,46 @@ namespace Studio.Editor
             RenderSettings.fog = true;
             RenderSettings.fogMode = FogMode.ExponentialSquared;
             RenderSettings.fogColor = new Color(0.16f, 0.14f, 0.12f);
-            RenderSettings.fogDensity = 0.014f;
+            RenderSettings.fogDensity = 0.012f;
 
-            // === LIGHTING (Budget Android URP <= 5 real lights; Z1 usa 3 luzes) ===
+            // === LIGHTING (Budget Android URP <= 5 real lights; Z1+Z2 usa 4/5 luzes) ===
             var lightsRoot = new GameObject("Lighting").transform;
             CreateDirectionalLight(lightsRoot, "L0_Directional_Desync", Quaternion.Euler(52f, -35f, 0f), new Color(0.75f, 0.68f, 0.60f), 0.75f);
             CreatePointLight(lightsRoot, "L1_Oficina_Warm", new Vector3(-29.0f, 5.2f, -18.0f), new Color(1.0f, 0.74f, 0.42f), 18f, 14f);
-            CreatePointLight(lightsRoot, "L2_Arco_Guide", new Vector3(-20.0f, 4.2f, -18.0f), new Color(0.78f, 0.88f, 0.96f), 12f, 12f);
+            if (closeZ1EndBulkhead)
+            {
+                CreatePointLight(lightsRoot, "L2_Arco_Guide", new Vector3(-20.0f, 4.2f, -18.0f), new Color(0.78f, 0.88f, 0.96f), 12f, 12f);
+            }
 
             // === Z1: OFICINA DA SUCATA (14m x 12m, X: -36..-22, Z: -24..-12, Teto Y=8.0m, 100% FECHADO) ===
             var z1Root = new GameObject("Z1_Oficina_da_Sucata").transform;
 
-            // Piso 14m x 12m (topo exatamente em Y=0.0)
             CreateWorldBox("Z1_Floor_14x12", z1Root, new Vector3(-29f, -0.25f, -18f), new Vector3(14f, 0.5f, 12f), _matFloor, isStatic: true, addCollider: true);
-            // Teto 14m x 12m (base em Y=8.0)
             CreateWorldBox("Z1_Ceiling_14x12", z1Root, new Vector3(-29f, 8.25f, -18f), new Vector3(14f, 0.5f, 12f), _matCeiling, isStatic: true, addCollider: false);
-
-            // Vigas estruturais no teto (Y=7.6) para leitura arquitetonica imediata
             CreateWorldBox("Z1_CeilingBeam_A", z1Root, new Vector3(-32.5f, 7.65f, -18f), new Vector3(0.6f, 0.7f, 12f), _matCeiling, isStatic: true, addCollider: false);
             CreateWorldBox("Z1_CeilingBeam_B", z1Root, new Vector3(-25.5f, 7.65f, -18f), new Vector3(0.6f, 0.7f, 12f), _matCeiling, isStatic: true, addCollider: false);
 
-            // Paredes fechadas (H=8.0m)
-            // Parede Oeste (X=-36)
             CreateWorldBox("Z1_Wall_West", z1Root, new Vector3(-36.25f, 4f, -18f), new Vector3(0.5f, 8f, 12f), _matWall, isStatic: true, addCollider: true);
-            // Parede Norte (Z=-12)
             CreateWorldBox("Z1_Wall_North", z1Root, new Vector3(-29f, 4f, -11.75f), new Vector3(14f, 8f, 0.5f), _matWall, isStatic: true, addCollider: true);
-            // Parede Sul (Z=-24)
             CreateWorldBox("Z1_Wall_South", z1Root, new Vector3(-29f, 4f, -24.25f), new Vector3(14f, 8f, 0.5f), _matWall, isStatic: true, addCollider: true);
 
-            // Parede Leste (X=-22) com Arco 4m (Z: -20..-16, altura 4.5m) -> fechada acima e nas laterais
             CreateWorldBox("Z1_Wall_East_South", z1Root, new Vector3(-21.75f, 4f, -22f), new Vector3(0.5f, 8f, 4f), _matWall, isStatic: true, addCollider: true);
             CreateWorldBox("Z1_Wall_East_North", z1Root, new Vector3(-21.75f, 4f, -14f), new Vector3(0.5f, 8f, 4f), _matWall, isStatic: true, addCollider: true);
             CreateWorldBox("Z1_Wall_East_Header", z1Root, new Vector3(-21.75f, 6.25f, -18f), new Vector3(0.5f, 3.5f, 4f), _matWall, isStatic: true, addCollider: true);
-            // Moldura do Arco 4m (destaque ambar)
             CreateWorldBox("Z1_Arch_Pillar_S", z1Root, new Vector3(-22.0f, 2.25f, -20.15f), new Vector3(0.7f, 4.5f, 0.4f), _matAccent, isStatic: true, addCollider: true);
             CreateWorldBox("Z1_Arch_Pillar_N", z1Root, new Vector3(-22.0f, 2.25f, -15.85f), new Vector3(0.7f, 4.5f, 0.4f), _matAccent, isStatic: true, addCollider: true);
             CreateWorldBox("Z1_Arch_Lintel", z1Root, new Vector3(-22.0f, 4.7f, -18f), new Vector3(0.7f, 0.45f, 4.7f), _matAccent, isStatic: true, addCollider: true);
 
-            // Corredor Z1->Z2 fechado (4m x 4m, X: -22..-18, Z: -20..-16) com parede provisoria ao fundo (zero void!)
             CreateWorldBox("Z1_ArchTunnel_Floor", z1Root, new Vector3(-20f, -0.25f, -18f), new Vector3(4f, 0.5f, 4f), _matFloor, isStatic: true, addCollider: true);
             CreateWorldBox("Z1_ArchTunnel_Ceiling", z1Root, new Vector3(-20f, 4.75f, -18f), new Vector3(4f, 0.5f, 4f), _matCeiling, isStatic: true, addCollider: false);
             CreateWorldBox("Z1_ArchTunnel_WallS", z1Root, new Vector3(-20f, 2.25f, -20.25f), new Vector3(4f, 4.5f, 0.5f), _matWall, isStatic: true, addCollider: true);
             CreateWorldBox("Z1_ArchTunnel_WallN", z1Root, new Vector3(-20f, 2.25f, -15.75f), new Vector3(4f, 4.5f, 0.5f), _matWall, isStatic: true, addCollider: true);
-            CreateWorldBox("Z1_ArchTunnel_EndBulkhead", z1Root, new Vector3(-17.75f, 2.25f, -18f), new Vector3(0.5f, 4.5f, 4.5f), _matWall, isStatic: true, addCollider: true);
+            if (closeZ1EndBulkhead)
+            {
+                CreateWorldBox("Z1_ArchTunnel_EndBulkhead", z1Root, new Vector3(-17.75f, 2.25f, -18f), new Vector3(0.5f, 4.5f, 4.5f), _matWall, isStatic: true, addCollider: true);
+            }
 
-            // === PROPS DA OFICINA Z1 (6 caixotes / prateleiras apoiados no piso Y=0.0, static batching) ===
+            // Props Z1
             var propsRoot = new GameObject("Z1_Props_Placeholders").transform;
             propsRoot.SetParent(z1Root);
             CreateWorldBox("Z1_Crate_NW_1", propsRoot, new Vector3(-34.6f, 0.55f, -13.2f), new Vector3(1.1f, 1.1f, 1.1f), _matAccent, isStatic: true, addCollider: true);
@@ -126,7 +144,7 @@ namespace Studio.Editor
             CreateWorldBox("Z1_Crate_SW_1", propsRoot, new Vector3(-34.5f, 0.5f, -22.8f), new Vector3(1.2f, 1.0f, 1.0f), _matWall, isStatic: true, addCollider: true);
             CreateWorldBox("Z1_Crate_SE_1", propsRoot, new Vector3(-24.0f, 0.5f, -22.6f), new Vector3(1.4f, 1.0f, 1.0f), _matWall, isStatic: true, addCollider: true);
 
-            // === I1: BANCADA DE RELOGIO (InteractableBase + IkHandTarget em (-29, 0, -17.5)) ===
+            // I1: Bancada de Relogio
             var bancada = new GameObject("I1_Bancada_Relogio");
             bancada.transform.SetParent(z1Root);
             bancada.transform.position = new Vector3(-29.0f, 0.0f, -17.5f);
@@ -141,33 +159,13 @@ namespace Studio.Editor
             soInteract.FindProperty("ikHandTarget").objectReferenceValue = ikTarget.transform;
             soInteract.ApplyModifiedPropertiesWithoutUndo();
 
-            // === ENTIDADES PLACEHOLDER CONFORME §5.1 (Dez + Porca em pe Y-up, +Z frente) ===
+            // Entidades Z1 (instanciadas a partir dos FBX A-pose validados pelo validate_visual)
             var entitiesRoot = new GameObject("Entities_Placeholders").transform;
-
-            // Player Dez Placeholder (H=1.55m, pes em Y=0.0, orientado para a bancada/arco)
-            var dez = new GameObject("Player_Dez_Placeholder");
-            dez.transform.SetParent(entitiesRoot);
-            dez.transform.position = new Vector3(-33.0f, 0.0f, -20.0f);
-            dez.transform.rotation = Quaternion.Euler(0f, 65f, 0f);
-            CreatePartScaled("Dez_Torso", ProceduralMeshLibrary.Capsule, dez.transform, new Vector3(0f, 0.72f, 0f), new Vector3(0.46f, 0.62f, 0.34f), _matPlayer);
-            CreatePartScaled("Dez_Head", ProceduralMeshLibrary.Sphere, dez.transform, new Vector3(0f, 1.38f, 0f), new Vector3(0.34f, 0.34f, 0.34f), _matPlayer);
-            CreatePartScaled("Dez_AuxArm_L", ProceduralMeshLibrary.Box, dez.transform, new Vector3(-0.32f, 0.95f, -0.18f), new Vector3(0.10f, 0.42f, 0.10f), _matAccent);
-            CreatePartScaled("Dez_AuxArm_R", ProceduralMeshLibrary.Box, dez.transform, new Vector3(0.32f, 0.95f, -0.18f), new Vector3(0.10f, 0.42f, 0.10f), _matAccent);
+            var dez = InstantiatePlaceholderFbx("dez_placeholder", "Player_Dez_Placeholder", entitiesRoot, new Vector3(-33.0f, 0.0f, -20.0f), Quaternion.Euler(0f, 65f, 0f), _matPlayer);
             dez.AddComponent<PlayerInteractor>();
             dez.AddComponent<DialoguePresenter>();
+            InstantiatePlaceholderFbx("porca_placeholder", "Companion_Porca_Placeholder", entitiesRoot, new Vector3(-31.8f, 1.35f, -19.0f), Quaternion.Euler(0f, 60f, 0f), _matAccent);
 
-            // Companion Porca Placeholder (Drone esfera Ø 0.45m, classe drone, hover a Y=1.55m)
-            var porca = new GameObject("Companion_Porca_Placeholder");
-            porca.transform.SetParent(entitiesRoot);
-            porca.transform.position = new Vector3(-31.8f, 1.55f, -19.0f);
-            porca.transform.rotation = Quaternion.Euler(0f, 60f, 0f);
-            CreatePartScaled("Porca_Shell", ProceduralMeshLibrary.Sphere, porca.transform, Vector3.zero, new Vector3(0.45f, 0.45f, 0.45f), _matAccent);
-            CreatePartScaled("Porca_Lens", ProceduralMeshLibrary.Cylinder, porca.transform, new Vector3(0f, 0f, 0.22f), new Vector3(0.18f, 0.05f, 0.18f), _matPlayer);
-            porca.transform.Find("Porca_Lens").localRotation = Quaternion.Euler(90f, 0f, 0f);
-            CreatePartScaled("Porca_Fin_L", ProceduralMeshLibrary.Box, porca.transform, new Vector3(-0.28f, 0.04f, -0.05f), new Vector3(0.16f, 0.04f, 0.14f), _matWall);
-            CreatePartScaled("Porca_Fin_R", ProceduralMeshLibrary.Box, porca.transform, new Vector3(0.28f, 0.04f, -0.05f), new Vector3(0.16f, 0.04f, 0.14f), _matWall);
-
-            // === CAMERA PRINCIPAL DE BLOCKOUT Z1 (enquadra Dez, Porca, I1 Bancada, grid 1m e Arco 4m) ===
             var camGo = new GameObject("Main Camera");
             camGo.tag = "MainCamera";
             var cam = camGo.AddComponent<Camera>();
@@ -184,14 +182,156 @@ namespace Studio.Editor
             AssetDatabase.SaveAssets();
             EditorSceneManager.SaveScene(scene, ScenePath);
 
-            // Captura datada de Z1 (vai para evidence/captures/ e director_review/)
-            CaptureZoneScreenshot(cam, "c2_z1_oficina_sucata");
-            Debug.Log("[CaldeiralC2] Z1 Oficina da Sucata construida, salva e capturada com sucesso.");
+            if (captureZ1)
+            {
+                CaptureZoneScreenshot(
+                    cam,
+                    "c2_z1_oficina_sucata",
+                    "O QUE É: Captura do blockout greybox C2 da Zona Z1 (Oficina da Sucata — 14m x 12m, teto 8m, grid 1 tile = 1m, Dez + Porca placeholder, Bancada I1 e Arco 4m).\n" +
+                    "O QUE VOCÊ DECIDE: Aprovar escala, proporção, fechamento espacial (zero void) e leitura da Z1 antes de construir a Zona Z2 (Passarela da Bigorna).\n" +
+                    "O QUE ACONTECE DEPOIS: Com seu OK, avançamos para o blockout C2 da Z2 mantendo o baseline PlayMode e validate_scene.py verdes.\n"
+                );
+            }
         }
 
-        private static void CaptureZoneScreenshot(Camera cam, string zoneSlug)
+        /// <summary>
+        /// Constrói Z2: Passarela da Bigorna (18m x 14m, X: -18..0, Z: -25..-11, teto 10m, 100% fechada).
+        /// Rampa industrial <= 18 deg (16.9 deg) ate Mezanino +3.5m, Tio Horario + InteractableBase,
+        /// E1/E2 A-pose nao-bloqueantes e Arco Leste 4m apontando para Z3.
+        /// </summary>
+        public static void BuildZ2PassarelaBigorna()
         {
-            // Warm-up URP (3 frames)
+            var lightsRoot = GameObject.Find("Lighting")?.transform ?? new GameObject("Lighting").transform;
+            // Luzes Z2: total acumulado na cena = 4/5 luzes reais (dentro do limite Android URP)
+            CreatePointLight(lightsRoot, "L2_Z2_Passarela_Key", new Vector3(-9.0f, 7.2f, -18.0f), new Color(0.95f, 0.82f, 0.68f), 24f, 22f);
+            CreatePointLight(lightsRoot, "L3_Z2_Arco_Z3_Guide", new Vector3(2.2f, 4.2f, -18.0f), new Color(0.62f, 0.90f, 0.96f), 14f, 16f);
+
+            var z2Root = new GameObject("Z2_Passarela_da_Bigorna").transform;
+
+            // Piso 18m x 14m (topo em Y=0.0) e Teto 18m x 14m (base em Y=10.0)
+            CreateWorldBox("Z2_Floor_18x14", z2Root, new Vector3(-9f, -0.25f, -18f), new Vector3(18f, 0.5f, 14f), _matFloor, isStatic: true, addCollider: true);
+            CreateWorldBox("Z2_Ceiling_18x14", z2Root, new Vector3(-9f, 10.25f, -18f), new Vector3(18f, 0.5f, 14f), _matCeiling, isStatic: true, addCollider: false);
+            CreateWorldBox("Z2_CeilingBeam_A", z2Root, new Vector3(-13.5f, 9.6f, -18f), new Vector3(0.7f, 0.8f, 14f), _matCeiling, isStatic: true, addCollider: false);
+            CreateWorldBox("Z2_CeilingBeam_B", z2Root, new Vector3(-4.5f, 9.6f, -18f), new Vector3(0.7f, 0.8f, 14f), _matCeiling, isStatic: true, addCollider: false);
+
+            // Parede Norte (Z=-11) e Parede Sul (Z=-25) fechadas (H=10m)
+            CreateWorldBox("Z2_Wall_North", z2Root, new Vector3(-9f, 5f, -10.75f), new Vector3(18f, 10f, 0.5f), _matWall, isStatic: true, addCollider: true);
+            CreateWorldBox("Z2_Wall_South", z2Root, new Vector3(-9f, 5f, -25.25f), new Vector3(18f, 10f, 0.5f), _matWall, isStatic: true, addCollider: true);
+
+            // Parede Oeste (X=-18) aberta apenas no Arco Z1->Z2 (Z: -20..-16, H: 0..4.5m)
+            CreateWorldBox("Z2_Wall_West_South", z2Root, new Vector3(-18.25f, 5f, -22.5f), new Vector3(0.5f, 10f, 5f), _matWall, isStatic: true, addCollider: true);
+            CreateWorldBox("Z2_Wall_West_North", z2Root, new Vector3(-18.25f, 5f, -13.5f), new Vector3(0.5f, 10f, 5f), _matWall, isStatic: true, addCollider: true);
+            CreateWorldBox("Z2_Wall_West_Header", z2Root, new Vector3(-18.25f, 7.25f, -18f), new Vector3(0.5f, 5.5f, 4f), _matWall, isStatic: true, addCollider: true);
+
+            // Parede Leste (X=0) aberta no Arco Z2->Z3 (Z: -20..-16, H: 0..4.5m) -> composicao apontando para Z3
+            CreateWorldBox("Z2_Wall_East_South", z2Root, new Vector3(0.25f, 5f, -22.5f), new Vector3(0.5f, 10f, 5f), _matWall, isStatic: true, addCollider: true);
+            CreateWorldBox("Z2_Wall_East_North", z2Root, new Vector3(0.25f, 5f, -13.5f), new Vector3(0.5f, 10f, 5f), _matWall, isStatic: true, addCollider: true);
+            CreateWorldBox("Z2_Wall_East_Header", z2Root, new Vector3(0.25f, 7.25f, -18f), new Vector3(0.5f, 5.5f, 4f), _matWall, isStatic: true, addCollider: true);
+            // Moldura ambar do Arco Z2->Z3
+            CreateWorldBox("Z2_ArchZ3_Pillar_S", z2Root, new Vector3(0.0f, 2.25f, -20.15f), new Vector3(0.7f, 4.5f, 0.4f), _matAccent, isStatic: true, addCollider: true);
+            CreateWorldBox("Z2_ArchZ3_Pillar_N", z2Root, new Vector3(0.0f, 2.25f, -15.85f), new Vector3(0.7f, 4.5f, 0.4f), _matAccent, isStatic: true, addCollider: true);
+            CreateWorldBox("Z2_ArchZ3_Lintel", z2Root, new Vector3(0.0f, 4.7f, -18f), new Vector3(0.7f, 0.45f, 4.7f), _matAccent, isStatic: true, addCollider: true);
+
+            // Tunel provisorio Z2->Z3 (X: 0..6, Z: -20..-16) fechado ao fundo (zero void!)
+            CreateWorldBox("Z2_TunnelZ3_Floor", z2Root, new Vector3(3f, -0.25f, -18f), new Vector3(6f, 0.5f, 4f), _matFloor, isStatic: true, addCollider: true);
+            CreateWorldBox("Z2_TunnelZ3_Ceiling", z2Root, new Vector3(3f, 4.75f, -18f), new Vector3(6f, 0.5f, 4f), _matCeiling, isStatic: true, addCollider: false);
+            CreateWorldBox("Z2_TunnelZ3_WallS", z2Root, new Vector3(3f, 2.25f, -20.25f), new Vector3(6f, 4.5f, 0.5f), _matWall, isStatic: true, addCollider: true);
+            CreateWorldBox("Z2_TunnelZ3_WallN", z2Root, new Vector3(3f, 2.25f, -15.75f), new Vector3(6f, 4.5f, 0.5f), _matWall, isStatic: true, addCollider: true);
+            CreateWorldBox("Z2_TunnelZ3_Bulkhead", z2Root, new Vector3(6.25f, 2.25f, -18f), new Vector3(0.5f, 4.5f, 4.5f), _matWall, isStatic: true, addCollider: true);
+
+            // === MEZANINO +3.5m (X: -6.0..0.0, Z: -14.5..-11.0, topo em Y=+3.5m) + RAMPA <= 18 deg (16.9 deg) ===
+            CreateWorldBox("Z2_Mezzanine_Deck", z2Root, new Vector3(-3.0f, 3.3f, -12.75f), new Vector3(6.0f, 0.4f, 3.5f), _matFloor, isStatic: true, addCollider: true);
+            CreateWorldBox("Z2_Mezzanine_Pillar_W", z2Root, new Vector3(-5.7f, 1.55f, -14.2f), new Vector3(0.5f, 3.1f, 0.5f), _matWall, isStatic: true, addCollider: true);
+            CreateWorldBox("Z2_Mezzanine_Pillar_E", z2Root, new Vector3(-0.6f, 1.55f, -14.2f), new Vector3(0.5f, 3.1f, 0.5f), _matWall, isStatic: true, addCollider: true);
+            CreateWorldBox("Z2_Mezzanine_Rail", z2Root, new Vector3(-3.0f, 4.0f, -14.4f), new Vector3(6.0f, 1.0f, 0.16f), _matAccent, isStatic: true, addCollider: true);
+
+            // Rampa transitavel a pe: sobe de X=-17.5 (Y=0.0) ate X=-6.0 (Y=3.5) -> run=11.5m, rise=3.5m, angulo=16.93 deg <= 18 deg
+            float run = 11.5f, rise = 3.5f;
+            float rampLen = Mathf.Sqrt(run * run + rise * rise);
+            float rampAngleDeg = Mathf.Atan2(rise, run) * Mathf.Rad2Deg; // 16.93 deg
+            var rampGo = CreateWorldBox("Z2_Mezzanine_Ramp_16_9deg", z2Root, new Vector3(-11.75f, 1.60f, -12.6f), new Vector3(rampLen, 0.30f, 2.8f), _matFloor, isStatic: true, addCollider: true);
+            rampGo.transform.localRotation = Quaternion.Euler(0f, 0f, rampAngleDeg);
+            var rampRail = CreateWorldBox("Z2_Mezzanine_Ramp_Rail", z2Root, new Vector3(-11.75f, 2.15f, -13.95f), new Vector3(rampLen, 0.85f, 0.14f), _matAccent, isStatic: true, addCollider: false);
+            rampRail.transform.localRotation = Quaternion.Euler(0f, 0f, rampAngleDeg);
+
+            // Pilares de cobertura da Passarela da Bigorna (guiam o olhar ao Arco Z3 sem obstruir o corredor central)
+            CreateWorldBox("Z2_CoverPillar_NW", z2Root, new Vector3(-11.5f, 1.6f, -15.6f), new Vector3(1.0f, 3.2f, 1.0f), _matWall, isStatic: true, addCollider: true);
+            CreateWorldBox("Z2_CoverPillar_SE", z2Root, new Vector3(-5.0f, 1.6f, -21.2f), new Vector3(1.0f, 3.2f, 1.0f), _matWall, isStatic: true, addCollider: true);
+
+            // === NPC TIO HORARIO + BANCA + ANCORA DE DIALOGO (InteractableBase em nicho Sul-Oeste) ===
+            var tioBooth = new GameObject("NPC_Tio_Horario_Anchor");
+            tioBooth.transform.SetParent(z2Root);
+            tioBooth.transform.position = new Vector3(-13.8f, 0.0f, -21.6f);
+            CreateWorldBox("Tio_Banca_Base", tioBooth.transform, new Vector3(0.0f, 0.5f, 0.8f), new Vector3(2.2f, 1.0f, 0.9f), _matAccent, isStatic: true, addCollider: true);
+            var tioIk = new GameObject("DialogueAnchor");
+            tioIk.transform.SetParent(tioBooth.transform);
+            tioIk.transform.localPosition = new Vector3(0f, 1.5f, 0f);
+            var tioInteract = tioBooth.AddComponent<InteractableBase>();
+            var soTio = new SerializedObject(tioInteract);
+            soTio.FindProperty("promptText").stringValue = "Conversar com Tio Horário [E/B]";
+            soTio.FindProperty("ikHandTarget").objectReferenceValue = tioIk.transform;
+            soTio.ApplyModifiedPropertiesWithoutUndo();
+
+            var entitiesRoot = GameObject.Find("Entities_Placeholders")?.transform ?? new GameObject("Entities_Placeholders").transform;
+            InstantiatePlaceholderFbx("tio_horario_placeholder", "NPC_Tio_Horario_Placeholder", entitiesRoot, new Vector3(-13.8f, 0.0f, -22.2f), Quaternion.Euler(0f, 20f, 0f), _matAccent);
+
+            // E1 & E2: Inimigos em A-pose simetrica, NAO-BLOQUEANTES (fora da passagem central Z=-18)
+            InstantiatePlaceholderFbx("ferrugem_trabalhadora_placeholder", "E1_Ferrugem_Trabalhadora_Placeholder", entitiesRoot, new Vector3(-8.5f, 0.0f, -21.8f), Quaternion.Euler(0f, -35f, 0f), _matEnemy);
+            InstantiatePlaceholderFbx("ferrugem_espelho_placeholder", "E2_Ferrugem_Espelho_Placeholder", entitiesRoot, new Vector3(-3.0f, 3.5f, -12.8f), Quaternion.Euler(0f, -135f, 0f), _matEnemy);
+
+            // Camera de composicao Z2 (enquadra Tio Horario + banca, rampa 16.9 deg, Mezanino +3.5m com E2, E1 em pe e Arco Z3!)
+            var cam = Camera.main ?? UnityEngine.Object.FindAnyObjectByType<Camera>();
+            cam.transform.position = new Vector3(-17.4f, 3.8f, -24.4f);
+            cam.transform.LookAt(new Vector3(-5.5f, 1.9f, -17.0f));
+
+            AssetDatabase.SaveAssets();
+            EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene(), ScenePath);
+
+            CaptureZoneScreenshot(
+                cam,
+                "c2_z2_passarela_bigorna",
+                "O QUE É: Captura do blockout greybox C2 da Zona Z2 (Passarela da Bigorna — 18m x 14m, teto 10m, rampa 16.9° até Mezanino +3.5m, Tio Horário + banca, E1/E2 A-pose não-bloqueantes e Arco Z3).\n" +
+                "O QUE VOCÊ DECIDE: Aprovar escala, inclinação da rampa (<=18°), posicionamento dos placeholders A-pose e composição guiando o olhar para Z3.\n" +
+                "O QUE ACONTECE DEPOIS: Com seu OK, avançamos para o blockout C2 da Zona Z3 (Pátio das Sirenes + Galeria de Fumaça) mantendo todos os gates verdes.\n"
+            );
+            Debug.Log("[CaldeiralC2] Z2 Passarela da Bigorna construida, salva e capturada com sucesso.");
+        }
+
+        private static GameObject InstantiatePlaceholderFbx(string assetName, string instanceName, Transform parent, Vector3 pos, Quaternion rot, Material mat)
+        {
+            string fbxPath = $"{PlaceholderDir}/{assetName}/{assetName}.fbx";
+            var imp = AssetImporter.GetAtPath(fbxPath) as ModelImporter;
+            if (imp != null && imp.bakeAxisConversion)
+            {
+                imp.bakeAxisConversion = false;
+                imp.SaveAndReimport();
+            }
+            var container = new GameObject(instanceName);
+            container.transform.SetParent(parent, false);
+            container.transform.position = pos;
+            container.transform.rotation = rot;
+
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(fbxPath);
+            if (prefab != null)
+            {
+                // Instancia como filho preservando o localRotation (-90 X) nativo do FBX exportado pelo Blender!
+                var model = (GameObject)UnityEngine.Object.Instantiate(prefab, container.transform);
+                model.name = "Model";
+                foreach (var r in model.GetComponentsInChildren<Renderer>(true))
+                {
+                    r.sharedMaterial = mat;
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"[CaldeiralC2] FBX nao encontrado em {fbxPath}, usando fallback procedural.");
+                ProceduralMeshLibrary.CreatePart("Model", ProceduralMeshLibrary.Capsule, container.transform, new Vector3(0f, 0.8f, 0f), Quaternion.identity, new Vector3(0.5f, 0.8f, 0.5f), mat);
+            }
+            return container;
+        }
+
+        private static void CaptureZoneScreenshot(Camera cam, string zoneSlug, string readmeText)
+        {
             for (int w = 0; w < 3; w++)
             {
                 var wrt = RenderTexture.GetTemporary(256, 144, 24);
@@ -226,17 +366,11 @@ namespace Studio.Editor
             File.WriteAllBytes(datedPath, pngBytes);
             File.WriteAllBytes(latestPath, pngBytes);
 
-            // Pasta canonica director_review/<data>_<nome>/ + LEIA-ME.txt de 3 linhas (Lei 7)
             string reviewDir = Path.Combine(Directory.GetCurrentDirectory(), "..", "director_review", $"{dateOnly}_{zoneSlug}");
             Directory.CreateDirectory(reviewDir);
             string reviewImg = Path.Combine(reviewDir, $"{zoneSlug}_{stamp}.png");
             File.WriteAllBytes(reviewImg, pngBytes);
-            File.WriteAllText(
-                Path.Combine(reviewDir, "LEIA-ME.txt"),
-                "O QUE É: Captura do blockout greybox C2 da Zona Z1 (Oficina da Sucata — 14m x 12m, teto 8m, grid 1 tile = 1m, Dez + Porca placeholder, Bancada I1 e Arco 4m).\n" +
-                "O QUE VOCÊ DECIDE: Aprovar escala, proporção, fechamento espacial (zero void) e leitura da Z1 antes de construir a Zona Z2 (Passarela da Bigorna).\n" +
-                "O QUE ACONTECE DEPOIS: Com seu OK, avançamos para o blockout C2 da Z2 mantendo o baseline PlayMode e validate_scene.py verdes.\n"
-            );
+            File.WriteAllText(Path.Combine(reviewDir, "LEIA-ME.txt"), readmeText);
 
             Debug.Log($"[CaldeiralC2] Captura salva em: {datedPath} e {reviewImg}");
         }
@@ -329,7 +463,7 @@ namespace Studio.Editor
             return m;
         }
 
-        private static Material EnsureProtoMaterial(string matName, string texPath, float metallic, float smoothness)
+        private static Material EnsureProtoMaterial(string matName, string texPath, float metallic, float smoothness, Color? tint = null)
         {
             var texImp = AssetImporter.GetAtPath(texPath) as TextureImporter;
             if (texImp != null)
@@ -345,13 +479,14 @@ namespace Studio.Editor
             if (existing != null)
             {
                 existing.SetTexture("_BaseMap", tex);
+                existing.SetColor("_BaseColor", tint ?? Color.white);
                 EditorUtility.SetDirty(existing);
                 return existing;
             }
             Shader lit = Shader.Find("Universal Render Pipeline/Lit");
             var mat = new Material(lit);
             mat.SetTexture("_BaseMap", tex);
-            mat.SetColor("_BaseColor", Color.white);
+            mat.SetColor("_BaseColor", tint ?? Color.white);
             mat.SetFloat("_Metallic", metallic);
             mat.SetFloat("_Smoothness", smoothness);
             AssetDatabase.CreateAsset(mat, matPath);

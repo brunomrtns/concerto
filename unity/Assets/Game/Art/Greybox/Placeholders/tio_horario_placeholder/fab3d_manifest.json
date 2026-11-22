@@ -1,0 +1,12 @@
+{
+  "asset_name": "tio_horario_placeholder",
+  "category": "player_character",
+  "preset": "character",
+  "texture_size": 512,
+  "astc": "ASTC_4x4",
+  "collider": "none",
+  "max_tris": 4000,
+  "tris_final": 340,
+  "rigged": false,
+  "source_mode": "greybox_placeholder_cc0"
+}

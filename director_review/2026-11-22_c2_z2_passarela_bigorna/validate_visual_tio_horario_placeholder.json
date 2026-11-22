@@ -1,0 +1,102 @@
+{
+  "validator": "validate_visual.py",
+  "version": "1.1.0",
+  "timestamp": "2026-11-22T17:28:12.673608+00:00",
+  "asset_name": "tio_horario_placeholder",
+  "asset_path": "unity/Assets/Game/Art/Greybox/Placeholders/tio_horario_placeholder/tio_horario_placeholder.fbx",
+  "class": "player_character",
+  "is_biped": true,
+  "applied_checks": [
+    "identity_transform_uniform_scale",
+    "pivot_grounded_or_centered",
+    "biped_upright_y_major_axis",
+    "biped_vertical_aspect_ratio_min_1.6",
+    "no_ngons",
+    "class_tri_budget",
+    "uv_texel_density_world_scale",
+    "material_basemap",
+    "scale_meters"
+  ],
+  "passed": true,
+  "checks": {
+    "orientation": {
+      "passed": true,
+      "details": {
+        "is_biped": true,
+        "branch": "biped_vertical_aspect",
+        "applied_checks": [
+          "identity_transform_uniform_scale",
+          "pivot_grounded_or_centered",
+          "biped_upright_y_major_axis",
+          "biped_vertical_aspect_ratio_min_1.6"
+        ],
+        "identity_transform": true,
+        "uniform_scale": true,
+        "pivot_grounded_on_floor": true,
+        "grounded_y_min": -0.0,
+        "bounds_unity_y_up": {
+          "width_x": 0.72,
+          "height_y": 1.5869,
+          "depth_z": 0.2621,
+          "y_min": -0.0,
+          "y_max": 1.5869
+        },
+        "torso_bounds": {
+          "width_x": 0.72,
+          "depth_z": 0.2135
+        },
+        "aspect_height_over_min_horiz": 6.055,
+        "aspect_height_over_torso_depth": 7.433,
+        "required_biped_aspect": 1.6,
+        "errors": []
+      }
+    },
+    "budget": {
+      "passed": true,
+      "details": {
+        "class": "player_character",
+        "tris": 340,
+        "max_tris": 4000,
+        "ngons": 0,
+        "errors": []
+      }
+    },
+    "uv_texel_density": {
+      "passed": true,
+      "details": {
+        "uv_valid": true,
+        "uv_total_area": 0.91498,
+        "uv_inside01": 1.0,
+        "mesh_area_m2": 2.15055,
+        "uv_world_ratio": 0.42547,
+        "allowed_ratio_range": [
+          0.005,
+          50.0
+        ],
+        "errors": []
+      }
+    },
+    "material": {
+      "passed": true,
+      "details": {
+        "material_slots": 1,
+        "basecolor_texture": "unity/Assets/Game/Art/Greybox/Placeholders/tio_horario_placeholder/tio_horario_placeholder_basecolor.png",
+        "unity_material_checked": null,
+        "errors": []
+      }
+    },
+    "scale_meters": {
+      "passed": true,
+      "details": {
+        "reference_dimension_m": 1.5869,
+        "allowed_range_m": [
+          0.4,
+          3.5
+        ],
+        "errors": []
+      }
+    }
+  },
+  "errors": [],
+  "warnings": []
+}

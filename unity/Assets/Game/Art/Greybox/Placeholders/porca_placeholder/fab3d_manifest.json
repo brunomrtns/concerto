@@ -1,0 +1,12 @@
+{
+  "asset_name": "porca_placeholder",
+  "category": "drone",
+  "preset": "prop",
+  "texture_size": 512,
+  "astc": "ASTC_4x4",
+  "collider": "none",
+  "max_tris": 2500,
+  "tris_final": 356,
+  "rigged": false,
+  "source_mode": "greybox_placeholder_cc0"
+}
