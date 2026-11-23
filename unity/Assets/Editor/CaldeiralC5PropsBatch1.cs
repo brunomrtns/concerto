@@ -155,10 +155,10 @@ namespace Studio.Editor
 
         private static void CaptureC5Batch1Checkpoint(Camera cam, int replacedCount)
         {
-            string stamp = "2026-11-22";
+            string stamp = "2026-11-23";
             string repoRoot = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), ".."));
-            string reviewDir = Path.Combine(repoRoot, "director_review", $"{stamp}_c5_props_batch1");
-            string capDir = Path.Combine(repoRoot, "evidence", "captures", "c5_props_batch1");
+            string reviewDir = Path.Combine(repoRoot, "director_review", $"{stamp}_c5_regen_vista_unica");
+            string capDir = Path.Combine(repoRoot, "evidence", "captures", "c5_regen_vista_unica");
             Directory.CreateDirectory(reviewDir);
             Directory.CreateDirectory(capDir);
 
@@ -167,7 +167,7 @@ namespace Studio.Editor
                 ("01_z1_oficina_bancada_wide",        new Vector3(-34.8f, 3.0f, -22.2f), new Vector3(-28.8f, 1.0f, -17.5f)),
                 ("02_z1_bancada_closeup",             new Vector3(-31.2f, 1.85f, -20.2f), new Vector3(-29.0f, 0.75f, -17.5f)),
                 ("03_z4_camara_wide_sirene_valvulas", new Vector3(0.0f,   5.8f,  -4.5f), new Vector3(0.0f,   5.5f,  7.0f)),
-                ("04_z4_sirene_mestra_closeup",       new Vector3(-9.5f,  7.2f,  -1.5f), new Vector3(0.0f,   7.5f,  7.0f)),
+                ("04_z4_sirene_mestra_closeup",       new Vector3(-7.8f,  5.4f,   0.5f), new Vector3(0.0f,   6.8f,  7.0f)),
                 ("05_z4_no_resincronia_closeup",      new Vector3(2.8f,   5.2f,  -2.2f), new Vector3(0.0f,   4.5f,  0.5f)),
                 ("06_z4_valvula_ritmica_closeup",     new Vector3(-3.3f,  1.65f,  1.6f), new Vector3(-5.5f,  0.75f, 4.0f)),
             };

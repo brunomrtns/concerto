@@ -2,7 +2,7 @@
   "uri": "c5_prop_valvula_ritmica__pbr_4k.glb",
   "mimeType": "model/gltf-binary",
   "validatorVersion": "2.0.0-dev.3.10",
-  "validatedAt": "2026-11-23T00:05:59.641Z",
+  "validatedAt": "2026-11-23T01:37:29.845Z",
   "issues": {
     "numErrors": 0,
     "numWarnings": 0,
@@ -44,7 +44,7 @@
         "pointer": "/buffers/0",
         "mimeType": "application/gltf-buffer",
         "storage": "glb",
-        "byteLength": 9964084
+        "byteLength": 8518488
       },
       {
         "pointer": "/images/0",
@@ -78,7 +78,7 @@
     "hasTextures": true,
     "hasDefaultScene": true,
     "drawCallCount": 1,
-    "totalVertexCount": 63652,
+    "totalVertexCount": 60538,
     "totalTriangleCount": 100000,
     "maxUVs": 1,
     "maxInfluences": 0,

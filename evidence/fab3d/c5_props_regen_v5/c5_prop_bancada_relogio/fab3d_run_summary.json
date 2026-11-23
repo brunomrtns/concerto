@@ -1,0 +1,15 @@
+{
+  "id": "c5_prop_bancada_relogio",
+  "source_concept": "evidence/concepts/c5_props_flux_v5/c5_prop_bancada_relogio.png (FLUX.1-dev FP8, gate_pass=true)",
+  "category": "env_tile",
+  "max_tris": 2000,
+  "engine": "triposg",
+  "shape_pipeline": "preproc C2 -> TripoSG -> TripoSF 512",
+  "triposf512_guard_tripped": false,
+  "shape_sec": 146.1,
+  "paint_sec": 398.5,
+  "total_sec": 544.6,
+  "master_glb_4k": "/home/bruno/printer3d-work/c5_props_regen_v5/c5_prop_bancada_relogio/run/staged_models/c5_prop_bancada_relogio__pbr_4k.glb",
+  "master_glb_4k_bytes": 7866040,
+  "timestamp_utc": "2026-11-23T01:36:35.539381+00:00"
+}

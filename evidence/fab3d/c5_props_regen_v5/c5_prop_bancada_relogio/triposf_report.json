@@ -1,0 +1,24 @@
+{
+ "label": "pipeline",
+ "mesh_path": "/home/bruno/printer3d-work/c5_props_regen_v5/c5_prop_bancada_relogio/shape_gen/1_triposg/mesh.obj",
+ "config": "/mnt/c/Users/Bruno/workspace/3dprinter-setup-ia/tools/generator/triposf/TripoSFVAE_o512.yaml",
+ "erros": [],
+ "vram_wait_s": 0.1,
+ "vram_baseline_mib": 902,
+ "tempo_total_s": 46.51,
+ "exit_code": 0,
+ "vram_pico_mib": 6684,
+ "guard_tripped": false,
+ "tempo_normalize_s": 6.62,
+ "tempo_load_s": 4.64,
+ "tempo_recon_s": 13.06,
+ "mesh_recon": "/home/bruno/printer3d-work/c5_props_regen_v5/c5_prop_bancada_relogio/shape_gen/2_triposf512/mesh_reconstruction.obj",
+ "vertices": 644906,
+ "faces": 1289812,
+ "bbox": [
+  0.9045,
+  0.9999,
+  0.4284
+ ],
+ "watertight": false
+}
