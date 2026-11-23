@@ -22,6 +22,12 @@ namespace Studio.Game.Animation
         public float gravity = -18.0f;
         public float jumpHeight = 1.15f;
 
+        [Header("Camera 3a Pessoa (Modo Jogavel)")]
+        public bool enablePlayableCamera = true;
+        public float camDistance = 3.2f;
+        public float camHeight = 1.25f;
+        public float camMouseSens = 2.6f;
+
         private CharacterController _cc;
         private Animator _anim;
         private DezProceduralAnimator _proc;
@@ -30,6 +36,10 @@ namespace Studio.Game.Animation
         private float _verticalVel;
         private bool _wasGrounded = true;
         private float _lastAirVy;
+        private float _camYaw = 70f;
+        private float _camPitch = 18f;
+        private Vector3 _camSmoothPos;
+        private bool _camInit;
 
         // Inputs programaticos opcionais (para testes PlayMode e cutscenes)
         public Vector3 ScriptedMoveDir { get; set; }
@@ -69,10 +79,41 @@ namespace Studio.Game.Animation
                 if (_proc != null) _proc.NotifyLanding(_lastAirVy);
             }
 
-            Vector3 desiredDir = UseScriptedInput ? ScriptedMoveDir : Vector3.zero;
-            bool wantRun = UseScriptedInput && ScriptedRun;
-            bool wantJump = UseScriptedInput && ScriptedJump;
-            if (UseScriptedInput) ScriptedJump = false;
+            Vector3 desiredDir;
+            bool wantRun;
+            bool wantJump;
+
+            if (UseScriptedInput)
+            {
+                desiredDir = ScriptedMoveDir;
+                wantRun = ScriptedRun;
+                wantJump = ScriptedJump;
+                ScriptedJump = false;
+            }
+            else
+            {
+                float h = Input.GetAxisRaw("Horizontal");
+                float v = Input.GetAxisRaw("Vertical");
+                Quaternion camFlat = Quaternion.Euler(0f, _camYaw, 0f);
+                desiredDir = (camFlat * Vector3.forward * v + camFlat * Vector3.right * h);
+                if (desiredDir.sqrMagnitude > 1f) desiredDir.Normalize();
+                wantRun = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+                wantJump = Input.GetKeyDown(KeyCode.Space);
+
+                // Rotacao de camera via mouse (segurando botao direito ou cursor travado) ou Q/E
+                if (Input.GetMouseButton(1) || Cursor.lockState == CursorLockMode.Locked)
+                {
+                    _camYaw += Input.GetAxis("Mouse X") * camMouseSens;
+                    _camPitch = Mathf.Clamp(_camPitch - Input.GetAxis("Mouse Y") * camMouseSens * 0.8f, -10f, 55f);
+                }
+                if (Input.GetKey(KeyCode.Q)) _camYaw -= 110f * dt;
+                if (Input.GetKey(KeyCode.E)) _camYaw += 110f * dt;
+                float scroll = Input.GetAxis("Mouse ScrollWheel");
+                if (Mathf.Abs(scroll) > 0.001f)
+                    camDistance = Mathf.Clamp(camDistance - scroll * 2.0f, 1.8f, 6.0f);
+                if (Input.GetKeyDown(KeyCode.Escape))
+                    Cursor.lockState = (Cursor.lockState == CursorLockMode.Locked) ? CursorLockMode.None : CursorLockMode.Locked;
+            }
 
             float mag = Mathf.Clamp01(desiredDir.magnitude);
             float targetSpeed = mag * (wantRun ? runSpeed : walkSpeed);
@@ -125,6 +166,36 @@ namespace Studio.Game.Animation
                 _proc.SetLocomotionState(_cc.isGrounded, _currentSpeed, turnRate);
             }
             _wasGrounded = _cc.isGrounded;
+        }
+
+        private void LateUpdate()
+        {
+            if (UseScriptedInput || !enablePlayableCamera) return;
+            var cam = Camera.main;
+            if (cam == null) return;
+
+            Vector3 pivot = transform.position + Vector3.up * camHeight;
+            Quaternion rot = Quaternion.Euler(_camPitch, _camYaw, 0f);
+            Vector3 desiredPos = pivot - (rot * Vector3.forward) * camDistance;
+
+            if (Physics.Linecast(pivot, desiredPos, out RaycastHit hit, ~0, QueryTriggerInteraction.Ignore))
+            {
+                if (hit.transform.root != transform.root)
+                    desiredPos = hit.point + hit.normal * 0.25f;
+            }
+
+            if (!_camInit)
+            {
+                _camSmoothPos = desiredPos;
+                _camInit = true;
+            }
+            else
+            {
+                float dt = Mathf.Clamp(Time.deltaTime, 0.001f, 0.05f);
+                _camSmoothPos = Vector3.Lerp(_camSmoothPos, desiredPos, 1f - Mathf.Exp(-14f * dt));
+            }
+            cam.transform.position = _camSmoothPos;
+            cam.transform.LookAt(pivot);
         }
     }
 }
