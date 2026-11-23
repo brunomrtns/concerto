@@ -136,7 +136,11 @@ namespace Studio.Editor
             var hd = dexImp.humanDescription;
             if (hd.human != null && hd.human.Length > 0)
             {
-                hd.human = hd.human.Where(h => h.humanName != "LeftEye" && h.humanName != "RightEye").ToArray();
+                // Remove LeftEye/RightEye (orelhas) e UpperChest (evita torcao lateral -30 deg do spine_03 do UAL1 em rigs chibi!)
+                hd.human = hd.human.Where(h =>
+                    h.humanName != "LeftEye" &&
+                    h.humanName != "RightEye" &&
+                    h.humanName != "UpperChest").ToArray();
                 dexImp.humanDescription = hd;
                 dexImp.SaveAndReimport();
             }

@@ -67,7 +67,7 @@ namespace Studio.Editor
                     clips[i].loopTime = loop;
                     clips[i].loopPose = loop;
                     clips[i].lockRootRotation = true;
-                    clips[i].keepOriginalOrientation = false;
+                    clips[i].keepOriginalOrientation = true;
                     clips[i].rotationOffset = 0f;
                     clips[i].lockRootHeightY = true;
                     clips[i].keepOriginalPositionY = false;
@@ -125,8 +125,8 @@ namespace Studio.Editor
                     clips[i].loopTime = isLoop;
                     clips[i].loopPose = isLoop;
                     clips[i].lockRootRotation = true;
-                    clips[i].keepOriginalOrientation = false;
-                    clips[i].rotationOffset = 0f;
+                    clips[i].keepOriginalOrientation = true;
+                    clips[i].rotationOffset = 180f;
                     clips[i].lockRootHeightY = true;
                     clips[i].keepOriginalPositionY = false;
                     clips[i].heightFromFeet = true;
@@ -152,6 +152,65 @@ namespace Studio.Editor
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        /// Remove o vies assimetrico constante (DC offset) das curvas laterais (Left-Right / Twist)
+        /// da coluna/pescoco/cabeca de um clip ciclico Humanoid, preservando 100% da oscilacao natural da passada.
+        /// Salva como .anim limpo e reutilizavel em qualquer personagem Humanoid da fabrica.
+        /// </summary>
+        private static AnimationClip CreateCenteredLocomotionClip(AnimationClip src, string outAssetPath)
+        {
+            if (src == null) return null;
+            string dir = Path.GetDirectoryName(outAssetPath);
+            if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+
+            var clean = UnityEngine.Object.Instantiate(src);
+            clean.name = Path.GetFileNameWithoutExtension(outAssetPath);
+
+            string[] lateralMuscles =
+            {
+                "Spine Left-Right", "Spine Twist Left-Right",
+                "Chest Left-Right", "Chest Twist Left-Right",
+                "UpperChest Left-Right", "UpperChest Twist Left-Right",
+                "Neck Tilt Left-Right", "Neck Turn Left-Right",
+                "Head Tilt Left-Right", "Head Turn Left-Right"
+            };
+
+            var bindings = AnimationUtility.GetCurveBindings(clean);
+            foreach (var b in bindings)
+            {
+                bool isLateral = lateralMuscles.Any(m => b.propertyName.Equals(m, StringComparison.OrdinalIgnoreCase));
+                if (!isLateral) continue;
+
+                var curve = AnimationUtility.GetEditorCurve(clean, b);
+                if (curve == null || curve.keys == null || curve.keys.Length == 0) continue;
+
+                // Calcula a media (DC offset) ao longo do ciclo completo
+                int samples = 32;
+                float sum = 0f;
+                float len = Mathf.Max(0.01f, clean.length);
+                for (int s = 0; s < samples; s++)
+                    sum += curve.Evaluate((s / (float)samples) * len);
+                float dcOffset = sum / samples;
+
+                if (Mathf.Abs(dcOffset) > 0.005f)
+                {
+                    var keys = curve.keys;
+                    for (int k = 0; k < keys.Length; k++)
+                        keys[k].value -= dcOffset;
+                    curve.keys = keys;
+                    AnimationUtility.SetEditorCurve(clean, b, curve);
+                    Debug.Log($"[HeroDezAAA] Centered '{clean.name}' curve '{b.propertyName}': removed DC offset {dcOffset:F3}");
+                }
+            }
+
+            if (AssetDatabase.LoadAssetAtPath<AnimationClip>(outAssetPath) != null)
+                AssetDatabase.DeleteAsset(outAssetPath);
+            AssetDatabase.CreateAsset(clean, outAssetPath);
+            AssetDatabase.SaveAssets();
+            return AssetDatabase.LoadAssetAtPath<AnimationClip>(outAssetPath);
         }
 
         private static AnimationClip FindUalFallback(string exactName)
@@ -182,8 +241,10 @@ namespace Studio.Editor
             //    - Walk / Sprint / Jump 3 fases: UAL1_Standard.fbx (Walk=-0.86 deg, Sprint=+0.70 deg, 100% ciclicos).
             var ual = ConfigureAndLoadUalClips(Ual1FbxPath);
             var cIdle      = ImportMoMaskClip("dez_idle_breath", true) ?? (ual.ContainsKey("Idle_Loop") ? ual["Idle_Loop"] : FindUalFallback("Idle_Loop"));
-            var cWalk      = ual.ContainsKey("Walk_Loop")   ? ual["Walk_Loop"]   : FindUalFallback("Walk_Loop");
-            var cRun       = ual.ContainsKey("Sprint_Loop") ? ual["Sprint_Loop"] : FindUalFallback("Sprint_Loop");
+            var rawWalk    = ual.ContainsKey("Walk_Loop")   ? ual["Walk_Loop"]   : FindUalFallback("Walk_Loop");
+            var rawRun     = ual.ContainsKey("Sprint_Loop") ? ual["Sprint_Loop"] : FindUalFallback("Sprint_Loop");
+            var cWalk      = CreateCenteredLocomotionClip(rawWalk, "Assets/Game/Animations/Clean/Clean_Walk.anim") ?? rawWalk;
+            var cRun       = CreateCenteredLocomotionClip(rawRun,  "Assets/Game/Animations/Clean/Clean_Run.anim")  ?? rawRun;
             var cJumpStart = ual.ContainsKey("Jump_Start")  ? ual["Jump_Start"]  : FindUalFallback("Jump_Start");
             var cJumpLoop  = ual.ContainsKey("Jump_Loop")   ? ual["Jump_Loop"]   : cJumpStart;
             var cJumpLand  = ual.ContainsKey("Jump_Land")   ? ual["Jump_Land"]   : cIdle;
