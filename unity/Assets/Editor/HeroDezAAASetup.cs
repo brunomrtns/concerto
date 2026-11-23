@@ -177,11 +177,11 @@ namespace Studio.Editor
             if (avatar == null || !avatar.isValid || !avatar.isHuman)
                 throw new Exception("Avatar Humanoid do hero_dez_humanoid.fbx invalido!");
 
-            // 2. Arquitetura Limpa 100% Homogenea (UAL1_Standard.fbx):
-            //    Todos os ciclos de locomocao e pulo da mesma biblioteca profissional ciclica,
-            //    sem mistura de fases incompativeis e sem IK/rotacao procedural conflitando.
+            // 2. Arquitetura Limpa 100% Reta (0 deg de yaw):
+            //    - Idle: dez_idle_breath (MoMask 0 deg reto — UAL1 Idle_Loop tem -18.45 deg de desvio no ombro!)
+            //    - Walk / Sprint / Jump 3 fases: UAL1_Standard.fbx (Walk=-0.86 deg, Sprint=+0.70 deg, 100% ciclicos).
             var ual = ConfigureAndLoadUalClips(Ual1FbxPath);
-            var cIdle      = ual.ContainsKey("Idle_Loop")   ? ual["Idle_Loop"]   : FindUalFallback("Idle_Loop");
+            var cIdle      = ImportMoMaskClip("dez_idle_breath", true) ?? (ual.ContainsKey("Idle_Loop") ? ual["Idle_Loop"] : FindUalFallback("Idle_Loop"));
             var cWalk      = ual.ContainsKey("Walk_Loop")   ? ual["Walk_Loop"]   : FindUalFallback("Walk_Loop");
             var cRun       = ual.ContainsKey("Sprint_Loop") ? ual["Sprint_Loop"] : FindUalFallback("Sprint_Loop");
             var cJumpStart = ual.ContainsKey("Jump_Start")  ? ual["Jump_Start"]  : FindUalFallback("Jump_Start");

@@ -3,7 +3,7 @@
   "ik_pass_enabled": true,
   "spring_bones_attached": 3,
   "clips": {
-    "idle": "Idle_Loop (human=True, fps=30)",
+    "idle": "dez_idle_breath (human=True, fps=60)",
     "walk": "Walk_Loop (human=True, fps=30)",
     "run": "Sprint_Loop (human=True, fps=30, scale=1.25x)",
     "jump_start": "Jump_Start (human=True, fps=30)",

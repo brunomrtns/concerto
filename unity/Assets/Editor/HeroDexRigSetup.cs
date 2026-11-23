@@ -124,7 +124,7 @@ namespace Studio.Editor
         {
             AssetDatabase.Refresh();
 
-            // 1. Reimporta hero_dex_humanoid.fbx como Humanoid
+            // 1. Reimporta hero_dex_humanoid.fbx como Humanoid e remove mapeamento errado LeftEye/RightEye -> Ear_L/Ear_R
             var dexImp = AssetImporter.GetAtPath(DexFbxPath) as ModelImporter;
             if (dexImp == null) throw new FileNotFoundException(DexFbxPath);
             dexImp.animationType = ModelImporterAnimationType.Human;
@@ -132,6 +132,14 @@ namespace Studio.Editor
             dexImp.importAnimation = false;
             dexImp.importNormals = ModelImporterNormals.Calculate;
             dexImp.SaveAndReimport();
+
+            var hd = dexImp.humanDescription;
+            if (hd.human != null && hd.human.Length > 0)
+            {
+                hd.human = hd.human.Where(h => h.humanName != "LeftEye" && h.humanName != "RightEye").ToArray();
+                dexImp.humanDescription = hd;
+                dexImp.SaveAndReimport();
+            }
 
             var avatar = AssetDatabase.LoadAllAssetsAtPath(DexFbxPath).OfType<Avatar>().FirstOrDefault();
             if (avatar == null || !avatar.isValid || !avatar.isHuman)
@@ -215,6 +223,22 @@ namespace Studio.Editor
                 }
                 container.transform.localPosition = Vector3.zero;
                 container.transform.localRotation = Quaternion.identity;
+
+                // Sincroniza velocidades serializadas do DezLocomotionController com o Blend Tree 1D (1.6 / 3.6)
+                var locoType = Type.GetType("Studio.Game.Animation.DezLocomotionController, Assembly-CSharp");
+                if (locoType != null)
+                {
+                    var loco = dezTarget.GetComponent(locoType);
+                    if (loco != null)
+                    {
+                        locoType.GetField("walkSpeed")?.SetValue(loco, 1.6f);
+                        locoType.GetField("runSpeed")?.SetValue(loco, 3.6f);
+                        locoType.GetField("accelRate")?.SetValue(loco, 10.0f);
+                        locoType.GetField("decelRate")?.SetValue(loco, 12.0f);
+                        locoType.GetField("turnSpeedDeg")?.SetValue(loco, 720.0f);
+                        EditorUtility.SetDirty(loco);
+                    }
+                }
 
                 EditorSceneManager.SaveScene(scene, ScenePath);
             }
