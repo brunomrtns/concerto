@@ -100,8 +100,8 @@ namespace Studio.Tests.PlayMode
             float maxJumpY = 0f;
             float maxEarAngleDeg = 0f;
 
-            Vector3 camCurrent = dezRoot.transform.position + new Vector3(1.5f, 1.05f, -2.0f);
-            int totalFrames = 720; // 12.0s @ 60 fps
+            Vector3 camCurrent = dezRoot.transform.position + new Vector3(1.35f, 0.95f, -1.65f);
+            int totalFrames = 810; // 13.5s @ 60 fps
 
             for (int f = 0; f < totalFrames; f++)
             {
@@ -109,54 +109,58 @@ namespace Studio.Tests.PlayMode
                 string phase;
                 Vector3 camOffset;
 
-                if (t < 2.2f)
+                if (t < 2.4f)
                 {
                     phase = "IDLE_VIVO";
                     pMoveDir.SetValue(loco, Vector3.zero);
                     pRun.SetValue(loco, false);
                     pYawRate.SetValue(loco, 0f);
-                    camOffset = new Vector3(1.45f, 0.95f, -1.75f); // 3/4 frontal limpo
+                    camOffset = new Vector3(1.25f, 0.92f, -1.55f); // close 3/4 frontal para ver respiracao + orelhas
                 }
-                else if (t < 4.7f)
+                else if (t < 5.2f)
                 {
                     phase = "WALK";
-                    pMoveDir.SetValue(loco, new Vector3(1.0f, 0f, 0.05f)); // anda pelo centro aberto da Oficina
+                    pMoveDir.SetValue(loco, new Vector3(1.0f, 0f, 0.06f)); // caminha +4.0m pelo centro aberto
                     pRun.SetValue(loco, false);
                     pYawRate.SetValue(loco, 0f);
-                    camOffset = new Vector3(0.45f, 1.05f, -2.35f); // perfil lateral limpo
+                    camOffset = new Vector3(0.45f, 1.02f, -2.25f); // perfil lateral limpo
                 }
-                else if (t < 5.3f)
+                else if (t < 5.9f)
                 {
                     phase = "WALK_STOP";
                     pMoveDir.SetValue(loco, Vector3.zero);
                     pRun.SetValue(loco, false);
                     pYawRate.SetValue(loco, 0f);
-                    camOffset = new Vector3(0.75f, 1.05f, -2.20f);
+                    camOffset = new Vector3(0.70f, 1.02f, -2.10f);
                 }
-                else if (t < 6.8f)
+                else if (t < 7.4f)
                 {
                     phase = "TURN_IN_PLACE";
                     pMoveDir.SetValue(loco, Vector3.zero);
                     pRun.SetValue(loco, false);
                     pYawRate.SetValue(loco, -120f); // gira 180 deg em 1.5s
-                    camOffset = new Vector3(1.10f, 1.05f, -2.00f);
+                    camOffset = new Vector3(1.05f, 1.00f, -1.90f);
                 }
-                else if (t < 8.6f)
+                else if (t < 9.1f)
                 {
-                    phase = "RUN";
-                    pMoveDir.SetValue(loco, new Vector3(-1.0f, 0f, -0.05f)); // corre de volta dentro da area aberta
+                    phase = "RUN_CURVA";
+                    // 1.7s de corrida em curva suave (~5.0m de volta ao centro, 100% longe de paredes!)
+                    float u = (t - 7.4f) / 1.7f;
+                    float ang = Mathf.Lerp(Mathf.PI, Mathf.PI * 1.24f, u);
+                    Vector3 runDir = new Vector3(Mathf.Cos(ang), 0f, Mathf.Sin(ang) * 0.40f).normalized;
+                    pMoveDir.SetValue(loco, runDir);
                     pRun.SetValue(loco, true);
                     pYawRate.SetValue(loco, 0f);
-                    camOffset = new Vector3(-0.35f, 1.15f, -2.45f); // 3/4 dinamico
+                    camOffset = new Vector3(-0.35f, 1.15f, -2.40f); // 3/4 dinamico
                 }
-                else if (t < 10.6f)
+                else if (t < 11.5f)
                 {
                     phase = "JUMP_GRAVIDADE";
-                    pMoveDir.SetValue(loco, new Vector3(0.75f, 0f, 0.05f)); // pula para o centro aberto
+                    pMoveDir.SetValue(loco, new Vector3(0.75f, 0f, 0.12f)); // pula de volta para o centro aberto
                     pRun.SetValue(loco, false);
                     pYawRate.SetValue(loco, 0f);
-                    if (f == (int)(8.75f * 60f)) pJump.SetValue(loco, true);
-                    camOffset = new Vector3(0.35f, 1.20f, -2.65f); // perfil aberto para ver altura do pulo + pouso
+                    if (f == (int)(9.25f * 60f)) pJump.SetValue(loco, true);
+                    camOffset = new Vector3(0.35f, 1.18f, -2.55f); // perfil aberto mostrando altura + sombra + pouso
                 }
                 else
                 {
@@ -164,7 +168,7 @@ namespace Studio.Tests.PlayMode
                     pMoveDir.SetValue(loco, Vector3.zero);
                     pRun.SetValue(loco, false);
                     pYawRate.SetValue(loco, 0f);
-                    camOffset = new Vector3(1.35f, 0.95f, -1.85f); // frente pos-pouso
+                    camOffset = new Vector3(1.25f, 0.92f, -1.65f); // 3/4 frontal pos-pouso de pe e viva!
                 }
 
                 yield return null;
@@ -241,7 +245,7 @@ namespace Studio.Tests.PlayMode
             UnityEngine.Object.Destroy(tex);
             Time.captureFramerate = 0;
 
-            Assert.AreEqual(720, totalFrames);
+            Assert.AreEqual(810, totalFrames);
         }
     }
 }

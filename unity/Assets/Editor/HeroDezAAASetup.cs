@@ -150,8 +150,8 @@ namespace Studio.Editor
             blendTree.AddChild(cIdle,  new Vector2( 0.0f, 0.0f));
             blendTree.AddChild(cTurnL, new Vector2(-0.8f, 0.0f));
             blendTree.AddChild(cTurnR, new Vector2( 0.8f, 0.0f));
-            blendTree.AddChild(cWalk,  new Vector2( 0.0f, 2.0f));
-            blendTree.AddChild(cRun,   new Vector2( 0.0f, 4.4f));
+            blendTree.AddChild(cWalk,  new Vector2( 0.0f, 1.45f));
+            blendTree.AddChild(cRun,   new Vector2( 0.0f, 3.45f));
 
             var sLoco = sm.AddState("Locomotion");
             sLoco.motion = blendTree;
@@ -165,11 +165,12 @@ namespace Studio.Editor
             tToJump.duration = 0.08f;
             tToJump.hasExitTime = false;
 
+            // Sai do estado Jump imediatamente ao tocar o chao (depois da subida), deixando o Landing Dip absorver o impacto!
             var tJumpBack = sJump.AddTransition(sLoco);
             tJumpBack.AddCondition(AnimatorConditionMode.If, 0f, "IsGrounded");
-            tJumpBack.duration = 0.14f;
-            tJumpBack.hasExitTime = true;
-            tJumpBack.exitTime = 0.72f;
+            tJumpBack.AddCondition(AnimatorConditionMode.Less, 0.1f, "VerticalVel");
+            tJumpBack.duration = 0.16f;
+            tJumpBack.hasExitTime = false;
 
             EditorUtility.SetDirty(ctrl);
             AssetDatabase.SaveAssets();

@@ -134,13 +134,17 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  landingDipStrength: 0.032
-  landingMaxDip: 0.22
-  landingSpringK: 140
-  landingDamping: 16
+  landingDipStrength: 0.026
+  landingMaxDip: 0.16
+  landingSpringK: 180
+  landingDamping: 20
   breathCycleSec: 3.8
-  breathChestDeg: 2.6
-  maxBankDeg: 12
+  breathChestDeg: 2.8
+  maxBankDeg: 14
+  runForwardLeanDeg: 9.5
+  idleWeightSwayMeters: 0.012
+  enableContactShadow: 1
+  shadowBaseRadius: 0.34
   lookTarget: {fileID: 0}
   lookWeight: 0.55
 --- !u!1 &2069799460885112828 stripped

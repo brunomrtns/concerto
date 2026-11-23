@@ -1,13 +1,13 @@
 {
-  "frames_captured": 720,
+  "frames_captured": 810,
   "target_fps": 60,
   "resolution": "1280x720",
   "max_jump_height_m": 1.214,
-  "spring_ear_max_angle_deg": 43.97,
-  "foot_plant_samples": 1262,
-  "avg_foot_slide_cm_per_frame": 1.995,
-  "max_foot_slide_cm_per_frame": 9.722,
-  "foot_slide_avg_pass_le_2cm": true,
+  "spring_ear_max_angle_deg": 44.00,
+  "foot_plant_samples": 1513,
+  "avg_foot_slide_cm_per_frame": 2.034,
+  "max_foot_slide_cm_per_frame": 9.747,
+  "foot_slide_avg_pass_le_2cm": false,
   "jump_gravity_pass": true,
   "spring_bone_active_pass": true
 }

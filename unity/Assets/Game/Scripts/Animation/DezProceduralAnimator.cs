@@ -21,15 +21,21 @@ namespace Studio.Game.Animation
         public LayerMask groundMask = ~0;
 
         [Header("Landing Dip (Absorcao de Impacto)")]
-        public float landingDipStrength = 0.032f;
-        public float landingMaxDip = 0.22f;
-        public float landingSpringK = 140f;
-        public float landingDamping = 16f;
+        public float landingDipStrength = 0.026f;
+        public float landingMaxDip = 0.16f;
+        public float landingSpringK = 180f;
+        public float landingDamping = 20f;
 
-        [Header("Idle Vivo & Banking")]
+        [Header("Idle Vivo, Corrida & Banking")]
         public float breathCycleSec = 3.8f;
-        public float breathChestDeg = 2.6f;
-        public float maxBankDeg = 12f;
+        public float breathChestDeg = 2.8f;
+        public float maxBankDeg = 14f;
+        public float runForwardLeanDeg = 9.5f;
+        public float idleWeightSwayMeters = 0.012f;
+
+        [Header("Sombra de Contato (Peso & Gravidade)")]
+        public bool enableContactShadow = true;
+        public float shadowBaseRadius = 0.34f;
 
         [Header("Look-At")]
         public Transform lookTarget;
@@ -40,24 +46,84 @@ namespace Studio.Game.Animation
         private float _dipVel;
         private float _currentBank;
         private float _targetBank;
+        private float _currentLean;
+        private float _targetLean;
+        private float _currentSpeed;
         private bool _isGrounded = true;
+        private Transform _shadowQuad;
+        private Material _shadowMat;
 
         private void Awake()
         {
             _anim = GetComponent<Animator>();
+            if (enableContactShadow) CreateContactShadow();
+        }
+
+        private void OnDestroy()
+        {
+            if (_shadowQuad != null) Destroy(_shadowQuad.gameObject);
+            if (_shadowMat != null) Destroy(_shadowMat);
+        }
+
+        private void CreateContactShadow()
+        {
+            var go = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            go.name = "Dez_ContactShadow";
+            var col = go.GetComponent<Collider>();
+            if (col != null) Destroy(col);
+            go.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
+            go.transform.localScale = Vector3.one * (shadowBaseRadius * 2f);
+
+            // Textura radial Gaussian suave em runtime (zero dependencias externas)
+            int sz = 64;
+            var tex = new Texture2D(sz, sz, TextureFormat.RGBA32, false);
+            tex.wrapMode = TextureWrapMode.Clamp;
+            for (int y = 0; y < sz; y++)
+            {
+                for (int x = 0; x < sz; x++)
+                {
+                    float nx = (x + 0.5f) / sz * 2f - 1f;
+                    float ny = (y + 0.5f) / sz * 2f - 1f;
+                    float r2 = nx * nx + ny * ny;
+                    float a = Mathf.Exp(-r2 * 4.2f) * 0.58f;
+                    if (r2 > 1f) a = 0f;
+                    tex.SetPixel(x, y, new Color(0.02f, 0.015f, 0.01f, a));
+                }
+            }
+            tex.Apply();
+
+            Shader sh = Shader.Find("Universal Render Pipeline/Unlit") ?? Shader.Find("Unlit/Transparent");
+            _shadowMat = new Material(sh);
+            _shadowMat.mainTexture = tex;
+            if (_shadowMat.HasProperty("_BaseMap")) _shadowMat.SetTexture("_BaseMap", tex);
+            if (_shadowMat.HasProperty("_BaseColor")) _shadowMat.SetColor("_BaseColor", Color.white);
+            if (_shadowMat.HasProperty("_Surface")) _shadowMat.SetFloat("_Surface", 1f); // Transparent
+            _shadowMat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+            _shadowMat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+            _shadowMat.SetInt("_ZWrite", 0);
+            _shadowMat.renderQueue = 3000;
+
+            var mr = go.GetComponent<MeshRenderer>();
+            mr.sharedMaterial = _shadowMat;
+            mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            mr.receiveShadows = false;
+            _shadowQuad = go.transform;
         }
 
         public void SetLocomotionState(bool isGrounded, float speed, float turnRateDegPerSec)
         {
             _isGrounded = isGrounded;
-            float speedFactor = Mathf.Clamp01(speed / 3.5f);
-            _targetBank = Mathf.Clamp(-turnRateDegPerSec * 0.08f * speedFactor, -maxBankDeg, maxBankDeg);
+            _currentSpeed = speed;
+            float speedFactor = Mathf.Clamp01(speed / 3.2f);
+            _targetBank = Mathf.Clamp(-turnRateDegPerSec * 0.09f * speedFactor, -maxBankDeg, maxBankDeg);
+            // Inclinacao atletica para frente ao correr
+            _targetLean = Mathf.Clamp01((speed - 1.2f) / 2.2f) * runForwardLeanDeg;
         }
 
         public void NotifyLanding(float verticalImpactSpeed)
         {
-            float impulse = Mathf.Clamp(Mathf.Abs(verticalImpactSpeed) * landingDipStrength, 0.04f, landingMaxDip);
-            _dipVel -= impulse * 16f;
+            float impulse = Mathf.Clamp(Mathf.Abs(verticalImpactSpeed) * landingDipStrength, 0.03f, landingMaxDip);
+            _dipVel -= impulse * 18f;
         }
 
         private void Update()
@@ -66,37 +132,76 @@ namespace Studio.Game.Animation
             // Mola critica do Landing Dip
             float force = -_dipOffset * landingSpringK - _dipVel * landingDamping;
             _dipVel += force * dt;
-            _dipOffset = Mathf.Clamp(_dipOffset + _dipVel * dt, -landingMaxDip, 0.04f);
+            _dipOffset = Mathf.Clamp(_dipOffset + _dipVel * dt, -landingMaxDip, 0.03f);
 
-            // Banking suave nas curvas
+            // Banking suave nas curvas + inclinacao atletica de corrida
             _currentBank = Mathf.Lerp(_currentBank, _targetBank, 1f - Mathf.Exp(-8f * dt));
+            _currentLean = Mathf.Lerp(_currentLean, _targetLean, 1f - Mathf.Exp(-7f * dt));
         }
 
         private void LateUpdate()
         {
             if (_anim == null || !_anim.isHuman) return;
 
-            // 1. Respiracao continua no torax/ombros (ciclo ~3.8s)
+            // 1. Respiracao continua no torax/ombros (ciclo ~3.8s) + inclinacao de corrida + banking
             float phase = (Time.time / Mathf.Max(0.5f, breathCycleSec)) * Mathf.PI * 2f;
             float breath = Mathf.Sin(phase);
             Transform chest = _anim.GetBoneTransform(HumanBodyBones.Chest);
             if (chest != null)
             {
-                chest.localRotation *= Quaternion.Euler(breath * breathChestDeg, 0f, _currentBank * 0.5f);
+                chest.localRotation *= Quaternion.Euler(breath * breathChestDeg + _currentLean * 0.55f, 0f, _currentBank * 0.5f);
             }
             Transform spine = _anim.GetBoneTransform(HumanBodyBones.Spine);
-            if (spine != null && Mathf.Abs(_currentBank) > 0.05f)
+            if (spine != null && (Mathf.Abs(_currentBank) > 0.05f || _currentLean > 0.05f))
             {
-                spine.localRotation *= Quaternion.Euler(0f, 0f, _currentBank * 0.5f);
+                spine.localRotation *= Quaternion.Euler(_currentLean * 0.45f, 0f, _currentBank * 0.5f);
+            }
+            // Respiracao sutil nos ombros em repouso
+            Transform shL = _anim.GetBoneTransform(HumanBodyBones.LeftShoulder);
+            Transform shR = _anim.GetBoneTransform(HumanBodyBones.RightShoulder);
+            if (shL != null) shL.localRotation *= Quaternion.Euler(0f, 0f, breath * 1.1f);
+            if (shR != null) shR.localRotation *= Quaternion.Euler(0f, 0f, -breath * 1.1f);
+
+            // 2. Micro-sway organico de peso no quadril em Idle + Absorcao de queda (Landing Dip)
+            Transform hips = _anim.GetBoneTransform(HumanBodyBones.Hips);
+            if (hips != null)
+            {
+                float idleFactor = _isGrounded ? Mathf.Clamp01(1f - _currentSpeed * 2f) : 0f;
+                float swayX = Mathf.Sin(Time.time * 1.15f) * idleWeightSwayMeters * idleFactor;
+                Vector3 offset = transform.right * swayX + new Vector3(0f, _dipOffset, 0f);
+                if (offset.sqrMagnitude > 1e-8f)
+                    hips.position += offset;
             }
 
-            // 2. Absorcao de queda (Landing Dip no Hips)
-            if (Mathf.Abs(_dipOffset) > 0.0005f)
+            // 3. Atualiza Sombra de Contato no piso (diminui e suaviza proporcionalmente a altura do pulo!)
+            if (_shadowQuad != null)
             {
-                Transform hips = _anim.GetBoneTransform(HumanBodyBones.Hips);
-                if (hips != null)
+                Vector3 origin = transform.position + Vector3.up * 0.6f;
+                var hits = Physics.RaycastAll(origin, Vector3.down, 4.0f, groundMask, QueryTriggerInteraction.Ignore);
+                float bestDist = float.MaxValue;
+                RaycastHit groundHit = default;
+                bool hasGround = false;
+                Transform selfRoot = transform.root;
+                for (int i = 0; i < hits.Length; i++)
                 {
-                    hips.position += new Vector3(0f, _dipOffset, 0f);
+                    if (hits[i].transform.root == selfRoot) continue;
+                    if (hits[i].distance < bestDist)
+                    {
+                        bestDist = hits[i].distance;
+                        groundHit = hits[i];
+                        hasGround = true;
+                    }
+                }
+                if (hasGround)
+                {
+                    float heightAboveFloor = Mathf.Max(0f, transform.position.y - groundHit.point.y);
+                    float scaleFactor = Mathf.Clamp(1f - heightAboveFloor * 0.28f, 0.42f, 1.0f);
+                    float alphaFactor = Mathf.Clamp(1f - heightAboveFloor * 0.45f, 0.18f, 1.0f);
+                    _shadowQuad.position = groundHit.point + groundHit.normal * 0.015f;
+                    _shadowQuad.rotation = Quaternion.FromToRotation(Vector3.up, groundHit.normal) * Quaternion.Euler(90f, 0f, 0f);
+                    _shadowQuad.localScale = Vector3.one * (shadowBaseRadius * 2f * scaleFactor);
+                    if (_shadowMat != null && _shadowMat.HasProperty("_BaseColor"))
+                        _shadowMat.SetColor("_BaseColor", new Color(1f, 1f, 1f, alphaFactor));
                 }
             }
         }

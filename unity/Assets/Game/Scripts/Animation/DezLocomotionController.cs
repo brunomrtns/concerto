@@ -12,8 +12,8 @@ namespace Studio.Game.Animation
     public sealed class DezLocomotionController : MonoBehaviour
     {
         [Header("Movimento & Inercia")]
-        public float walkSpeed = 2.0f;
-        public float runSpeed = 4.4f;
+        public float walkSpeed = 1.45f;
+        public float runSpeed = 3.45f;
         public float accelRate = 7.5f;
         public float decelRate = 9.0f;
         public float turnSpeedDeg = 420f;
