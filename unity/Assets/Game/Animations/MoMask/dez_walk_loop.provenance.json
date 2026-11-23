@@ -1,0 +1,19 @@
+{
+  "runner": "3dprinter-setup-ia/tools/animation/momask_to_fbx.py",
+  "model": "MoMask (t2m_nlayer8_nhead6_ld384_ff1024_cdp0.1_rvq6ns)",
+  "license": "MIT (code) / HumanML3D checkpoints (same policy as FLUX-dev, ADR-012)",
+  "name": "dez_walk_loop",
+  "prompt": "a person walks forward naturally at a steady comfortable pace with relaxed swinging arms",
+  "seed": 42,
+  "src_frames_20fps": 80,
+  "target_fps": 60,
+  "in_place": true,
+  "bvh_path": "/mnt/c/Users/Bruno/workspace/game-concerto/unity/Assets/Game/Animations/MoMask/dez_walk_loop.bvh",
+  "fbx_path": "/mnt/c/Users/Bruno/workspace/game-concerto/unity/Assets/Game/Animations/MoMask/dez_walk_loop.fbx",
+  "fbx_bytes": 484540,
+  "elapsed_gen_sec": 15.4,
+  "peak_vram_mib": 1780,
+  "vram_guard_mib": 10000,
+  "guard_ok": true,
+  "timestamp_utc": "2026-11-23T11:58:23.960168+00:00"
+}

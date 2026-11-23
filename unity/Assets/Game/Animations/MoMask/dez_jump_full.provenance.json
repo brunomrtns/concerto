@@ -1,0 +1,19 @@
+{
+  "runner": "3dprinter-setup-ia/tools/animation/momask_to_fbx.py",
+  "model": "MoMask (t2m_nlayer8_nhead6_ld384_ff1024_cdp0.1_rvq6ns)",
+  "license": "MIT (code) / HumanML3D checkpoints (same policy as FLUX-dev, ADR-012)",
+  "name": "dez_jump_full",
+  "prompt": "a person bends knees, jumps high up into the air, and lands softly bending knees to absorb impact",
+  "seed": 42,
+  "src_frames_20fps": 72,
+  "target_fps": 60,
+  "in_place": true,
+  "bvh_path": "/mnt/c/Users/Bruno/workspace/game-concerto/unity/Assets/Game/Animations/MoMask/dez_jump_full.bvh",
+  "fbx_path": "/mnt/c/Users/Bruno/workspace/game-concerto/unity/Assets/Game/Animations/MoMask/dez_jump_full.fbx",
+  "fbx_bytes": 453932,
+  "elapsed_gen_sec": 15.91,
+  "peak_vram_mib": 1784,
+  "vram_guard_mib": 10000,
+  "guard_ok": true,
+  "timestamp_utc": "2026-11-23T11:59:47.266995+00:00"
+}

@@ -1,0 +1,19 @@
+{
+  "runner": "3dprinter-setup-ia/tools/animation/momask_to_fbx.py",
+  "model": "MoMask (t2m_nlayer8_nhead6_ld384_ff1024_cdp0.1_rvq6ns)",
+  "license": "MIT (code) / HumanML3D checkpoints (same policy as FLUX-dev, ADR-012)",
+  "name": "dez_idle_breath",
+  "prompt": "a person stands still breathing gently, shifting weight slightly from one foot to the other and looking around calmly",
+  "seed": 42,
+  "src_frames_20fps": 120,
+  "target_fps": 60,
+  "in_place": true,
+  "bvh_path": "/mnt/c/Users/Bruno/workspace/game-concerto/unity/Assets/Game/Animations/MoMask/dez_idle_breath.bvh",
+  "fbx_path": "/mnt/c/Users/Bruno/workspace/game-concerto/unity/Assets/Game/Animations/MoMask/dez_idle_breath.fbx",
+  "fbx_bytes": 644604,
+  "elapsed_gen_sec": 20.52,
+  "peak_vram_mib": 1780,
+  "vram_guard_mib": 10000,
+  "guard_ok": true,
+  "timestamp_utc": "2026-11-23T11:58:06.804292+00:00"
+}

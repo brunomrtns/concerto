@@ -1,0 +1,13 @@
+{
+  "avatar_valid": true,
+  "ik_pass_enabled": true,
+  "spring_bones_attached": 3,
+  "clips": {
+    "idle": "dez_idle_breath (human=True, fps=60)",
+    "walk": "dez_walk_loop (human=True, fps=60)",
+    "run": "dez_run_loop (human=True, fps=60)",
+    "turn_l": "dez_turn_left (human=True, fps=60)",
+    "turn_r": "dez_turn_right (human=True, fps=60)",
+    "jump": "dez_jump_full (human=True, fps=60)"
+  }
+}
