@@ -1,0 +1,14 @@
+{
+  "asset": "Assets/Game/Art/Generated/hero_dez/hero_dez_humanoid.fbx",
+  "avatar_valid": true,
+  "avatar_human": true,
+  "ual_clips_found": 86,
+  "clip_idle": "Idle_Loop",
+  "clip_walk": "Walk_Loop",
+  "clip_run": "Sprint_Loop",
+  "clip_jump": "Jump_Start",
+  "clip_turn": "Roll",
+  "controller": "Assets/Game/Animations/HeroDezController.controller",
+  "prefab": "Assets/Game/Prefabs/Fab3D/hero_dez_humanoid.prefab",
+  "scene_updated": true
+}
