@@ -1,9 +1,9 @@
 {
   "scene": "Assets/Game/Scenes/Caldeiral.unity",
-  "solid_renderers_checked": 167,
-  "already_had_collider": 113,
-  "added_box_colliders": 0,
-  "added_mesh_colliders": 48,
+  "solid_renderers_checked": 185,
+  "already_had_collider": 64,
+  "added_box_colliders": 3,
+  "added_mesh_colliders": 45,
   "total_added": 48,
-  "sample_fixed_objects": ["Z1_CeilingBeam_A (PortalFix->MeshCol)", "caldeiral_env_portal_pillar (PortalFix->MeshCol)", "Z4_RingDeck_East (PortalFix->MeshCol)", "Z2_TunnelZ3_Ceiling (PortalFix->MeshCol)", "caldeiral_env_portal_pillar (PortalFix->MeshCol)", "caldeiral_env_portal_pillar (PortalFix->MeshCol)", "caldeiral_env_portal_pillar (PortalFix->MeshCol)", "caldeiral_env_portal_pillar (PortalFix->MeshCol)", "Z2_TunnelZ3_WallS (PortalFix->MeshCol)", "Z2_ArchZ3_Lintel (PortalFix->MeshCol)", "Z2_ArchZ3_Pillar_S (PortalFix->MeshCol)", "caldeiral_env_portal_pillar (PortalFix->MeshCol)", "Z3_Patio_Ceiling (PortalFix->MeshCol)", "Z1_Arch_Pillar_S (PortalFix->MeshCol)", "Z1_ArchTunnel_Floor (PortalFix->MeshCol)", "Z2_TunnelZ3_Floor (PortalFix->MeshCol)", "caldeiral_env_portal_pillar (PortalFix->MeshCol)", "Z5_C3_Portals_And_MiranteFrame (PortalFix->MeshCol)", "Z2_TunnelZ3_WallN (PortalFix->MeshCol)", "Z4_RingDeck_South (PortalFix->MeshCol)", "Z2_CeilingBeam_A (PortalFix->MeshCol)", "Z5_Mirante_WindowFrame_Top (PortalFix->MeshCol)", "Z4_RingDeck_West (PortalFix->MeshCol)", "caldeiral_env_portal_pillar (PortalFix->MeshCol)", "caldeiral_env_portal_pillar (PortalFix->MeshCol)"]
+  "sample_fixed_objects": ["caldeiral_env_wall_panel (InvisibleWallFix: BoxCol->MeshCol)", "Bay_DiagnosticScreen", "Z5_Mirante_Floor (InvisibleWallFix: BoxCol->MeshCol)", "Z3_BridgeZ4_WallN (InvisibleWallFix: BoxCol->MeshCol)", "caldeiral_env_wall_panel (InvisibleWallFix: BoxCol->MeshCol)", "caldeiral_env_floor_tile (InvisibleWallFix: BoxCol->MeshCol)", "Z4_Octagon_Corner_1 (InvisibleWallFix: BoxCol->MeshCol)", "caldeiral_env_floor_tile (InvisibleWallFix: BoxCol->MeshCol)", "c5_prop_sirene_mestra (InvisibleWallFix: BoxCol->MeshCol)", "caldeiral_env_wall_panel (InvisibleWallFix: BoxCol->MeshCol)", "Z3_VaporBridge_4m (InvisibleWallFix: BoxCol->MeshCol)", "caldeiral_env_wall_panel (InvisibleWallFix: BoxCol->MeshCol)", "z1_prop_cristal_energia (MeshCol)", "Cable_ShipToDiagnostic (MeshCol)", "Z4_Octagon_Corner_3 (InvisibleWallFix: BoxCol->MeshCol)", "Z3_Galeria_Wall_West_BelowBridge (InvisibleWallFix: BoxCol->MeshCol)", "c5_prop_bancada_relogio (InvisibleWallFix: BoxCol->MeshCol)", "Z2_Mezzanine_Pillar_W (InvisibleWallFix: BoxCol->MeshCol)", "caldeiral_env_floor_tile (InvisibleWallFix: BoxCol->MeshCol)", "Bay_HazardStrip_Front", "Z1_Wall_North_AboveMirante (InvisibleWallFix: BoxCol->MeshCol)", "z1_prop_cristal_energia (MeshCol)", "Z2_Mezzanine_Pillar_E (InvisibleWallFix: BoxCol->MeshCol)", "Cable_ShipToCrystal (MeshCol)", "caldeiral_env_wall_panel (InvisibleWallFix: BoxCol->MeshCol)"]
 }

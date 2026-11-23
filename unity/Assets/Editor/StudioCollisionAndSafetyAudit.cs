@@ -99,20 +99,26 @@ namespace Studio.Editor
 
                 var mf = go.GetComponent<MeshFilter>();
                 string low = go.name.ToLowerInvariant();
-                bool isHollowOrPortal =
+                bool isCompositeOrHollow =
+                    (mf != null && mf.sharedMesh != null && mf.sharedMesh.vertexCount > 24) ||
                     low.Contains("arch") || low.Contains("portal") || low.Contains("tunnel") ||
                     low.Contains("door") || low.Contains("gate") || low.Contains("ring") ||
                     low.Contains("ceiling") || low.Contains("frame") || low.Contains("parapet") ||
-                    low.Contains("railing") || low.Contains("corrimao");
+                    low.Contains("railing") || low.Contains("corrimao") || low.Contains("trim") ||
+                    low.Contains("pipe") || low.Contains("conduit") || low.Contains("mirante") ||
+                    low.Contains("gallery") || low.Contains("mezzanine") || low.Contains("octagon") ||
+                    low.Contains("dome") || low.Contains("bridge") || low.Contains("stair") ||
+                    low.Contains("ramp");
 
-                // Regra critica da fabrica: NUNCA deixar BoxCollider em portais/arcos/tuneis (cria barreira invisivel!)
-                if (isHollowOrPortal)
+                // Regra critica da fabrica: NUNCA deixar BoxCollider em malhas compostas (>24 verts) ou portais/arcos/trim/pipes (cria parede invisivel!)
+                if (isCompositeOrHollow)
                 {
                     var existingBox = go.GetComponent<BoxCollider>();
                     if (existingBox != null)
                     {
                         UnityEngine.Object.DestroyImmediate(existingBox);
                         EditorUtility.SetDirty(go);
+                        addedNames.Add(go.name + " (InvisibleWallFix: BoxCol->MeshCol)");
                     }
                     if (go.GetComponent<MeshCollider>() == null && mf != null && mf.sharedMesh != null)
                     {
@@ -120,7 +126,8 @@ namespace Studio.Editor
                         mc.sharedMesh = mf.sharedMesh;
                         mc.convex = false;
                         addedMesh++;
-                        addedNames.Add(go.name + " (PortalFix->MeshCol)");
+                        if (!addedNames.Contains(go.name + " (InvisibleWallFix: BoxCol->MeshCol)"))
+                            addedNames.Add(go.name + " (MeshCol)");
                         EditorUtility.SetDirty(go);
                     }
                     continue;
@@ -158,6 +165,30 @@ namespace Studio.Editor
                 addedNames.Add(go.name);
                 EditorUtility.SetDirty(go);
             }
+
+            // 2. Varredura de colisores fantasmas (objetos SEM malha visivel que tenham BoxCollider solido bloqueando passagens)
+            var allColliders = UnityEngine.Object.FindObjectsByType<Collider>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            int removedGhostWalls = 0;
+            foreach (var col in allColliders)
+            {
+                if (col == null || col.isTrigger) continue;
+                if (col is CharacterController) continue;
+                var go = col.gameObject;
+                if (ShouldIgnore(go.transform)) continue;
+
+                var mr = go.GetComponent<MeshRenderer>();
+                var childMr = go.GetComponentInChildren<MeshRenderer>(false);
+                bool hasVisibleMesh = (mr != null && mr.enabled) || (childMr != null && childMr.enabled);
+                if (!hasVisibleMesh)
+                {
+                    Debug.Log($"[CollisionAudit] Removed ghost invisible collider on '{go.name}' at {go.transform.position}");
+                    addedNames.Add(go.name + " (RemovedGhostInvisibleCollider)");
+                    UnityEngine.Object.DestroyImmediate(col);
+                    EditorUtility.SetDirty(go);
+                    removedGhostWalls++;
+                }
+            }
+            Debug.Log($"[CollisionAudit] Ghost invisible colliders removed: {removedGhostWalls}");
 
             if (saveScene && (addedBox + addedMesh) > 0)
             {
