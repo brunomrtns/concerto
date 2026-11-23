@@ -4,10 +4,11 @@
   "spring_bones_attached": 3,
   "clips": {
     "idle": "dez_idle_breath (human=True, fps=60)",
-    "walk": "dez_walk_loop (human=True, fps=60)",
-    "run": "dez_run_loop (human=True, fps=60)",
-    "turn_l": "dez_turn_left (human=True, fps=60)",
-    "turn_r": "dez_turn_right (human=True, fps=60)",
-    "jump": "dez_jump_full (human=True, fps=60)"
+    "walk": "Walk_Loop (human=True, fps=30)",
+    "jog": "Jog_Fwd_Loop (human=True, fps=30)",
+    "run": "Sprint_Loop (human=True, fps=30)",
+    "jump_start": "Jump_Start (human=True, fps=30)",
+    "jump_loop": "Jump_Loop (human=True, fps=30)",
+    "jump_land": "Jump_Land (human=True, fps=30)"
   }
 }

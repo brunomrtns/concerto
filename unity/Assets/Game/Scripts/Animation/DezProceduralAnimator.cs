@@ -49,6 +49,7 @@ namespace Studio.Game.Animation
         private float _currentLean;
         private float _targetLean;
         private float _currentSpeed;
+        private float _currentTurnRate;
         private bool _isGrounded = true;
         private Transform _shadowQuad;
         private Material _shadowMat;
@@ -114,6 +115,7 @@ namespace Studio.Game.Animation
         {
             _isGrounded = isGrounded;
             _currentSpeed = speed;
+            _currentTurnRate = turnRateDegPerSec;
             float speedFactor = Mathf.Clamp01(speed / 3.2f);
             _targetBank = Mathf.Clamp(-turnRateDegPerSec * 0.09f * speedFactor, -maxBankDeg, maxBankDeg);
             // Inclinacao atletica para frente ao correr
@@ -218,10 +220,12 @@ namespace Studio.Game.Animation
             }
             else
             {
-                // Olhar natural levemente vivo para frente
-                float sway = Mathf.Sin(Time.time * 0.9f) * 0.35f;
-                Vector3 fwdTarget = transform.position + transform.forward * 4f + transform.right * sway + Vector3.up * 1.15f;
-                _anim.SetLookAtWeight(0.35f, 0.08f, 0.55f, 0.7f, 0.5f);
+                // Olhar natural levemente vivo + Head Look-Ahead na direcao do giro (efeito AAA!)
+                float sway = Mathf.Sin(Time.time * 0.9f) * 0.30f;
+                float turnLook = Mathf.Clamp(_currentTurnRate / 120f, -1f, 1f) * 2.2f;
+                Vector3 fwdTarget = transform.position + transform.forward * 4f + transform.right * (sway + turnLook) + Vector3.up * 1.10f;
+                float wLook = Mathf.Abs(_currentTurnRate) > 10f ? 0.65f : 0.35f;
+                _anim.SetLookAtWeight(wLook, 0.12f, 0.65f, 0.75f, 0.5f);
                 _anim.SetLookAtPosition(fwdTarget);
             }
 
@@ -261,12 +265,17 @@ namespace Studio.Game.Animation
             if (found)
             {
                 Vector3 targetPos = bestHit.point + Vector3.up * footOffsetY;
-                Quaternion targetRot = Quaternion.FromToRotation(Vector3.up, bestHit.normal) * _anim.GetIKRotation(goal);
-                // Peso suave (evita puxar o pe durante a fase alta da passada)
+                float slopeAngle = Vector3.Angle(Vector3.up, bestHit.normal);
+                // Em piso plano andando/correndo, reduz IK para ZERO para nunca torcer o tornozelo do ciclo profissional;
+                // em Idle ou em rampas (slope >= 3 deg), aplica IK completo para plantar os pes no relevo!
+                float flatMoveAtten = (slopeAngle < 3.0f)
+                    ? Mathf.Lerp(0.85f, 0.0f, Mathf.Clamp01(_currentSpeed / 0.6f))
+                    : 1.0f;
                 float heightAboveGround = Mathf.Max(0f, footPos.y - targetPos.y);
-                float w = Mathf.Clamp01(1f - (heightAboveGround / 0.28f));
+                float w = Mathf.Clamp01(1f - (heightAboveGround / 0.24f)) * flatMoveAtten;
+                Quaternion targetRot = Quaternion.FromToRotation(Vector3.up, bestHit.normal) * _anim.GetIKRotation(goal);
                 _anim.SetIKPositionWeight(goal, w);
-                _anim.SetIKRotationWeight(goal, w * 0.85f);
+                _anim.SetIKRotationWeight(goal, slopeAngle >= 3.0f ? w * 0.85f : 0f);
                 _anim.SetIKPosition(goal, targetPos);
                 _anim.SetIKRotation(goal, targetRot);
             }

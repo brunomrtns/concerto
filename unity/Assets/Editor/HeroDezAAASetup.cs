@@ -88,6 +88,71 @@ namespace Studio.Editor
             return clip;
         }
 
+        private static Dictionary<string, AnimationClip> ConfigureAndLoadUalClips(string fbxPath)
+        {
+            var result = new Dictionary<string, AnimationClip>(StringComparer.OrdinalIgnoreCase);
+            var imp = AssetImporter.GetAtPath(fbxPath) as ModelImporter;
+            if (imp == null) return result;
+
+            imp.animationType = ModelImporterAnimationType.Human;
+            imp.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
+            imp.importAnimation = true;
+            imp.resampleCurves = true;
+
+            var loopSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                "Idle_Loop", "Walk_Loop", "Jog_Fwd_Loop", "Sprint_Loop", "Jump_Loop"
+            };
+            var targetSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                "Idle_Loop", "Walk_Loop", "Jog_Fwd_Loop", "Sprint_Loop", "Jump_Start", "Jump_Loop", "Jump_Land"
+            };
+
+            var clips = imp.defaultClipAnimations;
+            if (clips != null && clips.Length > 0)
+            {
+                bool changed = false;
+                for (int i = 0; i < clips.Length; i++)
+                {
+                    string shortName = clips[i].name.Contains("|")
+                        ? clips[i].name.Substring(clips[i].name.LastIndexOf('|') + 1)
+                        : clips[i].name;
+                    if (!targetSet.Contains(shortName)) continue;
+
+                    bool isLoop = loopSet.Contains(shortName);
+                    clips[i].name = shortName;
+                    clips[i].loopTime = isLoop;
+                    clips[i].loopPose = isLoop;
+                    clips[i].lockRootRotation = true;
+                    clips[i].keepOriginalOrientation = false;
+                    clips[i].rotationOffset = 0f;
+                    clips[i].lockRootHeightY = true;
+                    clips[i].keepOriginalPositionY = false;
+                    clips[i].heightFromFeet = true;
+                    clips[i].lockRootPositionXZ = true;
+                    clips[i].keepOriginalPositionXZ = true;
+                    changed = true;
+                }
+                if (changed)
+                {
+                    imp.clipAnimations = clips;
+                    imp.SaveAndReimport();
+                }
+            }
+
+            foreach (var c in AssetDatabase.LoadAllAssetsAtPath(fbxPath).OfType<AnimationClip>())
+            {
+                if (c.name.StartsWith("__preview__")) continue;
+                string shortName = c.name.Contains("|") ? c.name.Substring(c.name.LastIndexOf('|') + 1) : c.name;
+                if (targetSet.Contains(shortName))
+                {
+                    result[shortName] = c;
+                    Debug.Log($"[HeroDezAAA] UAL1 Clip OK: {shortName} | isHuman={c.isHumanMotion} | fps={c.frameRate} | len={c.length:F2}s");
+                }
+            }
+            return result;
+        }
+
         private static AnimationClip FindUalFallback(string exactName)
         {
             return AssetDatabase.LoadAllAssetsAtPath(Ual1FbxPath)
@@ -111,15 +176,19 @@ namespace Studio.Editor
             if (avatar == null || !avatar.isValid || !avatar.isHuman)
                 throw new Exception("Avatar Humanoid do hero_dez_humanoid.fbx invalido!");
 
-            // 2. Importa os 7 clips MoMask 60fps Humanoid (com fallback UAL caso algum falhe)
-            var cIdle  = ImportMoMaskClip("dez_idle_breath", true)  ?? FindUalFallback("Idle_Loop");
-            var cWalk  = ImportMoMaskClip("dez_walk_loop",   true)  ?? FindUalFallback("Walk_Loop");
-            var cRun   = ImportMoMaskClip("dez_run_loop",    true)  ?? FindUalFallback("Sprint_Loop");
-            var cTurnL = ImportMoMaskClip("dez_turn_left",   true)  ?? FindUalFallback("Walk_Loop");
-            var cTurnR = ImportMoMaskClip("dez_turn_right",  true)  ?? FindUalFallback("Walk_Loop");
-            var cJump  = ImportMoMaskClip("dez_jump_full",   false) ?? FindUalFallback("Jump_Start");
+            // 2. Arquitetura AAA Hibrida (ADR-012 v2):
+            //    - Idle expressivo: MoMask dez_idle_breath (aprovado pelo diretor!)
+            //    - Locomocao ciclica + Pulo em 3 fases reais: UAL1_Standard.fbx (CC0 profissional, 100% ciclico, pes retos!)
+            var ual = ConfigureAndLoadUalClips(Ual1FbxPath);
+            var cIdle      = ImportMoMaskClip("dez_idle_breath", true) ?? (ual.ContainsKey("Idle_Loop") ? ual["Idle_Loop"] : FindUalFallback("Idle_Loop"));
+            var cWalk      = ual.ContainsKey("Walk_Loop")    ? ual["Walk_Loop"]    : ImportMoMaskClip("dez_walk_loop", true);
+            var cJog       = ual.ContainsKey("Jog_Fwd_Loop") ? ual["Jog_Fwd_Loop"] : cWalk;
+            var cRun       = ual.ContainsKey("Sprint_Loop")  ? ual["Sprint_Loop"]  : ImportMoMaskClip("dez_run_loop", true);
+            var cJumpStart = ual.ContainsKey("Jump_Start")   ? ual["Jump_Start"]   : ImportMoMaskClip("dez_jump_full", false);
+            var cJumpLoop  = ual.ContainsKey("Jump_Loop")    ? ual["Jump_Loop"]    : cJumpStart;
+            var cJumpLand  = ual.ContainsKey("Jump_Land")    ? ual["Jump_Land"]    : cIdle;
 
-            // 3. Cria HeroDezController.controller v2 com Blend Tree 2D + IK Pass = true!
+            // 3. Cria HeroDezController.controller v3: Blend Tree 2D (Idle/Walk/Jog/Sprint + Turn pivo) + Pulo 3 Fases + IK Pass = true!
             if (AssetDatabase.LoadAssetAtPath<AnimatorController>(CtrlPath) != null)
                 AssetDatabase.DeleteAsset(CtrlPath);
 
@@ -136,7 +205,7 @@ namespace Studio.Editor
             ctrl.layers = layers;
             var sm = ctrl.layers[0].stateMachine;
 
-            // Blend Tree 2D Freeform Directional: X = TurnRate (-1..1), Y = Speed (0..4.4)
+            // Blend Tree 2D Freeform Directional: X = TurnRate (-1..1), Y = Speed (0..3.45)
             var blendTree = new BlendTree
             {
                 name = "Locomotion_2D",
@@ -147,30 +216,60 @@ namespace Studio.Editor
             };
             AssetDatabase.AddObjectToAsset(blendTree, ctrl);
 
-            blendTree.AddChild(cIdle,  new Vector2( 0.0f, 0.0f));
-            blendTree.AddChild(cTurnL, new Vector2(-0.8f, 0.0f));
-            blendTree.AddChild(cTurnR, new Vector2( 0.8f, 0.0f));
-            blendTree.AddChild(cWalk,  new Vector2( 0.0f, 1.45f));
-            blendTree.AddChild(cRun,   new Vector2( 0.0f, 3.45f));
+            blendTree.AddChild(cIdle, new Vector2( 0.0f, 0.00f));
+            // Turn in Place usa Walk_Loop com passo suave acompanhando o giro (nunca luta contra o Transform!)
+            blendTree.AddChild(cWalk, new Vector2(-0.85f, 0.00f));
+            blendTree.AddChild(cWalk, new Vector2( 0.85f, 0.00f));
+            blendTree.AddChild(cWalk, new Vector2( 0.0f, 1.45f));
+            blendTree.AddChild(cJog,  new Vector2( 0.0f, 2.45f));
+            blendTree.AddChild(cRun,  new Vector2( 0.0f, 3.45f));
+            // Ajusta timeScale dos filhos Turn para passos pivo naturais (0.78x)
+            var ch = blendTree.children;
+            if (ch.Length >= 3)
+            {
+                ch[1].timeScale = 0.78f;
+                ch[2].timeScale = 0.78f;
+                blendTree.children = ch;
+            }
 
             var sLoco = sm.AddState("Locomotion");
             sLoco.motion = blendTree;
             sm.defaultState = sLoco;
 
-            var sJump = sm.AddState("Jump");
-            sJump.motion = cJump;
+            // Pulo em 3 Fases AAA: Jump_Start (impulso) -> Jump_Loop (no ar) -> Jump_Land (pouso) -> Locomotion!
+            var sJumpStart = sm.AddState("Jump_Start");
+            sJumpStart.motion = cJumpStart;
+            var sJumpLoop = sm.AddState("Jump_Loop");
+            sJumpLoop.motion = cJumpLoop;
+            var sJumpLand = sm.AddState("Jump_Land");
+            sJumpLand.motion = cJumpLand;
 
-            var tToJump = sm.AddAnyStateTransition(sJump);
+            var tToJump = sm.AddAnyStateTransition(sJumpStart);
             tToJump.AddCondition(AnimatorConditionMode.If, 0f, "Jump");
-            tToJump.duration = 0.08f;
+            tToJump.duration = 0.06f;
             tToJump.hasExitTime = false;
 
-            // Sai do estado Jump imediatamente ao tocar o chao (depois da subida), deixando o Landing Dip absorver o impacto!
-            var tJumpBack = sJump.AddTransition(sLoco);
-            tJumpBack.AddCondition(AnimatorConditionMode.If, 0f, "IsGrounded");
-            tJumpBack.AddCondition(AnimatorConditionMode.Less, 0.1f, "VerticalVel");
-            tJumpBack.duration = 0.16f;
-            tJumpBack.hasExitTime = false;
+            var tStartToLoop = sJumpStart.AddTransition(sJumpLoop);
+            tStartToLoop.hasExitTime = true;
+            tStartToLoop.exitTime = 0.72f;
+            tStartToLoop.duration = 0.12f;
+
+            var tStartToLand = sJumpStart.AddTransition(sJumpLand);
+            tStartToLand.AddCondition(AnimatorConditionMode.If, 0f, "IsGrounded");
+            tStartToLand.AddCondition(AnimatorConditionMode.Less, 0.1f, "VerticalVel");
+            tStartToLand.hasExitTime = false;
+            tStartToLand.duration = 0.08f;
+
+            var tLoopToLand = sJumpLoop.AddTransition(sJumpLand);
+            tLoopToLand.AddCondition(AnimatorConditionMode.If, 0f, "IsGrounded");
+            tLoopToLand.AddCondition(AnimatorConditionMode.Less, 0.1f, "VerticalVel");
+            tLoopToLand.hasExitTime = false;
+            tLoopToLand.duration = 0.08f;
+
+            var tLandToLoco = sJumpLand.AddTransition(sLoco);
+            tLandToLoco.hasExitTime = true;
+            tLandToLoco.exitTime = 0.62f;
+            tLandToLoco.duration = 0.18f;
 
             EditorUtility.SetDirty(ctrl);
             AssetDatabase.SaveAssets();
@@ -260,10 +359,11 @@ namespace Studio.Editor
                 $"  \"clips\": {{\n" +
                 $"    \"idle\": \"{(cIdle ? cIdle.name : "")} (human={cIdle?.isHumanMotion}, fps={cIdle?.frameRate})\",\n" +
                 $"    \"walk\": \"{(cWalk ? cWalk.name : "")} (human={cWalk?.isHumanMotion}, fps={cWalk?.frameRate})\",\n" +
+                $"    \"jog\": \"{(cJog ? cJog.name : "")} (human={cJog?.isHumanMotion}, fps={cJog?.frameRate})\",\n" +
                 $"    \"run\": \"{(cRun ? cRun.name : "")} (human={cRun?.isHumanMotion}, fps={cRun?.frameRate})\",\n" +
-                $"    \"turn_l\": \"{(cTurnL ? cTurnL.name : "")} (human={cTurnL?.isHumanMotion}, fps={cTurnL?.frameRate})\",\n" +
-                $"    \"turn_r\": \"{(cTurnR ? cTurnR.name : "")} (human={cTurnR?.isHumanMotion}, fps={cTurnR?.frameRate})\",\n" +
-                $"    \"jump\": \"{(cJump ? cJump.name : "")} (human={cJump?.isHumanMotion}, fps={cJump?.frameRate})\"\n" +
+                $"    \"jump_start\": \"{(cJumpStart ? cJumpStart.name : "")} (human={cJumpStart?.isHumanMotion}, fps={cJumpStart?.frameRate})\",\n" +
+                $"    \"jump_loop\": \"{(cJumpLoop ? cJumpLoop.name : "")} (human={cJumpLoop?.isHumanMotion}, fps={cJumpLoop?.frameRate})\",\n" +
+                $"    \"jump_land\": \"{(cJumpLand ? cJumpLand.name : "")} (human={cJumpLand?.isHumanMotion}, fps={cJumpLand?.frameRate})\"\n" +
                 $"  }}\n" +
                 "}\n";
             File.WriteAllText(repPath, json);
