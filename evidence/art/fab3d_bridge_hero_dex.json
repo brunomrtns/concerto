@@ -1,0 +1,48 @@
+{
+  "manifest": {
+    "asset_name": "hero_dex",
+    "category": "player_character",
+    "preset": "character",
+    "texture_size": 1024,
+    "astc": "ASTC_4x4",
+    "collider": "none",
+    "max_tris": 8000,
+    "tris_final": 8000,
+    "rigged": false,
+    "source_mode": "from_glb",
+    "source_glb": "hero_dex__pbr_4k.glb"
+  },
+  "blender_report": {
+    "name": "hero_dex",
+    "preset": "character",
+    "uv": {
+      "has_layer": true,
+      "area": 2.873076,
+      "inside01": 1.0,
+      "valid": true
+    },
+    "identity_transform": true,
+    "exported": "/mnt/c/Users/Bruno/workspace/game-concerto/unity/Assets/Game/Art/Generated/hero_dex/hero_dex.fbx",
+    "dimensions": {
+      "x": 1.5669,
+      "y": 0.6038,
+      "z": 1.8761
+    },
+    "tris": 8000,
+    "rig": {
+      "applied": false
+    },
+    "decimate": {
+      "before": 40000,
+      "after": 8000,
+      "applied": true,
+      "final_ratio": 0.2
+    },
+    "textures": {
+      "basecolor": "/mnt/c/Users/Bruno/workspace/game-concerto/unity/Assets/Game/Art/Generated/hero_dex/hero_dex_basecolor.png",
+      "mr": "/mnt/c/Users/Bruno/workspace/game-concerto/unity/Assets/Game/Art/Generated/hero_dex/hero_dex_mr.png"
+    },
+    "source_glb": "hero_dex__pbr_4k.glb",
+    "texture_size": 1024
+  }
+}

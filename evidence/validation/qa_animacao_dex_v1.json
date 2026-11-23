@@ -1,0 +1,13 @@
+{
+  "frames_captured": 720,
+  "target_fps": 60,
+  "resolution": "1280x720",
+  "max_jump_height_m": 1.214,
+  "spring_ear_max_angle_deg": 43.82,
+  "foot_plant_samples": 918,
+  "avg_foot_slide_cm_per_frame": 1.498,
+  "max_foot_slide_cm_per_frame": 11.623,
+  "foot_slide_avg_pass_le_2cm": true,
+  "jump_gravity_pass": true,
+  "spring_bone_active_pass": true
+}

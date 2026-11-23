@@ -1,0 +1,9 @@
+{
+  "prefab": "Assets/Game/Prefabs/Fab3D/hero_dex_humanoid.prefab",
+  "controller_reused": "Assets/Game/Animations/HeroDezController.controller",
+  "avatar_valid": true,
+  "avatar_human": true,
+  "bind_pose_spine_tilt_deg": 0.000,
+  "bind_pose_upright_pass": true,
+  "spring_bones_attached": 3
+}

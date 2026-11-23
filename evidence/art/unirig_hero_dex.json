@@ -1,0 +1,11 @@
+{
+  "schema": "unirig-bridge-v1",
+  "name": "hero_dex",
+  "input_mesh": "C:\\Users\\Bruno\\workspace\\game-concerto\\unity\\Assets\\Game\\Art\\Generated\\hero_dex\\hero_dex.fbx",
+  "skeleton_fbx": "C:\\Users\\Bruno\\workspace\\game-concerto\\unity\\Assets\\Game\\Art\\Generated\\hero_dex\\hero_dex_skeleton.fbx",
+  "skin_fbx": "C:\\Users\\Bruno\\workspace\\game-concerto\\unity\\Assets\\Game\\Art\\Generated\\hero_dex\\hero_dex_skin.fbx",
+  "rigged_fbx": "C:\\Users\\Bruno\\workspace\\game-concerto\\unity\\Assets\\Game\\Art\\Generated\\hero_dex\\hero_dex_rigged.fbx",
+  "size_bytes": 1641372,
+  "elapsed_sec": 95.72,
+  "errors": []
+}
