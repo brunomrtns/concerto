@@ -1,0 +1,19 @@
+{
+  "id": "hero_porca",
+  "variant_id": "pbr",
+  "mesh": "/home/bruno/printer3d-work/c5_herois/hero_porca/shape_gen/2_triposf512/mesh_reconstruction.obj",
+  "uv": "/home/bruno/printer3d-work/c5_herois/hero_porca/shape_gen/2_triposf512/mesh_reconstruction.obj",
+  "tier": "single",
+  "input_images": [
+    "/home/bruno/printer3d-work/c5_herois/hero_porca/shape_gen/entrada_preproc.png"
+  ],
+  "outputs": {
+    "mode_8k": "pbr_8k",
+    "mode_4k": "pbr_4k",
+    "glb_names": [
+      "hero_porca__pbr_8k.glb",
+      "hero_porca__pbr_4k.glb"
+    ]
+  },
+  "notes": "CONCERTO C5 Heroi aprovado por Bruno (hero_porca <- porca_D.png, FLUX.1-dev FP8)."
+}

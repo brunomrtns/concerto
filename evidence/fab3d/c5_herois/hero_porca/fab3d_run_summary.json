@@ -1,0 +1,16 @@
+{
+  "id": "hero_porca",
+  "approved_concept": "evidence/concepts/c5_personagens_flux/porca_D.png",
+  "category": "env_tile",
+  "max_tris": 2500,
+  "height_m": 0.45,
+  "engine": "triposg",
+  "shape_pipeline": "preproc C2 -> TripoSG -> TripoSF 512",
+  "triposf512_guard_tripped": false,
+  "shape_sec": 187.8,
+  "paint_sec": 449.6,
+  "total_sec": 637.3,
+  "master_glb_4k": "/home/bruno/printer3d-work/c5_herois/hero_porca/run/staged_models/hero_porca__pbr_4k.glb",
+  "master_glb_4k_bytes": 8709940,
+  "timestamp_utc": "2026-11-23T02:00:59.092521+00:00"
+}

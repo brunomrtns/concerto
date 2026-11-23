@@ -1,0 +1,673 @@
+{
+  "asset_id": "hero_porca",
+  "tier": "single",
+  "overall_pass": true,
+  "gates": {
+    "lap_var": {
+      "value": 1425.32,
+      "threshold": ">= 1200.0",
+      "pass": true
+    },
+    "bright_patches": {
+      "value": 0.0047,
+      "threshold": "<= 0.01% (all classes)",
+      "pass": true
+    },
+    "color_outlier_pct": {
+      "value": 0.003,
+      "threshold": "<= 0.02%",
+      "pass": true
+    },
+    "saturation_band": {
+      "value": 73.1,
+      "threshold": "[2.0%, 85.0%]",
+      "pass": true
+    },
+    "mr_pbr_present": {
+      "value": true,
+      "threshold": "required=True",
+      "pass": true
+    },
+    "glb_sizes_sane": {
+      "value": {
+        "8k_mb": 15.5,
+        "4k_mb": 8.31
+      },
+      "threshold": "[1.0, 45.0] MB",
+      "pass": true
+    }
+  },
+  "color_outliers_before": {
+    "count": 45,
+    "texels": 1563,
+    "texels_pct": 0.0373,
+    "rejected_shape_elongated": 20,
+    "rejected_ring_incoherent": 44,
+    "rejected_uv_border": 52
+  },
+  "color_outliers_after": {
+    "count": 7,
+    "texels": 127,
+    "texels_pct": 0.003
+  },
+  "vlm_triage": {
+    "enabled": false,
+    "model": "conservative_offline",
+    "calls": 0,
+    "protected_count": 0,
+    "deferred_count": 50
+  },
+  "vlm_deferred": [
+    {
+      "area_px": 29,
+      "bbox_px": [
+        325,
+        107,
+        9,
+        7
+      ],
+      "uv_center": [
+        0.1608,
+        0.9462
+      ],
+      "aspect": 1.29,
+      "delta_e": 49.4,
+      "ring_coherence": 0.732,
+      "comp_L": 32.5,
+      "ring_L": 2.7,
+      "bright_in_dark": true,
+      "defer_reason": "conservative_no_vlm"
+    },
+    {
+      "area_px": 18,
+      "bbox_px": [
+        817,
+        107,
+        7,
+        4
+      ],
+      "uv_center": [
+        0.4003,
+        0.9472
+      ],
+      "aspect": 1.75,
+      "delta_e": 31.9,
+      "ring_coherence": 0.786,
+      "comp_L": 60.8,
+      "ring_L": 34.1,
+      "bright_in_dark": true,
+      "defer_reason": "conservative_no_vlm"
+    },
+    {
+      "area_px": 8,
+      "bbox_px": [
+        514,
+        111,
+        3,
+        5
+      ],
+      "uv_center": [
+        0.2515,
+        0.9448
+      ],
+      "aspect": 1.67,
+      "delta_e": 46.0,
+      "ring_coherence": 0.703,
+      "comp_L": 28.8,
+      "ring_L": 0.8,
+      "bright_in_dark": true,
+      "defer_reason": "conservative_no_vlm"
+    },
+    {
+      "area_px": 346,
+      "bbox_px": [
+        1554,
+        202,
+        59,
+        48
+      ],
+      "uv_center": [
+        0.7718,
+        0.8918
+      ],
+      "aspect": 1.23,
+      "delta_e": 54.1,
+      "ring_coherence": 0.824,
+      "comp_L": 16.1,
+      "ring_L": 65.9,
+      "bright_in_dark": false,
+      "defer_reason": "conservative_no_vlm"
+    },
+    {
+      "area_px": 279,
+      "bbox_px": [
+        1730,
+        206,
+        42,
+        48
+      ],
+      "uv_center": [
+        0.8547,
+        0.8891
+      ],
+      "aspect": 1.14,
+      "delta_e": 63.3,
+      "ring_coherence": 0.721,
+      "comp_L": 4.3,
+      "ring_L": 57.3,
+      "bright_in_dark": false,
+      "defer_reason": "conservative_no_vlm"
+    },
+    {
+      "area_px": 19,
+      "bbox_px": [
+        1470,
+        225,
+        6,
+        9
+      ],
+      "uv_center": [
+        0.7186,
+        0.8882
+      ],
+      "aspect": 1.5,
+      "delta_e": 57.0,
+      "ring_coherence": 0.72,
+      "comp_L": 65.5,
+      "ring_L": 13.3,
+      "bright_in_dark": true,
+      "defer_reason": "conservative_no_vlm"
+    },
+    {
+      "area_px": 434,
+      "bbox_px": [
+        1197,
+        263,
+        85,
+        66
+      ],
+      "uv_center": [
+        0.6025,
+        0.8587
+      ],
+      "aspect": 1.29,
+      "delta_e": 60.5,
+      "ring_coherence": 0.84,
+      "comp_L": 12.2,
+      "ring_L": 66.7,
+      "bright_in_dark": false,
+      "defer_reason": "conservative_no_vlm"
+    },
+    {
+      "area_px": 22,
+      "bbox_px": [
+        1936,
+        287,
+        6,
+        6
+      ],
+      "uv_center": [
+        0.9464,
+        0.859
+      ],
+      "aspect": 1.0,
+      "delta_e": 64.0,
+      "ring_coherence": 0.903,
+      "comp_L": 37.1,
+      "ring_L": 0.0,
+      "bright_in_dark": true,
+      "defer_reason": "conservative_no_vlm"
+    },
+    {
+      "area_px": 196,
+      "bbox_px": [
+        1395,
+        396,
+        41,
+        84
+      ],
+      "uv_center": [
+        0.6937,
+        0.7853
+      ],
+      "aspect": 2.05,
+      "delta_e": 42.7,
+      "ring_coherence": 0.887,
+      "comp_L": 21.8,
+      "ring_L": 60.8,
+      "bright_in_dark": false,
+      "defer_reason": "conservative_no_vlm"
+    },
+    {
+      "area_px": 166,
+      "bbox_px": [
+        1962,
+        396,
+        15,
+        56
+      ],
+      "uv_center": [
+        0.9611,
+        0.7928
+      ],
+      "aspect": 3.73,
+      "delta_e": 41.3,
+      "ring_coherence": 0.907,
+      "comp_L": 17.8,
+      "ring_L": 0.4,
+      "bright_in_dark": true,
+      "defer_reason": "conservative_no_vlm"
+    },
+    {
+      "area_px": 373,
+      "bbox_px": [
+        1181,
+        409,
+        71,
+        93
+      ],
+      "uv_center": [
+        0.588,
+        0.7796
+      ],
+      "aspect": 1.31,
+      "delta_e": 54.6,
+      "ring_coherence": 0.834,
+      "comp_L": 11.4,
+      "ring_L": 58.8,
+      "bright_in_dark": false,
+      "defer_reason": "conservative_no_vlm"
+    },
+    {
+      "area_px": 42,
+      "bbox_px": [
+        1978,
+        413,
+        8,
+        10
+      ],
+      "uv_center": [
+        0.9674,
+        0.7964
+      ],
+      "aspect": 1.25,
+      "delta_e": 56.1,
+      "ring_coherence": 0.773,
+      "comp_L": 35.7,
+      "ring_L": 0.4,
+      "bright_in_dark": true,
+      "defer_reason": "conservative_no_vlm"
+    },
+    {
+      "area_px": 21,
+      "bbox_px": [
+        682,
+        422,
+        5,
+        9
+      ],
+      "uv_center": [
+        0.334,
+        0.792
+      ],
+      "aspect": 1.8,
+      "delta_e": 51.1,
+      "ring_coherence": 0.623,
+      "comp_L": 50.6,
+      "ring_L": 22.7,
+      "bright_in_dark": true,
+      "defer_reason": "conservative_no_vlm"
+    },
+    {
+      "area_px": 11,
+      "bbox_px": [
+        1984,
+        429,
+        5,
+        5
+      ],
+      "uv_center": [
+        0.9698,
+        0.7896
+      ],
+      "aspect": 1.0,
+      "delta_e": 41.2,
+      "ring_coherence": 0.708,
+      "comp_L": 24.3,
+      "ring_L": 0.8,
+      "bright_in_dark": true,
+      "defer_reason": "conservative_no_vlm"
+    },
+    {
+      "area_px": 203,
+      "bbox_px": [
+        1330,
+        437,
+        46,
+        23
+      ],
+      "uv_center": [
+        0.6613,
+        0.7809
+      ],
+      "aspect": 2.0,
+      "delta_e": 52.8,
+      "ring_coherence": 0.791,
+      "comp_L": 3.9,
+      "ring_L": 40.8,
+      "bright_in_dark": false,
+      "defer_reason": "conservative_no_vlm"
+    },
+    {
+      "area_px": 19,
+      "bbox_px": [
+        299,
+        467,
+        7,
+        8
+      ],
+      "uv_center": [
+        0.1476,
+        0.7702
+      ],
+      "aspect": 1.14,
+      "delta_e": 39.8,
+      "ring_coherence": 0.888,
+      "comp_L": 24.7,
+      "ring_L": 2.0,
+      "bright_in_dark": true,
+      "defer_reason": "conservative_no_vlm"
+    },
+    {
+      "area_px": 46,
+      "bbox_px": [
+        676,
+        485,
+        11,
+        18
+      ],
+      "uv_center": [
+        0.3317,
+        0.759
+      ],
+      "aspect": 1.64,
+      "delta_e": 38.4,
+      "ring_coherence": 0.692,
+      "comp_L": 48.2,
+      "ring_L": 12.2,
+      "bright_in_dark": true,
+      "defer_reason": "conservative_no_vlm"
+    },
+    {
+      "area_px": 38,
+      "bbox_px": [
+        698,
+        488,
+        6,
+        11
+      ],
+      "uv_center": [
+        0.3419,
+        0.7589
+      ],
+      "aspect": 1.83,
+      "delta_e": 43.8,
+      "ring_coherence": 0.702,
+      "comp_L": 48.6,
+      "ring_L": 6.3,
+      "bright_in_dark": true,
+      "defer_reason": "conservative_no_vlm"
+    },
+    {
+      "area_px": 60,
+      "bbox_px": [
+        1797,
+        562,
+        20,
+        6
+      ],
+      "uv_center": [
+        0.8813,
+        0.7246
+      ],
+      "aspect": 3.33,
+      "delta_e": 49.5,
+      "ring_coherence": 0.969,
+      "comp_L": 27.1,
+      "ring_L": 0.0,
+      "bright_in_dark": true,
+      "defer_reason": "conservative_no_vlm"
+    },
+    {
+      "area_px": 9,
+      "bbox_px": [
+        862,
+        591,
+        4,
+        3
+      ],
+      "uv_center": [
+        0.4217,
+        0.7109
+      ],
+      "aspect": 1.33,
+      "delta_e": 32.8,
+      "ring_coherence": 0.609,
+      "comp_L": 32.5,
+      "ring_L": 10.2,
+      "bright_in_dark": true,
+      "defer_reason": "conservative_no_vlm"
+    },
+    {
+      "area_px": 110,
+      "bbox_px": [
+        1602,
+        639,
+        10,
+        35
+      ],
+      "uv_center": [
+        0.7843,
+        0.6799
+      ],
+      "aspect": 3.5,
+      "delta_e": 49.6,
+      "ring_coherence": 0.855,
+      "comp_L": 35.7,
+      "ring_L": 4.3,
+      "bright_in_dark": true,
+      "defer_reason": "conservative_no_vlm"
+    },
+    {
+      "area_px": 30,
+      "bbox_px": [
+        605,
+        697,
+        8,
+        7
+      ],
+      "uv_center": [
+        0.2974,
+        0.6581
+      ],
+      "aspect": 1.14,
+      "delta_e": 49.6,
+      "ring_coherence": 0.643,
+      "comp_L": 49.2,
+      "ring_L": 7.5,
+      "bright_in_dark": true,
+      "defer_reason": "conservative_no_vlm"
+    },
+    {
+      "area_px": 76,
+      "bbox_px": [
+        266,
+        883,
+        10,
+        14
+      ],
+      "uv_center": [
+        0.1321,
+        0.5661
+      ],
+      "aspect": 1.4,
+      "delta_e": 56.7,
+      "ring_coherence": 0.771,
+      "comp_L": 57.8,
+      "ring_L": 8.6,
+      "bright_in_dark": true,
+      "defer_reason": "conservative_no_vlm"
+    },
+    {
+      "area_px": 51,
+      "bbox_px": [
+        245,
+        896,
+        14,
+        12
+      ],
+      "uv_center": [
+        0.1222,
+        0.5603
+      ],
+      "aspect": 1.17,
+      "delta_e": 55.8,
+      "ring_coherence": 0.713,
+      "comp_L": 52.5,
+      "ring_L": 3.5,
+      "bright_in_dark": true,
+      "defer_reason": "conservative_no_vlm"
+    },
+    {
+      "area_px": 46,
+      "bbox_px": [
+        305,
+        938,
+        8,
+        9
+      ],
+      "uv_center": [
+        0.1506,
+        0.5401
+      ],
+      "aspect": 1.12,
+      "delta_e": 53.1,
+      "ring_coherence": 0.771,
+      "comp_L": 54.9,
+      "ring_L": 9.8,
+      "bright_in_dark": true,
+      "defer_reason": "conservative_no_vlm"
+    },
+    {
+      "area_px": 286,
+      "bbox_px": [
+        200,
+        949,
+        37,
+        50
+      ],
+      "uv_center": [
+        0.1098,
+        0.5255
+      ],
+      "aspect": 1.35,
+      "delta_e": 54.9,
+      "ring_coherence": 0.825,
+      "comp_L": 49.0,
+      "ring_L": 5.9,
+      "bright_in_dark": true,
+      "defer_reason": "conservative_no_vlm"
+    },
+    {
+      "area_px": 43,
+      "bbox_px": [
+        286,
+        951,
+        14,
+        10
+      ],
+      "uv_center": [
+        0.1427,
+        0.5331
+      ],
+      "aspect": 1.4,
+      "delta_e": 55.6,
+      "ring_coherence": 0.696,
+      "comp_L": 52.9,
+      "ring_L": 3.9,
+      "bright_in_dark": true,
+      "defer_reason": "conservative_no_vlm"
+    },
+    {
+      "area_px": 19,
+      "bbox_px": [
+        214,
+        979,
+        6,
+        5
+      ],
+      "uv_center": [
+        0.1057,
+        0.5209
+      ],
+      "aspect": 1.2,
+      "delta_e": 51.7,
+      "ring_coherence": 0.643,
+      "comp_L": 55.3,
+      "ring_L": 11.0,
+      "bright_in_dark": true,
+      "defer_reason": "conservative_no_vlm"
+    },
+    {
+      "area_px": 19,
+      "bbox_px": [
+        115,
+        1077,
+        7,
+        10
+      ],
+      "uv_center": [
+        0.0578,
+        0.4717
+      ],
+      "aspect": 1.43,
+      "delta_e": 40.3,
+      "ring_coherence": 0.791,
+      "comp_L": 38.0,
+      "ring_L": 10.6,
+      "bright_in_dark": true,
+      "defer_reason": "conservative_no_vlm"
+    },
+    {
+      "area_px": 223,
+      "bbox_px": [
+        755,
+        1086,
+        26,
+        27
+      ],
+      "uv_center": [
+        0.3757,
+        0.4621
+      ],
+      "aspect": 1.04,
+      "delta_e": 81.5,
+      "ring_coherence": 0.65,
+      "comp_L": 2.4,
+      "ring_L": 72.2,
+      "bright_in_dark": false,
+      "defer_reason": "conservative_no_vlm"
+    }
+  ],
+  "crops": {
+    "detail_center_front": "/home/bruno/printer3d-work/c5_herois/hero_porca/run/renders/crops/pbr_detail_center_front.png",
+    "detail_center_back": "/home/bruno/printer3d-work/c5_herois/hero_porca/run/renders/crops/pbr_detail_center_back.png"
+  },
+  "tempo_total_s": 447.81,
+  "vram_pico_mib": 10471,
+  "timestamp_utc": "2026-11-23T02:00:58.865880+00:00",
+  "publish": {
+    "published": false,
+    "reason": "auto-publish disabled"
+  }
+}

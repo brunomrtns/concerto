@@ -1,0 +1,97 @@
+{
+  "validator": "validate_visual.py",
+  "version": "1.1.0",
+  "timestamp": "2026-11-23T02:10:06.532033+00:00",
+  "asset_name": "hero_porca",
+  "asset_path": "unity/Assets/Game/Art/Generated/hero_porca/hero_porca.fbx",
+  "class": "env_tile",
+  "is_biped": false,
+  "applied_checks": [
+    "pivot_base_grounded_on_floor",
+    "uniform_scale_identity_transform",
+    "prop_exempt_from_biped_vertical_ratio",
+    "no_ngons",
+    "class_tri_budget",
+    "uv_texel_density_world_scale",
+    "material_basemap",
+    "scale_meters"
+  ],
+  "passed": true,
+  "checks": {
+    "orientation": {
+      "passed": true,
+      "details": {
+        "is_biped": false,
+        "branch": "prop_grounded_uniform_scale",
+        "applied_checks": [
+          "pivot_base_grounded_on_floor",
+          "uniform_scale_identity_transform",
+          "prop_exempt_from_biped_vertical_ratio"
+        ],
+        "identity_transform": true,
+        "uniform_scale": true,
+        "pivot_grounded_on_floor": true,
+        "grounded_y_min": -0.4972,
+        "bounds_unity_y_up": {
+          "width_x": 0.9369,
+          "height_y": 0.9944,
+          "depth_z": 0.7401,
+          "y_min": -0.4972,
+          "y_max": 0.4972
+        },
+        "torso_bounds": null,
+        "aspect_height_over_min_horiz": null,
+        "aspect_height_over_torso_depth": null,
+        "required_biped_aspect": null,
+        "errors": []
+      }
+    },
+    "budget": {
+      "passed": true,
+      "details": {
+        "class": "env_tile",
+        "tris": 2496,
+        "max_tris": 2500,
+        "ngons": 0,
+        "errors": []
+      }
+    },
+    "uv_texel_density": {
+      "passed": true,
+      "details": {
+        "uv_valid": true,
+        "uv_total_area": 0.66765,
+        "uv_inside01": 1.0,
+        "mesh_area_m2": 2.64419,
+        "uv_world_ratio": 0.2525,
+        "allowed_ratio_range": [
+          0.005,
+          50.0
+        ],
+        "errors": []
+      }
+    },
+    "material": {
+      "passed": true,
+      "details": {
+        "material_slots": 1,
+        "basecolor_texture": "unity/Assets/Game/Art/Generated/hero_porca/hero_porca_basecolor.png",
+        "unity_material_checked": null,
+        "errors": []
+      }
+    },
+    "scale_meters": {
+      "passed": true,
+      "details": {
+        "reference_dimension_m": 0.9944,
+        "allowed_range_m": [
+          0.05,
+          20.0
+        ],
+        "errors": []
+      }
+    }
+  },
+  "errors": [],
+  "warnings": []
+}

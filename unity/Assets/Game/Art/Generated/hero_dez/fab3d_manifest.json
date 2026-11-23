@@ -1,0 +1,13 @@
+{
+  "asset_name": "hero_dez",
+  "category": "player_character",
+  "preset": "character",
+  "texture_size": 1024,
+  "astc": "ASTC_4x4",
+  "collider": "none",
+  "max_tris": 8000,
+  "tris_final": 8000,
+  "rigged": false,
+  "source_mode": "from_glb",
+  "source_glb": "hero_dez__pbr_4k.glb"
+}

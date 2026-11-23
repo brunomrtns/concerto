@@ -1,6 +1,6 @@
 {
-    "generatedAt": "2026-11-23T01:38:40.6479343Z",
-    "assetsProcessed": 8,
+    "generatedAt": "2026-11-23T02:15:37.2784148Z",
+    "assetsProcessed": 10,
     "animationsImported": 0,
     "humanoidAvatarsValid": 0,
     "ualClipsBound": 0,
@@ -12,7 +12,9 @@
         "Assets/Game/Materials/Fab3D/Mat_Fab3D_caldeiral_env_floor_tile.mat",
         "Assets/Game/Materials/Fab3D/Mat_Fab3D_caldeiral_env_portal_pillar.mat",
         "Assets/Game/Materials/Fab3D/Mat_Fab3D_caldeiral_env_vapor_pipe.mat",
-        "Assets/Game/Materials/Fab3D/Mat_Fab3D_caldeiral_env_wall_panel.mat"
+        "Assets/Game/Materials/Fab3D/Mat_Fab3D_caldeiral_env_wall_panel.mat",
+        "Assets/Game/Materials/Fab3D/Mat_Fab3D_hero_dez.mat",
+        "Assets/Game/Materials/Fab3D/Mat_Fab3D_hero_porca.mat"
     ],
     "prefabs": [
         "Assets/Game/Prefabs/Fab3D/c5_prop_bancada_relogio.prefab",
@@ -22,7 +24,9 @@
         "Assets/Game/Prefabs/Fab3D/caldeiral_env_floor_tile.prefab",
         "Assets/Game/Prefabs/Fab3D/caldeiral_env_portal_pillar.prefab",
         "Assets/Game/Prefabs/Fab3D/caldeiral_env_vapor_pipe.prefab",
-        "Assets/Game/Prefabs/Fab3D/caldeiral_env_wall_panel.prefab"
+        "Assets/Game/Prefabs/Fab3D/caldeiral_env_wall_panel.prefab",
+        "Assets/Game/Prefabs/Fab3D/hero_dez.prefab",
+        "Assets/Game/Prefabs/Fab3D/hero_porca.prefab"
     ],
     "captures": [],
     "errors": []

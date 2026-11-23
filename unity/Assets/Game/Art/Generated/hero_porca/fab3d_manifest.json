@@ -1,0 +1,13 @@
+{
+  "asset_name": "hero_porca",
+  "category": "env_tile",
+  "preset": "prop",
+  "texture_size": 1024,
+  "astc": "ASTC_6x6",
+  "collider": "box",
+  "max_tris": 2500,
+  "tris_final": 2500,
+  "rigged": false,
+  "source_mode": "from_glb",
+  "source_glb": "hero_porca__pbr_4k.glb"
+}
