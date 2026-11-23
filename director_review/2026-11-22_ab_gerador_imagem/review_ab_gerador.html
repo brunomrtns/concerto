@@ -1,0 +1,19 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+<title>RUN mega_v4 — A/B SDXL-Turbo vs FLUX.1-dev FP8 (2026-11-22)</title>
+<style>body{background:#141210;color:#ece3d5;font-family:system-ui,sans-serif;margin:24px}
+h1,h2{color:#e8a13c}table{border-collapse:collapse;width:100%;max-width:960px;margin:16px 0}
+th,td{border:1px solid #3a3026;padding:8px 12px;text-align:left}th{background:#1e1a16;color:#e8a13c}
+img{max-width:100%;border-radius:8px;border:1px solid #3a3026}</style></head><body>
+<h1>A/B Controlado: SDXL-Turbo vs FLUX.1-dev FP8</h1>
+<p>Mesmos 4 prompts e mesmas seeds do Batch-1 (v3). Guard VRAM 10 GB: <strong>4/4 PASS</strong> no FLUX (pico 9.743–9.828 MiB, 42–62 s/img).</p>
+<table>
+  <tr><th>Prop</th><th>Seed</th><th>SDXL-Turbo (0–5)</th><th>FLUX.1-dev FP8 (0–5)</th><th>Diferença principal</th></tr>
+  <tr><td>c5_prop_sirene_mestra</td><td>442</td><td>4/5</td><td><strong>5/5</strong></td><td>FLUX entregou corneta de sirene no topo + zero marca d'água</td></tr>
+  <tr><td>c5_prop_no_resincronia</td><td>443</td><td>4/5</td><td><strong>5/5</strong></td><td>FLUX entregou pedestal octogonal maciço + fundo 100% branco</td></tr>
+  <tr><td>c5_prop_valvula_ritmica</td><td>42</td><td>3/5</td><td><strong>5/5</strong></td><td>FLUX entregou volante vermelho + manômetro + fundo 100% branco</td></tr>
+  <tr><td>c5_prop_bancada_relogio</td><td>42</td><td>3/5</td><td><strong>5/5</strong></td><td>FLUX entregou tampo madeira + morsa + lamparina + fundo 100% branco</td></tr>
+  <tr><td><strong>TOTAL</strong></td><td>—</td><td><strong>14 / 20</strong></td><td><strong>20 / 20</strong></td><td><strong>Vencedor provisório: FLUX.1-dev FP8</strong></td></tr>
+</table>
+<h2>Contact Sheet Lado a Lado (SDXL-Turbo | FLUX.1-dev FP8)</h2>
+<img src="ab_contact_sheet_sdxl_vs_flux.png">
+</body></html>

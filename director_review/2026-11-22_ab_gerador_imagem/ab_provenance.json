@@ -1,0 +1,46 @@
+[
+  {
+    "id": "c5_prop_sirene_mestra",
+    "seed": 442,
+    "prompt": "monumental chunky solid industrial clockwork steam boiler tower with large brass megaphone horn at top, riveted dark iron base, thick solid copper pipes, single isolated game prop object, 3/4 view, centered, pure solid white background, matte weathered metal, diffuse studio lighting, no background scenery, no pillars, no floating parts, no text",
+    "sdxl_png": "c5_prop_sirene_mestra__sdxl_turbo.png",
+    "flux_png": "c5_prop_sirene_mestra__flux1_dev_fp8.png",
+    "flux_elapsed_sec": 62.13,
+    "flux_peak_vram_mib": 9770,
+    "flux_guard_ok": true,
+    "flux_sha256": "8e91b68084b53a7fc44ed2a3756d821e355ac1a7b6fe29be760c1db532f3d88a"
+  },
+  {
+    "id": "c5_prop_no_resincronia",
+    "seed": 443,
+    "prompt": "chunky octagonal dark iron and weathered brass clockwork pedestal cradling a glowing warm golden amber crystal core on top, riveted steampunk industrial console, single isolated game prop object, 3/4 view, centered, pure solid white background, diffuse studio lighting, no background scenery, no pillars, no text",
+    "sdxl_png": "c5_prop_no_resincronia__sdxl_turbo.png",
+    "flux_png": "c5_prop_no_resincronia__flux1_dev_fp8.png",
+    "flux_elapsed_sec": 48.1,
+    "flux_peak_vram_mib": 9786,
+    "flux_guard_ok": true,
+    "flux_sha256": "8e91b68084b53a7fc44ed2a3756d821e355ac1a7b6fe29be760c1db532f3d88a"
+  },
+  {
+    "id": "c5_prop_valvula_ritmica",
+    "seed": 42,
+    "prompt": "weathered brass and dark iron industrial steam valve pedestal with red-painted iron handwheel, pressure gauge dial and riveted brass pipes, clockwork-industrial game prop, single isolated object, 3/4 view, centered, pure solid white background, diffuse studio lighting, no background scenery, no text",
+    "sdxl_png": "c5_prop_valvula_ritmica__sdxl_turbo.png",
+    "flux_png": "c5_prop_valvula_ritmica__flux1_dev_fp8.png",
+    "flux_elapsed_sec": 44.09,
+    "flux_peak_vram_mib": 9828,
+    "flux_guard_ok": true,
+    "flux_sha256": "8e91b68084b53a7fc44ed2a3756d821e355ac1a7b6fe29be760c1db532f3d88a"
+  },
+  {
+    "id": "c5_prop_bancada_relogio",
+    "seed": 42,
+    "prompt": "clockmaker repair workbench made of dark riveted iron frame, weathered timber top, brass vise, small brass gears and oil lamp on table, clockwork-industrial game prop, single isolated object, 3/4 view, centered, pure solid white background, diffuse studio lighting, no background scenery, no text",
+    "sdxl_png": "c5_prop_bancada_relogio__sdxl_turbo.png",
+    "flux_png": "c5_prop_bancada_relogio__flux1_dev_fp8.png",
+    "flux_elapsed_sec": 42.31,
+    "flux_peak_vram_mib": 9743,
+    "flux_guard_ok": true,
+    "flux_sha256": "8e91b68084b53a7fc44ed2a3756d821e355ac1a7b6fe29be760c1db532f3d88a"
+  }
+]

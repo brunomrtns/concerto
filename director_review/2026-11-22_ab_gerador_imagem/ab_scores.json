@@ -1,0 +1,44 @@
+{
+  "run": "RUN mega_v4 — TAREFA 2 (A/B SDXL-Turbo vs FLUX.1-dev FP8)",
+  "date": "2026-11-22",
+  "criteria": [
+    "objeto_unico",
+    "fundo_100pct_limpo",
+    "silhueta_e_aderencia_prompt",
+    "zero_reflexo_especular_forte",
+    "angulo_3_4_estavel"
+  ],
+  "results": [
+    {
+      "id": "c5_prop_sirene_mestra",
+      "seed": 442,
+      "sdxl_turbo": { "scores": [1, 1, 0, 1, 1], "total": 4, "notes": "Ignorou corneta/megafone no topo; marca dagua no canto inferior direito; hastes finas" },
+      "flux1_dev_fp8": { "scores": [1, 1, 1, 1, 1], "total": 5, "notes": "Corneta de sirene no topo exata, corpo solido rebitado, fundo 100% branco puro" }
+    },
+    {
+      "id": "c5_prop_no_resincronia",
+      "seed": 443,
+      "sdxl_turbo": { "scores": [1, 0, 1, 1, 1], "total": 4, "notes": "Fundo acinzentado com linha de horizonte; hastes finas na gaiola" },
+      "flux1_dev_fp8": { "scores": [1, 1, 1, 1, 1], "total": 5, "notes": "Pedestal octogonal macico ferro/latao + cristal ambar limpo, fundo 100% branco" }
+    },
+    {
+      "id": "c5_prop_valvula_ritmica",
+      "seed": 42,
+      "sdxl_turbo": { "scores": [1, 0, 0, 1, 1], "total": 3, "notes": "Ignorou volante vermelho; gerou 2 relogios com engrenagens finas; fundo cinza" },
+      "flux1_dev_fp8": { "scores": [1, 1, 1, 1, 1], "total": 5, "notes": "Valvula exata com volante vermelho + manometro lateral + base rebitada, fundo 100% branco" }
+    },
+    {
+      "id": "c5_prop_bancada_relogio",
+      "seed": 42,
+      "sdxl_turbo": { "scores": [1, 0, 0, 1, 1], "total": 3, "notes": "Ignorou tampo madeira, morsa e lamparina; fundo cinza" },
+      "flux1_dev_fp8": { "scores": [1, 1, 1, 1, 1], "total": 5, "notes": "Ferro rebitado + tampo madeira + morsa + engrenagens + lamparina, fundo 100% branco" }
+    }
+  ],
+  "totals": {
+    "sdxl_turbo": 14,
+    "flux1_dev_fp8": 20,
+    "max_possible": 20
+  },
+  "provisional_winner": "flux1_dev_fp8",
+  "recommendation": "Promover FLUX.1-dev FP8 (ComfyUI headless --lowvram --reserve-vram 3.5, pico <= 9.828 MiB) como gerador principal de conceitos 2D para herois e props; manter SDXL-Turbo apenas para tileables rapidos e rascunhos."
+}

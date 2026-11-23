@@ -1,0 +1,20 @@
+{
+  "runner": "3dprinter-setup-ia/tools/generator/concept_flux.py",
+  "backend": "ComfyUI headless (--lowvram)",
+  "model": "flux1-dev-fp8",
+  "weights_file": "/home/bruno/tools/comfyui/models/checkpoints/flux1-dev-fp8.safetensors",
+  "weights_sha256": "8e91b68084b53a7fc44ed2a3756d821e355ac1a7b6fe29be760c1db532f3d88a",
+  "license_note": "FLUX.1-dev = BFL non-commercial (personal/vertical-slice OK; migrate to FLUX.1-schnell Apache 2.0 or BFL license for commercial release)",
+  "seed": 442,
+  "width": 768,
+  "height": 768,
+  "steps": 20,
+  "guidance": 3.5,
+  "prompt": "monumental chunky solid industrial clockwork steam boiler tower with large brass megaphone horn at top, riveted dark iron base, thick solid copper pipes, single isolated game prop object, 3/4 view, centered, pure solid white background, matte weathered metal, diffuse studio lighting, no background scenery, no pillars, no floating parts, no text",
+  "output_png": "/mnt/c/Users/Bruno/workspace/game-concerto/director_review/2026-11-22_ab_gerador_imagem/c5_prop_sirene_mestra__flux1_dev_fp8.png",
+  "elapsed_sec": 62.13,
+  "peak_vram_mib": 9770,
+  "vram_guard_mib": 10000,
+  "guard_ok": true,
+  "timestamp_utc": "2026-11-23T00:34:46.505603+00:00"
+}
