@@ -178,11 +178,17 @@ namespace Studio.Editor
                 "Head Tilt Left-Right", "Head Turn Left-Right"
             };
 
+            string[] nodMuscles =
+            {
+                "Neck Nod Down-Up", "Head Nod Down-Up"
+            };
+
             var bindings = AnimationUtility.GetCurveBindings(clean);
             foreach (var b in bindings)
             {
                 bool isLateral = lateralMuscles.Any(m => b.propertyName.Equals(m, StringComparison.OrdinalIgnoreCase));
-                if (!isLateral) continue;
+                bool isNod = nodMuscles.Any(m => b.propertyName.Equals(m, StringComparison.OrdinalIgnoreCase));
+                if (!isLateral && !isNod) continue;
 
                 var curve = AnimationUtility.GetEditorCurve(clean, b);
                 if (curve == null || curve.keys == null || curve.keys.Length == 0) continue;
@@ -195,7 +201,7 @@ namespace Studio.Editor
                     sum += curve.Evaluate((s / (float)samples) * len);
                 float dcOffset = sum / samples;
 
-                if (Mathf.Abs(dcOffset) > 0.005f)
+                if (isLateral && Mathf.Abs(dcOffset) > 0.005f)
                 {
                     var keys = curve.keys;
                     for (int k = 0; k < keys.Length; k++)
@@ -203,6 +209,17 @@ namespace Studio.Editor
                     curve.keys = keys;
                     AnimationUtility.SetEditorCurve(clean, b, curve);
                     Debug.Log($"[HeroDezAAA] Centered '{clean.name}' curve '{b.propertyName}': removed DC offset {dcOffset:F3}");
+                }
+                else if (isNod && dcOffset < 0.08f)
+                {
+                    // Garante cabeca erguida olhando para frente (evita postura cabisbaixa/triste)
+                    float lift = 0.08f - dcOffset;
+                    var keys = curve.keys;
+                    for (int k = 0; k < keys.Length; k++)
+                        keys[k].value = Mathf.Clamp(keys[k].value + lift, -1f, 1f);
+                    curve.keys = keys;
+                    AnimationUtility.SetEditorCurve(clean, b, curve);
+                    Debug.Log($"[HeroDezAAA] Lifted '{clean.name}' curve '{b.propertyName}': +{lift:F3} (mean {dcOffset:F3} -> 0.080)");
                 }
             }
 
@@ -240,9 +257,10 @@ namespace Studio.Editor
             //    - Idle: dez_idle_breath (MoMask 0 deg reto — UAL1 Idle_Loop tem -18.45 deg de desvio no ombro!)
             //    - Walk / Sprint / Jump 3 fases: UAL1_Standard.fbx (Walk=-0.86 deg, Sprint=+0.70 deg, 100% ciclicos).
             var ual = ConfigureAndLoadUalClips(Ual1FbxPath);
-            var cIdle      = ImportMoMaskClip("dez_idle_breath", true) ?? (ual.ContainsKey("Idle_Loop") ? ual["Idle_Loop"] : FindUalFallback("Idle_Loop"));
-            var rawWalk    = ual.ContainsKey("Walk_Loop")   ? ual["Walk_Loop"]   : FindUalFallback("Walk_Loop");
-            var rawRun     = ual.ContainsKey("Sprint_Loop") ? ual["Sprint_Loop"] : FindUalFallback("Sprint_Loop");
+            var rawIdle    = ImportMoMaskClip("dez_idle_breath", true) ?? (ual.ContainsKey("Idle_Loop") ? ual["Idle_Loop"] : FindUalFallback("Idle_Loop"));
+            var rawWalk    = ual.ContainsKey("Walk_Loop")    ? ual["Walk_Loop"]    : FindUalFallback("Walk_Loop");
+            var rawRun     = ual.ContainsKey("Jog_Fwd_Loop") ? ual["Jog_Fwd_Loop"] : FindUalFallback("Jog_Fwd_Loop");
+            var cIdle      = CreateCenteredLocomotionClip(rawIdle, "Assets/Game/Animations/Clean/Clean_Idle.anim") ?? rawIdle;
             var cWalk      = CreateCenteredLocomotionClip(rawWalk, "Assets/Game/Animations/Clean/Clean_Walk.anim") ?? rawWalk;
             var cRun       = CreateCenteredLocomotionClip(rawRun,  "Assets/Game/Animations/Clean/Clean_Run.anim")  ?? rawRun;
             var cJumpStart = ual.ContainsKey("Jump_Start")  ? ual["Jump_Start"]  : FindUalFallback("Jump_Start");
