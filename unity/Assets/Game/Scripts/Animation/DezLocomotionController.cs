@@ -22,11 +22,17 @@ namespace Studio.Game.Animation
         public float gravity = -18.0f;
         public float jumpHeight = 1.15f;
 
-        [Header("Camera 3a Pessoa (Modo Jogavel)")]
+        [Header("Camera 3a Pessoa Inteligente AAA (Modo Jogavel)")]
         public bool enablePlayableCamera = true;
         public float camDistance = 3.2f;
         public float camHeight = 1.25f;
         public float camMouseSens = 2.6f;
+        [Tooltip("Velocidade com que a camera se alinha suavemente atras do personagem quando o jogador nao gira o mouse.")]
+        public float camAutoAlignSpeedDeg = 95f;
+        public float camManualPauseSec = 1.6f;
+
+        [Header("Anti-Limbo (Seguranca Padrao da Fabrica)")]
+        public float killFloorY = -3.0f;
 
         private CharacterController _cc;
         private Animator _anim;
@@ -38,8 +44,11 @@ namespace Studio.Game.Animation
         private float _lastAirVy;
         private float _camYaw = 70f;
         private float _camPitch = 18f;
+        private float _lastManualCamTime = -10f;
         private Vector3 _camSmoothPos;
         private bool _camInit;
+        private Vector3 _lastSafeGroundedPos;
+        private bool _hasSafePos;
 
         // Inputs programaticos opcionais (para testes PlayMode e cutscenes)
         public Vector3 ScriptedMoveDir { get; set; }
@@ -104,13 +113,34 @@ namespace Studio.Game.Animation
                 wantJump = Input.GetKeyDown(KeyCode.Space);
 
                 // Rotacao de camera via mouse (segurando botao direito ou cursor travado) ou Q/E
+                bool manualCam = false;
                 if (Input.GetMouseButton(1) || Cursor.lockState == CursorLockMode.Locked)
                 {
-                    _camYaw += Input.GetAxis("Mouse X") * camMouseSens;
-                    _camPitch = Mathf.Clamp(_camPitch - Input.GetAxis("Mouse Y") * camMouseSens * 0.8f, -10f, 55f);
+                    float mx = Input.GetAxis("Mouse X");
+                    float my = Input.GetAxis("Mouse Y");
+                    if (Mathf.Abs(mx) > 0.01f || Mathf.Abs(my) > 0.01f) manualCam = true;
+                    _camYaw += mx * camMouseSens;
+                    _camPitch = Mathf.Clamp(_camPitch - my * camMouseSens * 0.8f, -10f, 55f);
                 }
-                if (Input.GetKey(KeyCode.Q)) _camYaw -= 110f * dt;
-                if (Input.GetKey(KeyCode.E)) _camYaw += 110f * dt;
+                if (Input.GetKey(KeyCode.Q)) { _camYaw -= 110f * dt; manualCam = true; }
+                if (Input.GetKey(KeyCode.E)) { _camYaw += 110f * dt; manualCam = true; }
+                if (manualCam) _lastManualCamTime = Time.time;
+
+                // Smart Auto-Align AAA (padrao Zelda BotW / Mario 3D / Ratchet):
+                // Quando o jogador anda/vira sem mexer na camera, ela orbita suavemente atras das costas da Dez!
+                if (!manualCam && (Time.time - _lastManualCamTime) > camManualPauseSec && _currentSpeed > 0.35f)
+                {
+                    // Se o jogador apertou S (andando em direcao a camera), nao gira bruscamente; alinha suavemente em curvas/laterais
+                    float dotFwd = Vector3.Dot(transform.forward, camFwd);
+                    if (dotFwd > -0.55f)
+                    {
+                        float targetYaw = transform.eulerAngles.y;
+                        float yawDelta = Mathf.DeltaAngle(_camYaw, targetYaw);
+                        float alignStrength = Mathf.Clamp01(Mathf.Abs(h) * 0.85f + 0.35f);
+                        _camYaw = Mathf.MoveTowardsAngle(_camYaw, targetYaw, camAutoAlignSpeedDeg * alignStrength * dt);
+                    }
+                }
+
                 float scroll = Input.GetAxis("Mouse ScrollWheel");
                 if (Mathf.Abs(scroll) > 0.001f)
                     camDistance = Mathf.Clamp(camDistance - scroll * 2.0f, 1.8f, 6.0f);
@@ -169,6 +199,20 @@ namespace Studio.Game.Animation
                 _proc.SetLocomotionState(_cc.isGrounded, _currentSpeed, turnRate);
             }
             _wasGrounded = _cc.isGrounded;
+
+            // Seguranca Anti-Limbo (padrao da fabrica): grava ultimo ponto seguro no chao e resgata se cair fora do mapa
+            if (_cc.isGrounded && transform.position.y > -0.5f)
+            {
+                _lastSafeGroundedPos = transform.position;
+                _hasSafePos = true;
+            }
+            if (!UseScriptedInput && _hasSafePos && transform.position.y < killFloorY)
+            {
+                _cc.enabled = false;
+                transform.position = _lastSafeGroundedPos + Vector3.up * 0.25f;
+                _verticalVel = 0f;
+                _cc.enabled = true;
+            }
         }
 
         private void LateUpdate()
@@ -179,12 +223,14 @@ namespace Studio.Game.Animation
 
             Vector3 pivot = transform.position + Vector3.up * camHeight;
             Quaternion rot = Quaternion.Euler(_camPitch, _camYaw, 0f);
-            Vector3 desiredPos = pivot - (rot * Vector3.forward) * camDistance;
+            Vector3 dir = -(rot * Vector3.forward);
+            Vector3 desiredPos = pivot + dir * camDistance;
 
-            if (Physics.Linecast(pivot, desiredPos, out RaycastHit hit, ~0, QueryTriggerInteraction.Ignore))
+            // Spring Arm com SphereCast (raio 0.22m) — nunca atravessa quinas de paredes ou canos!
+            if (Physics.SphereCast(pivot, 0.22f, dir, out RaycastHit hit, camDistance, ~0, QueryTriggerInteraction.Ignore))
             {
                 if (hit.transform.root != transform.root)
-                    desiredPos = hit.point + hit.normal * 0.25f;
+                    desiredPos = pivot + dir * Mathf.Max(0.75f, hit.distance - 0.12f);
             }
 
             if (!_camInit)

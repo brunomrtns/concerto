@@ -32,8 +32,8 @@ namespace Studio.Game.Animation
         public float maxBankDeg = 12f;
         public float runForwardLeanDeg = 8.5f;
         public float idleWeightSwayMeters = 0.012f;
-        [Tooltip("Fecha levemente as coxas andando/correndo em personagens estilizados/chibi (evita pernas abertas demais).")]
-        public float legAdductionDeg = 10.5f;
+        [Tooltip("Fecha as coxas andando/correndo em personagens estilizados/chibi (evita pernas abertas demais vistas por tras).")]
+        public float legAdductionDeg = 14.0f;
         [Tooltip("Movimento dinamico e relaxamento natural dos pulsos/maos.")]
         public float handDynamicAmpDeg = 11.0f;
 
@@ -176,21 +176,23 @@ namespace Studio.Game.Animation
             if (shL != null) shL.rotation = Quaternion.AngleAxis(breath * 1.1f, charFwd) * shL.rotation;
             if (shR != null) shR.rotation = Quaternion.AngleAxis(-breath * 1.1f, charFwd) * shR.rotation;
 
-            // 1B. Aducao suave das coxas ao andar/correr (passada fechada e agil sob o quadril, sem "coxas assadas"!)
+            // 1B. Aducao suave das coxas ao andar/correr (passada fechada e agil sob o quadril vista por tras!)
+            // Prova Unity left-handed (+Z frente, -Y perna para baixo):
+            //   +deg em torno de +Z move (0,-1,0) para (+sin, -cos, 0) = DIREITA (+X) -> FECHA a perna ESQUERDA!
+            //   -deg em torno de +Z move (0,-1,0) para (-sin, -cos, 0) = ESQUERDA (-X) -> FECHA a perna DIREITA!
             if (_isGrounded && _currentSpeed > 0.12f && legAdductionDeg > 0.1f)
             {
-                float moveW = Mathf.Clamp01(_currentSpeed / 1.35f);
+                float moveW = Mathf.Clamp01(_currentSpeed / 1.25f);
                 float addDeg = legAdductionDeg * moveW;
                 Transform lUp = _anim.GetBoneTransform(HumanBodyBones.LeftUpperLeg);
                 Transform rUp = _anim.GetBoneTransform(HumanBodyBones.RightUpperLeg);
                 Transform lLow = _anim.GetBoneTransform(HumanBodyBones.LeftLowerLeg);
                 Transform rLow = _anim.GetBoneTransform(HumanBodyBones.RightLowerLeg);
-                // Fecha coxa esquerda para dentro (-charFwd) e direita para dentro (+charFwd)
-                if (lUp != null) lUp.rotation = Quaternion.AngleAxis(-addDeg, charFwd) * lUp.rotation;
-                if (rUp != null) rUp.rotation = Quaternion.AngleAxis( addDeg, charFwd) * rUp.rotation;
-                // Compensa levemente na canela (45%) para manter as botas retas e paralelas no chao
-                if (lLow != null) lLow.rotation = Quaternion.AngleAxis( addDeg * 0.45f, charFwd) * lLow.rotation;
-                if (rLow != null) rLow.rotation = Quaternion.AngleAxis(-addDeg * 0.45f, charFwd) * rLow.rotation;
+                if (lUp != null) lUp.rotation = Quaternion.AngleAxis( addDeg, charFwd) * lUp.rotation;
+                if (rUp != null) rUp.rotation = Quaternion.AngleAxis(-addDeg, charFwd) * rUp.rotation;
+                // Compensa 60% na canela para manter joelhos alinhados e botas 100% paralelas no piso
+                if (lLow != null) lLow.rotation = Quaternion.AngleAxis(-addDeg * 0.60f, charFwd) * lLow.rotation;
+                if (rLow != null) rLow.rotation = Quaternion.AngleAxis( addDeg * 0.60f, charFwd) * rLow.rotation;
             }
 
             // 1C. Movimento dinamico natural dos pulsos/maos (relaxamento em idle + follow-through elastico andando/correndo)

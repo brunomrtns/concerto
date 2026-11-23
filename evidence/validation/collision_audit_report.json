@@ -1,0 +1,9 @@
+{
+  "scene": "Assets/Game/Scenes/Caldeiral.unity",
+  "solid_renderers_checked": 167,
+  "already_had_collider": 97,
+  "added_box_colliders": 47,
+  "added_mesh_colliders": 23,
+  "total_added": 70,
+  "sample_fixed_objects": ["caldeiral_env_portal_pillar", "Z3_BridgeZ4_Ceiling", "c5_prop_sirene_mestra", "Z4_C3_RingRailings_And_ExitArch", "c5_prop_no_resincronia", "caldeiral_env_portal_pillar", "caldeiral_env_portal_pillar", "Z2_TunnelZ3_Ceiling", "caldeiral_env_portal_pillar", "caldeiral_env_portal_pillar", "caldeiral_env_portal_pillar", "caldeiral_env_portal_pillar", "Z4_C3_DomeRibs_And_Columns", "caldeiral_env_vapor_pipe", "Z1_ArchTunnel_Ceiling", "caldeiral_env_portal_pillar", "caldeiral_env_vapor_pipe", "Z1_CeilingBeam_A", "caldeiral_env_vapor_pipe", "Z5_C3_Mirante_OpenParapet", "Z1_C3_LeadingPipes", "caldeiral_env_vapor_pipe", "Z1_C3_Architecture_Trim", "Z2_CeilingBeam_A", "Z3_Patio_Ceiling"]
+}
