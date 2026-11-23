@@ -26,12 +26,16 @@ namespace Studio.Game.Animation
         public float landingSpringK = 180f;
         public float landingDamping = 20f;
 
-        [Header("Idle Vivo, Corrida & Banking")]
+        [Header("Idle Vivo, Corrida, Passada & Maos")]
         public float breathCycleSec = 3.8f;
         public float breathChestDeg = 2.8f;
-        public float maxBankDeg = 14f;
-        public float runForwardLeanDeg = 9.5f;
+        public float maxBankDeg = 12f;
+        public float runForwardLeanDeg = 8.5f;
         public float idleWeightSwayMeters = 0.012f;
+        [Tooltip("Fecha levemente as coxas andando/correndo em personagens estilizados/chibi (evita pernas abertas demais).")]
+        public float legAdductionDeg = 10.5f;
+        [Tooltip("Movimento dinamico e relaxamento natural dos pulsos/maos.")]
+        public float handDynamicAmpDeg = 11.0f;
 
         [Header("Sombra de Contato (Peso & Gravidade)")]
         public bool enableContactShadow = true;
@@ -145,24 +149,74 @@ namespace Studio.Game.Animation
         {
             if (_anim == null || !_anim.isHuman) return;
 
-            // 1. Respiracao continua no torax/ombros (ciclo ~3.8s) + inclinacao de corrida + banking
+            // 1. Respiracao continua + inclinacao atletica + banking EM ESPACO DO PERSONAGEM (zero torcao diagonal!)
             float phase = (Time.time / Mathf.Max(0.5f, breathCycleSec)) * Mathf.PI * 2f;
             float breath = Mathf.Sin(phase);
+            Vector3 charRight = transform.right;
+            Vector3 charFwd = transform.forward;
+            Vector3 charUp = transform.up;
+
             Transform chest = _anim.GetBoneTransform(HumanBodyBones.Chest);
             if (chest != null)
             {
-                chest.localRotation *= Quaternion.Euler(breath * breathChestDeg + _currentLean * 0.55f, 0f, _currentBank * 0.5f);
+                Quaternion qPitch = Quaternion.AngleAxis(breath * breathChestDeg + _currentLean * 0.55f, charRight);
+                Quaternion qBank  = Quaternion.AngleAxis(_currentBank * 0.5f, charFwd);
+                chest.rotation = qBank * qPitch * chest.rotation;
             }
             Transform spine = _anim.GetBoneTransform(HumanBodyBones.Spine);
             if (spine != null && (Mathf.Abs(_currentBank) > 0.05f || _currentLean > 0.05f))
             {
-                spine.localRotation *= Quaternion.Euler(_currentLean * 0.45f, 0f, _currentBank * 0.5f);
+                Quaternion qPitch = Quaternion.AngleAxis(_currentLean * 0.45f, charRight);
+                Quaternion qBank  = Quaternion.AngleAxis(_currentBank * 0.5f, charFwd);
+                spine.rotation = qBank * qPitch * spine.rotation;
             }
             // Respiracao sutil nos ombros em repouso
             Transform shL = _anim.GetBoneTransform(HumanBodyBones.LeftShoulder);
             Transform shR = _anim.GetBoneTransform(HumanBodyBones.RightShoulder);
-            if (shL != null) shL.localRotation *= Quaternion.Euler(0f, 0f, breath * 1.1f);
-            if (shR != null) shR.localRotation *= Quaternion.Euler(0f, 0f, -breath * 1.1f);
+            if (shL != null) shL.rotation = Quaternion.AngleAxis(breath * 1.1f, charFwd) * shL.rotation;
+            if (shR != null) shR.rotation = Quaternion.AngleAxis(-breath * 1.1f, charFwd) * shR.rotation;
+
+            // 1B. Aducao suave das coxas ao andar/correr (passada fechada e agil sob o quadril, sem "coxas assadas"!)
+            if (_isGrounded && _currentSpeed > 0.12f && legAdductionDeg > 0.1f)
+            {
+                float moveW = Mathf.Clamp01(_currentSpeed / 1.35f);
+                float addDeg = legAdductionDeg * moveW;
+                Transform lUp = _anim.GetBoneTransform(HumanBodyBones.LeftUpperLeg);
+                Transform rUp = _anim.GetBoneTransform(HumanBodyBones.RightUpperLeg);
+                Transform lLow = _anim.GetBoneTransform(HumanBodyBones.LeftLowerLeg);
+                Transform rLow = _anim.GetBoneTransform(HumanBodyBones.RightLowerLeg);
+                // Fecha coxa esquerda para dentro (-charFwd) e direita para dentro (+charFwd)
+                if (lUp != null) lUp.rotation = Quaternion.AngleAxis(-addDeg, charFwd) * lUp.rotation;
+                if (rUp != null) rUp.rotation = Quaternion.AngleAxis( addDeg, charFwd) * rUp.rotation;
+                // Compensa levemente na canela (45%) para manter as botas retas e paralelas no chao
+                if (lLow != null) lLow.rotation = Quaternion.AngleAxis( addDeg * 0.45f, charFwd) * lLow.rotation;
+                if (rLow != null) rLow.rotation = Quaternion.AngleAxis(-addDeg * 0.45f, charFwd) * rLow.rotation;
+            }
+
+            // 1C. Movimento dinamico natural dos pulsos/maos (relaxamento em idle + follow-through elastico andando/correndo)
+            Transform handL = _anim.GetBoneTransform(HumanBodyBones.LeftHand);
+            Transform handR = _anim.GetBoneTransform(HumanBodyBones.RightHand);
+            if (handL != null || handR != null)
+            {
+                float moveFactor = Mathf.Clamp01(_currentSpeed / 2.2f);
+                float strideFreq = Mathf.Lerp(1.6f, 9.5f, moveFactor);
+                float swing = Mathf.Sin(Time.time * strideFreq) * handDynamicAmpDeg * (0.28f + 0.72f * moveFactor);
+                float relaxPitch = _isGrounded ? (7.5f + breath * 2.0f) : -12.0f; // relaxa no chao, abre leve no pulo
+                float inwardCup = _isGrounded ? 8.0f : -6.0f;
+
+                if (handL != null)
+                {
+                    Quaternion qH = Quaternion.AngleAxis(relaxPitch + swing, charRight)
+                                  * Quaternion.AngleAxis(-inwardCup, charUp);
+                    handL.rotation = qH * handL.rotation;
+                }
+                if (handR != null)
+                {
+                    Quaternion qH = Quaternion.AngleAxis(relaxPitch - swing, charRight)
+                                  * Quaternion.AngleAxis(inwardCup, charUp);
+                    handR.rotation = qH * handR.rotation;
+                }
+            }
 
             // 2. Micro-sway organico de peso no quadril em Idle + Absorcao de queda (Landing Dip)
             Transform hips = _anim.GetBoneTransform(HumanBodyBones.Hips);

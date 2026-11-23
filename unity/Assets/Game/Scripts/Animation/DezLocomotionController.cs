@@ -67,6 +67,7 @@ namespace Studio.Game.Animation
             }
             _anim = GetComponentInChildren<Animator>(true);
             _proc = GetComponentInChildren<DezProceduralAnimator>(true);
+            _camYaw = transform.eulerAngles.y;
         }
 
         private void Update()
@@ -94,8 +95,10 @@ namespace Studio.Game.Animation
             {
                 float h = Input.GetAxisRaw("Horizontal");
                 float v = Input.GetAxisRaw("Vertical");
-                Quaternion camFlat = Quaternion.Euler(0f, _camYaw, 0f);
-                desiredDir = (camFlat * Vector3.forward * v + camFlat * Vector3.right * h);
+                // Direcao sempre 100% alinhada ao eixo horizontal real da camera (W = reto para frente na tela!)
+                Vector3 camFwd = Quaternion.Euler(0f, _camYaw, 0f) * Vector3.forward;
+                Vector3 camRight = Quaternion.Euler(0f, _camYaw, 0f) * Vector3.right;
+                desiredDir = (camFwd * v + camRight * h);
                 if (desiredDir.sqrMagnitude > 1f) desiredDir.Normalize();
                 wantRun = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
                 wantJump = Input.GetKeyDown(KeyCode.Space);
