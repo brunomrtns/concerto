@@ -177,15 +177,14 @@ namespace Studio.Editor
             if (avatar == null || !avatar.isValid || !avatar.isHuman)
                 throw new Exception("Avatar Humanoid do hero_dez_humanoid.fbx invalido!");
 
-            // 2. Arquitetura AAA Hibrida v8 (Melhor dos dois mundos):
-            //    - Idle / Walk / Run: MoMask 60fps (postura ereta, natural, humana, sem corcunda nem perna aberta!)
-            //      com Body Orientation 0 deg + Foot IK flat-safe (zero pe torto!).
-            //    - Pulo em 3 fases reais: UAL1_Standard.fbx (Jump_Start -> Jump_Loop -> Jump_Land).
+            // 2. Arquitetura AAA Hibrida v8.1:
+            //    - Idle / Walk: MoMask 60fps (postura ereta, natural, humana)
+            //    - Run: UAL1 Jog_Fwd_Loop (1.25x) -> corrida atletica real, bracos dobrados, ereta (sem corcunda do Sprint_Loop!)
+            //    - Pulo em 3 fases reais: UAL1 (Jump_Start -> Jump_Loop -> Jump_Land).
             var ual = ConfigureAndLoadUalClips(Ual1FbxPath);
             var cIdle      = ImportMoMaskClip("dez_idle_breath", true) ?? (ual.ContainsKey("Idle_Loop") ? ual["Idle_Loop"] : FindUalFallback("Idle_Loop"));
             var cWalk      = ImportMoMaskClip("dez_walk_loop", true)   ?? (ual.ContainsKey("Walk_Loop") ? ual["Walk_Loop"] : FindUalFallback("Walk_Loop"));
-            var cRun       = ImportMoMaskClip("dez_run_loop", true)    ?? (ual.ContainsKey("Sprint_Loop") ? ual["Sprint_Loop"] : FindUalFallback("Sprint_Loop"));
-            var cJog       = cWalk;
+            var cRun       = ual.ContainsKey("Jog_Fwd_Loop") ? ual["Jog_Fwd_Loop"] : ImportMoMaskClip("dez_run_loop", true);
             var cJumpStart = ual.ContainsKey("Jump_Start")   ? ual["Jump_Start"]   : ImportMoMaskClip("dez_jump_full", false);
             var cJumpLoop  = ual.ContainsKey("Jump_Loop")    ? ual["Jump_Loop"]    : cJumpStart;
             var cJumpLand  = ual.ContainsKey("Jump_Land")    ? ual["Jump_Land"]    : cIdle;
@@ -224,12 +223,13 @@ namespace Studio.Editor
             blendTree.AddChild(cWalk, new Vector2( 0.85f, 0.00f));
             blendTree.AddChild(cWalk, new Vector2( 0.0f, 1.45f));
             blendTree.AddChild(cRun,  new Vector2( 0.0f, 3.45f));
-            // Ajusta timeScale dos filhos Turn para passos pivo naturais (0.78x)
+            // Ajusta timeScale dos filhos Turn (0.78x) e Run Jog_Fwd_Loop (1.25x = corrida atletica ereta!)
             var ch = blendTree.children;
-            if (ch.Length >= 3)
+            if (ch.Length >= 5)
             {
                 ch[1].timeScale = 0.78f;
                 ch[2].timeScale = 0.78f;
+                ch[4].timeScale = 1.25f;
                 blendTree.children = ch;
             }
 
@@ -360,8 +360,7 @@ namespace Studio.Editor
                 $"  \"clips\": {{\n" +
                 $"    \"idle\": \"{(cIdle ? cIdle.name : "")} (human={cIdle?.isHumanMotion}, fps={cIdle?.frameRate})\",\n" +
                 $"    \"walk\": \"{(cWalk ? cWalk.name : "")} (human={cWalk?.isHumanMotion}, fps={cWalk?.frameRate})\",\n" +
-                $"    \"jog\": \"{(cJog ? cJog.name : "")} (human={cJog?.isHumanMotion}, fps={cJog?.frameRate})\",\n" +
-                $"    \"run\": \"{(cRun ? cRun.name : "")} (human={cRun?.isHumanMotion}, fps={cRun?.frameRate})\",\n" +
+                $"    \"run\": \"{(cRun ? cRun.name : "")} (human={cRun?.isHumanMotion}, fps={cRun?.frameRate}, scale=1.25x)\",\n" +
                 $"    \"jump_start\": \"{(cJumpStart ? cJumpStart.name : "")} (human={cJumpStart?.isHumanMotion}, fps={cJumpStart?.frameRate})\",\n" +
                 $"    \"jump_loop\": \"{(cJumpLoop ? cJumpLoop.name : "")} (human={cJumpLoop?.isHumanMotion}, fps={cJumpLoop?.frameRate})\",\n" +
                 $"    \"jump_land\": \"{(cJumpLand ? cJumpLand.name : "")} (human={cJumpLand?.isHumanMotion}, fps={cJumpLand?.frameRate})\"\n" +
