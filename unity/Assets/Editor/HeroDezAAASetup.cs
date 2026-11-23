@@ -369,7 +369,10 @@ namespace Studio.Editor
                 if (locoType != null && dezTarget.GetComponent(locoType) == null)
                     dezTarget.AddComponent(locoType);
 
-                var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath);
+                // Nunca regredir para o modelo antigo (hero_dez) se o canonico novo (hero_dex) ja existir!
+                const string DexPrefabPath = "Assets/Game/Prefabs/Fab3D/hero_dex_humanoid.prefab";
+                var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(DexPrefabPath)
+                             ?? AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath);
                 var oldVis = dezTarget.transform.Find("Player_Dez_Placeholder_HeroVisual");
                 if (oldVis != null) UnityEngine.Object.DestroyImmediate(oldVis.gameObject);
 
