@@ -1,0 +1,24 @@
+{
+  "gate_pass": false,
+  "n_componentes": 8,
+  "areas_componentes_pct": [
+    10.87,
+    10.86,
+    10.76,
+    10.72,
+    10.66,
+    10.6,
+    10.58,
+    10.56
+  ],
+  "calhas": true,
+  "corte": false,
+  "max_border_touch_pct": 0.0,
+  "razao": "multi_sujeito_ou_grade(8_componentes>=5%); calha_branca_grade(H+V)",
+  "backend": "cpu-border-bg-darkframe",
+  "image": "/mnt/c/Users/Bruno/workspace/game-concerto/director_review/2026-11-22_c5_conceitos_porca_dez/painel_unificado_porca_dez_4x2.png",
+  "size": [
+    1750,
+    874
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "gate_pass": false,
+  "n_componentes": 1,
+  "areas_componentes_pct": [
+    74.93
+  ],
+  "calhas": false,
+  "corte": true,
+  "max_border_touch_pct": 75.52,
+  "razao": "corte_borda(max=75.5%)",
+  "backend": "cpu-border-bg-light",
+  "image": "/mnt/c/Users/Bruno/workspace/game-concerto/director_review/2026-11-22_ab_gerador_imagem/c5_prop_bancada_relogio__sdxl_turbo.png",
+  "size": [
+    768,
+    768
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "gate_pass": false,
+  "n_componentes": 1,
+  "areas_componentes_pct": [
+    77.02
+  ],
+  "calhas": false,
+  "corte": true,
+  "max_border_touch_pct": 66.15,
+  "razao": "corte_borda(max=66.1%)",
+  "backend": "cpu-border-bg-light",
+  "image": "/mnt/c/Users/Bruno/workspace/game-concerto/director_review/2026-11-22_ab_gerador_imagem/c5_prop_valvula_ritmica__sdxl_turbo.png",
+  "size": [
+    768,
+    768
+  ]
+}

@@ -186,6 +186,20 @@ def main():
     report["art_bible"] = args.art_bible or ""
     report["output_win"] = str(out_png)
 
+    # Gate Anti-Grade / Sujeito Unico obrigatorio para mode == concept (RUN mega_v5)
+    if args.mode == "concept":
+        gate_script = Path(r"C:\Users\Bruno\workspace\3dprinter-setup-ia\tools\generator\gate_concept_image.py")
+        if gate_script.exists():
+            gres = subprocess.run(
+                ["wsl", args.wsl_python, to_wsl_path(gate_script), to_wsl_path(out_png)],
+                capture_output=True, text=True,
+            )
+            gate_json_path = out_png.with_suffix(".gate.json")
+            if gate_json_path.exists():
+                gdata = json.loads(gate_json_path.read_text(encoding="utf-8"))
+                report["gate_pass"] = gdata.get("gate_pass")
+                report["gate_razao"] = gdata.get("razao")
+
     ev_dir = ROOT / "evidence" / "art"
     ev_dir.mkdir(parents=True, exist_ok=True)
     ev_path = ev_dir / f"concept_{args.name}.json"

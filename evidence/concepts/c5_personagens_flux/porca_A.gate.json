@@ -1,0 +1,18 @@
+{
+  "gate_pass": false,
+  "n_componentes": 2,
+  "areas_componentes_pct": [
+    25.85,
+    5.24
+  ],
+  "calhas": true,
+  "corte": false,
+  "max_border_touch_pct": 0.0,
+  "razao": "multi_sujeito_ou_grade(2_componentes>=5%); calha_branca_grade(H)",
+  "backend": "cpu-border-bg-light",
+  "image": "/mnt/c/Users/Bruno/workspace/game-concerto/evidence/concepts/c5_personagens_flux/porca_A.png",
+  "size": [
+    768,
+    768
+  ]
+}

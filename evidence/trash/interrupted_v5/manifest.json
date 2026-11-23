@@ -1,0 +1,15 @@
+{
+  "run": "RUN mega_v5 — TAREFA 1 (Parada limpa do fluxo atual)",
+  "timestamp_utc": "2026-11-23T01:01:49Z",
+  "interrupted_job": "tools/art/ai_generator/run_c5_props_batch2_3d.py (task-1717)",
+  "interrupted_stage": "prop 1/4 (c5_prop_banca_tio_horario) -> 02_paint_hunyuan (loading delight pipeline)",
+  "reason": "parada do dono — mega_v5 (gate anti-grade + auditoria retroativa antes de continuar 3D)",
+  "archived_work_path_wsl": "/home/bruno/printer3d-work/trash/interrupted_v5/c5_props_batch2_20261122",
+  "nvidia_smi_after_stop": {
+    "gpu": "NVIDIA GeForce RTX 3060",
+    "memory_used_mib": 741,
+    "memory_total_mib": 12288,
+    "temp_c": 33,
+    "active_python_gpu_procs": 0
+  }
+}

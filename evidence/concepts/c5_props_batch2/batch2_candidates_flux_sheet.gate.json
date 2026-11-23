@@ -1,0 +1,24 @@
+{
+  "gate_pass": false,
+  "n_componentes": 8,
+  "areas_componentes_pct": [
+    10.71,
+    10.63,
+    10.56,
+    10.48,
+    10.48,
+    10.45,
+    10.15,
+    9.9
+  ],
+  "calhas": true,
+  "corte": false,
+  "max_border_touch_pct": 0.0,
+  "razao": "multi_sujeito_ou_grade(8_componentes>=5%); calha_branca_grade(H+V)",
+  "backend": "cpu-border-bg-darkframe",
+  "image": "/mnt/c/Users/Bruno/workspace/game-concerto/evidence/concepts/c5_props_batch2/batch2_candidates_flux_sheet.png",
+  "size": [
+    1008,
+    2176
+  ]
+}

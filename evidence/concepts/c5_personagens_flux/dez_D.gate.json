@@ -1,0 +1,17 @@
+{
+  "gate_pass": true,
+  "n_componentes": 1,
+  "areas_componentes_pct": [
+    24.93
+  ],
+  "calhas": false,
+  "corte": false,
+  "max_border_touch_pct": 2.6,
+  "razao": "OK (sujeito unico, vista unica)",
+  "backend": "cpu-border-bg-light",
+  "image": "/mnt/c/Users/Bruno/workspace/game-concerto/evidence/concepts/c5_personagens_flux/dez_D.png",
+  "size": [
+    768,
+    768
+  ]
+}

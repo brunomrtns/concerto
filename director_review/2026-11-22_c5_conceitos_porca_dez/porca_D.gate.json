@@ -1,0 +1,17 @@
+{
+  "gate_pass": false,
+  "n_componentes": 1,
+  "areas_componentes_pct": [
+    70.29
+  ],
+  "calhas": false,
+  "corte": true,
+  "max_border_touch_pct": 100.0,
+  "razao": "corte_borda(max=100.0%)",
+  "backend": "cpu-border-bg-light",
+  "image": "/mnt/c/Users/Bruno/workspace/game-concerto/director_review/2026-11-22_c5_conceitos_porca_dez/porca_D.png",
+  "size": [
+    832,
+    768
+  ]
+}

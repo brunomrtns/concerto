@@ -1,0 +1,17 @@
+{
+  "gate_pass": false,
+  "n_componentes": 1,
+  "areas_componentes_pct": [
+    48.26
+  ],
+  "calhas": false,
+  "corte": true,
+  "max_border_touch_pct": 90.1,
+  "razao": "corte_borda(max=90.1%)",
+  "backend": "cpu-border-bg-light",
+  "image": "/mnt/c/Users/Bruno/workspace/game-concerto/evidence/concepts/c5_personagens/porca_B.png",
+  "size": [
+    768,
+    768
+  ]
+}

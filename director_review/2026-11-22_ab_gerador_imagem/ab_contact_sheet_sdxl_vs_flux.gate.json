@@ -1,0 +1,24 @@
+{
+  "gate_pass": false,
+  "n_componentes": 8,
+  "areas_componentes_pct": [
+    10.88,
+    10.86,
+    10.75,
+    10.75,
+    10.69,
+    10.66,
+    10.62,
+    10.3
+  ],
+  "calhas": true,
+  "corte": false,
+  "max_border_touch_pct": 0.0,
+  "razao": "multi_sujeito_ou_grade(8_componentes>=5%); calha_branca_grade(H+V)",
+  "backend": "cpu-border-bg-darkframe",
+  "image": "/mnt/c/Users/Bruno/workspace/game-concerto/director_review/2026-11-22_ab_gerador_imagem/ab_contact_sheet_sdxl_vs_flux.png",
+  "size": [
+    1078,
+    2338
+  ]
+}

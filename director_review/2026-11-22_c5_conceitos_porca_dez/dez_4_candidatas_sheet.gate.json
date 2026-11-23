@@ -1,0 +1,20 @@
+{
+  "gate_pass": false,
+  "n_componentes": 4,
+  "areas_componentes_pct": [
+    22.69,
+    22.41,
+    22.36,
+    22.34
+  ],
+  "calhas": true,
+  "corte": false,
+  "max_border_touch_pct": 0.0,
+  "razao": "multi_sujeito_ou_grade(4_componentes>=5%); calha_branca_grade(H+V)",
+  "backend": "cpu-border-bg-darkframe",
+  "image": "/mnt/c/Users/Bruno/workspace/game-concerto/director_review/2026-11-22_c5_conceitos_porca_dez/dez_4_candidatas_sheet.png",
+  "size": [
+    1712,
+    1638
+  ]
+}

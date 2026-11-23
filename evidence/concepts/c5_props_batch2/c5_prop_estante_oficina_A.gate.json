@@ -1,0 +1,17 @@
+{
+  "gate_pass": true,
+  "n_componentes": 1,
+  "areas_componentes_pct": [
+    38.75
+  ],
+  "calhas": false,
+  "corte": false,
+  "max_border_touch_pct": 0.0,
+  "razao": "OK (sujeito unico, vista unica)",
+  "backend": "cpu-border-bg-light",
+  "image": "/mnt/c/Users/Bruno/workspace/game-concerto/evidence/concepts/c5_props_batch2/c5_prop_estante_oficina_A.png",
+  "size": [
+    768,
+    768
+  ]
+}

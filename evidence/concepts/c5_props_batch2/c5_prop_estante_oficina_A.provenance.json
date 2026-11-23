@@ -1,0 +1,20 @@
+{
+  "runner": "3dprinter-setup-ia/tools/generator/concept_flux.py",
+  "backend": "ComfyUI headless (--lowvram)",
+  "model": "flux1-dev-fp8",
+  "weights_file": "/home/bruno/tools/comfyui/models/checkpoints/flux1-dev-fp8.safetensors",
+  "weights_sha256": "8e91b68084b53a7fc44ed2a3756d821e355ac1a7b6fe29be760c1db532f3d88a",
+  "license_note": "FLUX.1-dev = BFL non-commercial (personal/vertical-slice OK; migrate to FLUX.1-schnell Apache 2.0 or BFL license for commercial release)",
+  "seed": 42,
+  "width": 768,
+  "height": 768,
+  "steps": 20,
+  "guidance": 3.5,
+  "prompt": "sturdy industrial clockmaker workshop shelving rack made of riveted dark iron frame and thick weathered timber shelves, holding chunky brass gears, copper oil cans and wooden toolboxes, solid compact structure, clockwork-industrial Kit 4.0 game prop, single isolated object, 3/4 view, centered, pure solid white studio background, diffuse studio lighting, matte wood and metal, no background scenery, no text",
+  "output_png": "/mnt/c/Users/Bruno/workspace/game-concerto/evidence/concepts/c5_props_batch2/c5_prop_estante_oficina_A.png",
+  "elapsed_sec": 45.34,
+  "peak_vram_mib": 10158,
+  "vram_guard_mib": 10000,
+  "guard_ok": false,
+  "timestamp_utc": "2026-11-23T00:52:52.843880+00:00"
+}

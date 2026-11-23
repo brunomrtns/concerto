@@ -1,0 +1,42 @@
+[
+  {
+    "id": "c5_prop_banca_tio_horario",
+    "category": "env_tile",
+    "max_tris": 2000,
+    "prompt": "chunky weathered timber and dark riveted iron clockmaker merchant counter booth, brass gears, coiled copper springs, small pressure gauges and leather pouches neatly displayed on sturdy wooden tabletop, clockwork-industrial Kit 4.0 game prop, single isolated object, 3/4 view, centered, pure solid white studio background, diffuse studio lighting, matte metal and wood, no background scenery, no text",
+    "candidates": [
+      "c5_prop_banca_tio_horario_A.png",
+      "c5_prop_banca_tio_horario_B.png"
+    ]
+  },
+  {
+    "id": "c5_prop_catraca_sync",
+    "category": "env_tile",
+    "max_tris": 1500,
+    "prompt": "heavy clockwork industrial brass and dark iron mechanical turnstile security gate pedestal, chunky three-arm rotating brass barrier wheel, riveted dark iron housing with glowing warm amber sync dial on top, Kit 4.0 clockwork-industrial game prop, single isolated object, 3/4 view, centered, pure solid white studio background, diffuse studio lighting, matte weathered metal, no background scenery, no text",
+    "candidates": [
+      "c5_prop_catraca_sync_A.png",
+      "c5_prop_catraca_sync_B.png"
+    ]
+  },
+  {
+    "id": "c5_prop_caixote_oficina",
+    "category": "small_prop_item",
+    "max_tris": 600,
+    "prompt": "chunky sturdy industrial workshop storage crate made of weathered dark wood planks reinforced with riveted dark iron corner brackets and brass clasps, clockwork-industrial Kit 4.0 game prop, single isolated cube crate object, 3/4 view, centered, pure solid white studio background, diffuse studio lighting, matte wood and metal, no background scenery, no text",
+    "candidates": [
+      "c5_prop_caixote_oficina_A.png",
+      "c5_prop_caixote_oficina_B.png"
+    ]
+  },
+  {
+    "id": "c5_prop_estante_oficina",
+    "category": "env_tile",
+    "max_tris": 2000,
+    "prompt": "sturdy industrial clockmaker workshop shelving rack made of riveted dark iron frame and thick weathered timber shelves, holding chunky brass gears, copper oil cans and wooden toolboxes, solid compact structure, clockwork-industrial Kit 4.0 game prop, single isolated object, 3/4 view, centered, pure solid white studio background, diffuse studio lighting, matte wood and metal, no background scenery, no text",
+    "candidates": [
+      "c5_prop_estante_oficina_A.png",
+      "c5_prop_estante_oficina_B.png"
+    ]
+  }
+]
