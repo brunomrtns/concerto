@@ -127,28 +127,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: debf8739454608f45979d3003751353d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Studio.Game.Animation.DezProceduralAnimator
-  enableFootIK: 1
-  footRaycastUp: 0.55
-  footRaycastDown: 1
-  footOffsetY: 0.04
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  landingDipStrength: 0.026
-  landingMaxDip: 0.16
+  landingDipStrength: 0.022
+  landingMaxDip: 0.14
   landingSpringK: 180
   landingDamping: 20
   breathCycleSec: 3.8
-  breathChestDeg: 2.8
-  maxBankDeg: 10
-  runForwardLeanDeg: 6
-  idleWeightSwayMeters: 0.012
-  legAdductionDeg: 0
-  handDynamicAmpDeg: 11
+  breathChestDeg: 1.8
   enableContactShadow: 1
   shadowBaseRadius: 0.34
-  lookTarget: {fileID: 0}
-  lookWeight: 0.55
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &2069799460885112828 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -7816765921374009594, guid: 5fe5ecaff5a0db543aba6c83fe1f8af8,

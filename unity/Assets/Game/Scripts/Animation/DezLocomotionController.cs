@@ -12,11 +12,11 @@ namespace Studio.Game.Animation
     public sealed class DezLocomotionController : MonoBehaviour
     {
         [Header("Movimento & Inercia")]
-        public float walkSpeed = 1.45f;
-        public float runSpeed = 3.45f;
-        public float accelRate = 7.5f;
-        public float decelRate = 9.0f;
-        public float turnSpeedDeg = 420f;
+        public float walkSpeed = 1.6f;
+        public float runSpeed = 3.6f;
+        public float accelRate = 10.0f;
+        public float decelRate = 12.0f;
+        public float turnSpeedDeg = 720f;
 
         [Header("Fisica & Gravidade")]
         public float gravity = -18.0f;
@@ -183,14 +183,13 @@ namespace Studio.Game.Animation
                 _lastAirVy = _verticalVel;
             }
 
-            Vector3 horizMove = transform.forward * _currentSpeed;
+            Vector3 horizMove = (mag > 0.05f ? desiredDir.normalized : transform.forward) * _currentSpeed;
             Vector3 totalMove = (horizMove + Vector3.up * _verticalVel) * dt;
             _cc.Move(totalMove);
 
             if (_anim != null)
             {
-                _anim.SetFloat("Speed", _currentSpeed, 0.08f, dt);
-                _anim.SetFloat("TurnRate", Mathf.Clamp(turnRate / 180f, -1f, 1f), 0.10f, dt);
+                _anim.SetFloat("Speed", _currentSpeed, 0.06f, dt);
                 _anim.SetBool("IsGrounded", _cc.isGrounded);
                 _anim.SetFloat("VerticalVel", _verticalVel);
             }

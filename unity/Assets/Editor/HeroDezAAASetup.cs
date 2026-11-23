@@ -177,61 +177,46 @@ namespace Studio.Editor
             if (avatar == null || !avatar.isValid || !avatar.isHuman)
                 throw new Exception("Avatar Humanoid do hero_dez_humanoid.fbx invalido!");
 
-            // 2. Arquitetura AAA Hibrida v8.1:
-            //    - Idle / Walk: MoMask 60fps (postura ereta, natural, humana)
-            //    - Run: UAL1 Jog_Fwd_Loop (1.25x) -> corrida atletica real, bracos dobrados, ereta (sem corcunda do Sprint_Loop!)
-            //    - Pulo em 3 fases reais: UAL1 (Jump_Start -> Jump_Loop -> Jump_Land).
+            // 2. Arquitetura Limpa 100% Homogenea (UAL1_Standard.fbx):
+            //    Todos os ciclos de locomocao e pulo da mesma biblioteca profissional ciclica,
+            //    sem mistura de fases incompativeis e sem IK/rotacao procedural conflitando.
             var ual = ConfigureAndLoadUalClips(Ual1FbxPath);
-            var cIdle      = ImportMoMaskClip("dez_idle_breath", true) ?? (ual.ContainsKey("Idle_Loop") ? ual["Idle_Loop"] : FindUalFallback("Idle_Loop"));
-            var cWalk      = ImportMoMaskClip("dez_walk_loop", true)   ?? (ual.ContainsKey("Walk_Loop") ? ual["Walk_Loop"] : FindUalFallback("Walk_Loop"));
-            var cRun       = ual.ContainsKey("Jog_Fwd_Loop") ? ual["Jog_Fwd_Loop"] : ImportMoMaskClip("dez_run_loop", true);
-            var cJumpStart = ual.ContainsKey("Jump_Start")   ? ual["Jump_Start"]   : ImportMoMaskClip("dez_jump_full", false);
-            var cJumpLoop  = ual.ContainsKey("Jump_Loop")    ? ual["Jump_Loop"]    : cJumpStart;
-            var cJumpLand  = ual.ContainsKey("Jump_Land")    ? ual["Jump_Land"]    : cIdle;
+            var cIdle      = ual.ContainsKey("Idle_Loop")   ? ual["Idle_Loop"]   : FindUalFallback("Idle_Loop");
+            var cWalk      = ual.ContainsKey("Walk_Loop")   ? ual["Walk_Loop"]   : FindUalFallback("Walk_Loop");
+            var cRun       = ual.ContainsKey("Sprint_Loop") ? ual["Sprint_Loop"] : FindUalFallback("Sprint_Loop");
+            var cJumpStart = ual.ContainsKey("Jump_Start")  ? ual["Jump_Start"]  : FindUalFallback("Jump_Start");
+            var cJumpLoop  = ual.ContainsKey("Jump_Loop")   ? ual["Jump_Loop"]   : cJumpStart;
+            var cJumpLand  = ual.ContainsKey("Jump_Land")   ? ual["Jump_Land"]   : cIdle;
 
-            // 3. Cria HeroDezController.controller v3: Blend Tree 2D (Idle/Walk/Jog/Sprint + Turn pivo) + Pulo 3 Fases + IK Pass = true!
+            // 3. Cria HeroDezController.controller limpo: Blend Tree 1D (Speed: 0 -> 1.6 -> 3.6) + Pulo 3 Fases + iKPass = false!
             if (AssetDatabase.LoadAssetAtPath<AnimatorController>(CtrlPath) != null)
                 AssetDatabase.DeleteAsset(CtrlPath);
 
             var ctrl = AnimatorController.CreateAnimatorControllerAtPath(CtrlPath);
             ctrl.AddParameter("Speed",       AnimatorControllerParameterType.Float);
-            ctrl.AddParameter("TurnRate",    AnimatorControllerParameterType.Float);
             ctrl.AddParameter("IsGrounded",  AnimatorControllerParameterType.Bool);
             ctrl.AddParameter("VerticalVel", AnimatorControllerParameterType.Float);
             ctrl.AddParameter("Jump",        AnimatorControllerParameterType.Trigger);
 
-            // Ativa IK Pass na Base Layer (obrigatorio para OnAnimatorIK!)
+            // Desativa IK Pass para garantir zero interferencia procedural em pes/cabeca durante locomocao
             var layers = ctrl.layers;
-            layers[0].iKPass = true;
+            layers[0].iKPass = false;
             ctrl.layers = layers;
             var sm = ctrl.layers[0].stateMachine;
 
-            // Blend Tree 2D Freeform Directional: X = TurnRate (-1..1), Y = Speed (0..3.45)
+            // Blend Tree 1D puro controlado apenas por Speed (zero conflito de TurnRate/2D polar)
             var blendTree = new BlendTree
             {
-                name = "Locomotion_2D",
-                blendType = BlendTreeType.FreeformDirectional2D,
-                blendParameter = "TurnRate",
-                blendParameterY = "Speed",
+                name = "Locomotion_1D",
+                blendType = BlendTreeType.Simple1D,
+                blendParameter = "Speed",
                 useAutomaticThresholds = false
             };
             AssetDatabase.AddObjectToAsset(blendTree, ctrl);
 
-            blendTree.AddChild(cIdle, new Vector2( 0.0f, 0.00f));
-            // Turn in Place usa dez_walk_loop com passo suave acompanhando o giro (nunca luta contra o Transform!)
-            blendTree.AddChild(cWalk, new Vector2(-0.85f, 0.00f));
-            blendTree.AddChild(cWalk, new Vector2( 0.85f, 0.00f));
-            blendTree.AddChild(cWalk, new Vector2( 0.0f, 1.45f));
-            blendTree.AddChild(cRun,  new Vector2( 0.0f, 3.45f));
-            // Ajusta timeScale dos filhos Turn (0.78x) e Run Jog_Fwd_Loop (1.25x = corrida atletica ereta!)
-            var ch = blendTree.children;
-            if (ch.Length >= 5)
-            {
-                ch[1].timeScale = 0.78f;
-                ch[2].timeScale = 0.78f;
-                ch[4].timeScale = 1.25f;
-                blendTree.children = ch;
-            }
+            blendTree.AddChild(cIdle, 0.0f);
+            blendTree.AddChild(cWalk, 1.6f);
+            blendTree.AddChild(cRun,  3.6f);
 
             var sLoco = sm.AddState("Locomotion");
             sLoco.motion = blendTree;
