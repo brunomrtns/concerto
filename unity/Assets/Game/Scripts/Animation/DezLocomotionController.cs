@@ -22,6 +22,14 @@ namespace Studio.Game.Animation
         public float gravity = -18.0f;
         public float jumpHeight = 1.15f;
 
+        [Header("Escalada de Borda (Ledge Grab / Mantle)")]
+        public bool enableLedgeMantle = true;
+        public float ledgeDetectDist = 0.62f;
+        public float ledgeMinHeight = 0.42f;
+        public float ledgeMaxHeight = 1.55f;
+        public float mantleDuration = 0.38f;
+        public float mantleCooldown = 0.22f;
+
         [Header("Camera 3a Pessoa Inteligente AAA (Modo Jogavel)")]
         public bool enablePlayableCamera = true;
         public float camDistance = 3.2f;
@@ -49,6 +57,18 @@ namespace Studio.Game.Animation
         private bool _camInit;
         private Vector3 _lastSafeGroundedPos;
         private bool _hasSafePos;
+
+        // Estado de escalada de borda (Ledge Grab / Mantle)
+        private bool _isMantling;
+        private float _mantleTimer;
+        private float _mantleCooldownUntil;
+        private Vector3 _mantleStartPos;
+        private Vector3 _mantleMidPos;
+        private Vector3 _mantleEndPos;
+        private Quaternion _mantleStartRot;
+        private Quaternion _mantleEndRot;
+
+        public bool IsMantling => _isMantling;
 
         // Inputs programaticos opcionais (para testes PlayMode e cutscenes)
         public Vector3 ScriptedMoveDir { get; set; }
@@ -82,6 +102,14 @@ namespace Studio.Game.Animation
         private void Update()
         {
             float dt = Mathf.Clamp(Time.deltaTime, 0.001f, 0.05f);
+
+            // Se esta escalando uma borda (Ledge Grab / Mantle), executa a subida suave com as maos
+            if (_isMantling)
+            {
+                UpdateMantle(dt);
+                return;
+            }
+
             bool grounded = _cc.isGrounded;
 
             if (grounded && !_wasGrounded && _lastAirVy < -2.0f)
@@ -181,6 +209,14 @@ namespace Studio.Game.Animation
             {
                 _verticalVel += gravity * dt;
                 _lastAirVy = _verticalVel;
+
+                // Detecta borda ao alcance das maos/cabeca no ar e sobe automaticamente (Ledge Grab / Mantle)!
+                if (enableLedgeMantle && Time.time >= _mantleCooldownUntil && _verticalVel <= 5.0f)
+                {
+                    Vector3 probeDir = (mag > 0.05f) ? desiredDir.normalized : transform.forward;
+                    if (TryStartLedgeMantle(probeDir))
+                        return;
+                }
             }
 
             Vector3 horizMove = (mag > 0.05f ? desiredDir.normalized : transform.forward) * _currentSpeed;
@@ -212,6 +248,159 @@ namespace Studio.Game.Animation
                 _verticalVel = 0f;
                 _cc.enabled = true;
             }
+        }
+
+        private bool TryStartLedgeMantle(Vector3 probeDir)
+        {
+            probeDir.y = 0f;
+            if (probeDir.sqrMagnitude < 0.01f) probeDir = transform.forward;
+            probeDir.Normalize();
+
+            // 1. Sonda parede/borda na frente (testa altura do peito 0.70m e altura da cabeca 1.08m)
+            bool hasWall =
+                SphereCastIgnoreSelf(transform.position + Vector3.up * 0.70f, 0.16f, probeDir, ledgeDetectDist, out RaycastHit wallHit) ||
+                SphereCastIgnoreSelf(transform.position + Vector3.up * 1.08f, 0.16f, probeDir, ledgeDetectDist, out wallHit);
+
+            if (!hasWall) return false;
+            // Precisa ser face quase vertical (nao rampa suave)
+            if (Mathf.Abs(wallHit.normal.y) > 0.35f) return false;
+
+            Vector3 wallNormal = new Vector3(wallHit.normal.x, 0f, wallHit.normal.z).normalized;
+            if (wallNormal.sqrMagnitude < 0.01f) return false;
+
+            // 2. Sonda topo da borda (0.28m para dentro da plataforma, descendo de cima da cabeca)
+            float probeTopY = transform.position.y + ledgeMaxHeight + 0.18f;
+            Vector3 topProbeOrigin = new Vector3(wallHit.point.x, probeTopY, wallHit.point.z) - wallNormal * 0.28f;
+            float downDist = (ledgeMaxHeight - ledgeMinHeight) + 0.30f;
+
+            if (!RaycastIgnoreSelf(topProbeOrigin, Vector3.down, downDist, out RaycastHit topHit))
+                return false;
+
+            // Topo precisa ser piso caminhavel
+            if (topHit.normal.y < 0.70f) return false;
+
+            float ledgeHeight = topHit.point.y - transform.position.y;
+            if (ledgeHeight < ledgeMinHeight || ledgeHeight > ledgeMaxHeight)
+                return false;
+
+            // 3. Verifica espaco livre para Dex ficar de pe em cima da borda (zero clipping em teto/parede)
+            Vector3 standPos = new Vector3(topProbeOrigin.x, topHit.point.y + 0.02f, topProbeOrigin.z);
+            Vector3 capBottom = standPos + Vector3.up * (_cc.radius + 0.06f);
+            Vector3 capTop    = standPos + Vector3.up * Mathf.Max(_cc.radius + 0.12f, _cc.height - _cc.radius - 0.04f);
+            var overlaps = Physics.OverlapCapsule(capBottom, capTop, _cc.radius * 0.85f, ~0, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < overlaps.Length; i++)
+            {
+                if (overlaps[i] != null && overlaps[i].transform.root != transform.root)
+                    return false;
+            }
+
+            // 4. Inicia escalada suave em 2 fases (puxa pra cima na beira -> sobe para o piso)
+            _isMantling = true;
+            _mantleTimer = 0f;
+            _mantleStartPos = transform.position;
+            Vector3 edgePos = new Vector3(wallHit.point.x, topHit.point.y + 0.02f, wallHit.point.z) + wallNormal * (_cc.radius * 0.65f);
+            _mantleMidPos = edgePos;
+            _mantleEndPos = standPos;
+            _mantleStartRot = transform.rotation;
+            _mantleEndRot = Quaternion.LookRotation(-wallNormal, Vector3.up);
+
+            _verticalVel = 0f;
+            _currentSpeed = 0f;
+            _cc.enabled = false;
+
+            if (_anim != null)
+            {
+                _anim.SetFloat("Speed", 0.5f);
+                _anim.SetBool("IsGrounded", false);
+                _anim.SetFloat("VerticalVel", 2.0f);
+            }
+            if (_proc != null) _proc.SetMantleState(true, 0f);
+            return true;
+        }
+
+        private void UpdateMantle(float dt)
+        {
+            _mantleTimer += dt;
+            float t = Mathf.Clamp01(_mantleTimer / Mathf.Max(0.15f, mantleDuration));
+
+            // Fase 1 (0..0.55): puxa o corpo verticalmente com as maos ate a altura da borda
+            // Fase 2 (0.55..1.0): projeta o corpo para cima da plataforma
+            Vector3 pos;
+            if (t < 0.55f)
+            {
+                float u = Mathf.SmoothStep(0f, 1f, t / 0.55f);
+                pos = Vector3.Lerp(_mantleStartPos, _mantleMidPos, u);
+            }
+            else
+            {
+                float u = Mathf.SmoothStep(0f, 1f, (t - 0.55f) / 0.45f);
+                pos = Vector3.Lerp(_mantleMidPos, _mantleEndPos, u);
+            }
+
+            transform.position = pos;
+            transform.rotation = Quaternion.Slerp(_mantleStartRot, _mantleEndRot, Mathf.SmoothStep(0f, 1f, Mathf.Min(1f, t * 2.2f)));
+
+            if (_proc != null) _proc.SetMantleState(true, t);
+
+            if (t >= 1f)
+            {
+                _isMantling = false;
+                _mantleCooldownUntil = Time.time + mantleCooldown;
+                transform.position = _mantleEndPos;
+                _verticalVel = -1.0f;
+                _wasGrounded = true;
+                _cc.enabled = true;
+
+                if (_anim != null)
+                {
+                    _anim.SetBool("IsGrounded", true);
+                    _anim.SetFloat("VerticalVel", 0f);
+                }
+                if (_proc != null)
+                {
+                    _proc.SetMantleState(false, 0f);
+                    _proc.NotifyLanding(-3.2f);
+                }
+            }
+        }
+
+        private bool SphereCastIgnoreSelf(Vector3 origin, float radius, Vector3 dir, float maxDist, out RaycastHit bestHit)
+        {
+            bestHit = default;
+            var hits = Physics.SphereCastAll(origin, radius, dir, maxDist, ~0, QueryTriggerInteraction.Ignore);
+            float bestDist = float.MaxValue;
+            bool found = false;
+            for (int i = 0; i < hits.Length; i++)
+            {
+                if (hits[i].transform == null || hits[i].transform.root == transform.root) continue;
+                if (hits[i].distance <= 0.001f) continue;
+                if (hits[i].distance < bestDist)
+                {
+                    bestDist = hits[i].distance;
+                    bestHit = hits[i];
+                    found = true;
+                }
+            }
+            return found;
+        }
+
+        private bool RaycastIgnoreSelf(Vector3 origin, Vector3 dir, float maxDist, out RaycastHit bestHit)
+        {
+            bestHit = default;
+            var hits = Physics.RaycastAll(origin, dir, maxDist, ~0, QueryTriggerInteraction.Ignore);
+            float bestDist = float.MaxValue;
+            bool found = false;
+            for (int i = 0; i < hits.Length; i++)
+            {
+                if (hits[i].transform == null || hits[i].transform.root == transform.root) continue;
+                if (hits[i].distance < bestDist)
+                {
+                    bestDist = hits[i].distance;
+                    bestHit = hits[i];
+                    found = true;
+                }
+            }
+            return found;
         }
 
         private void LateUpdate()

@@ -32,6 +32,8 @@ namespace Studio.Game.Animation
         private float _dipVel;
         private float _currentSpeed;
         private bool _isGrounded = true;
+        private bool _isMantling;
+        private float _mantleT;
         private Transform _shadowQuad;
         private Material _shadowMat;
 
@@ -97,6 +99,12 @@ namespace Studio.Game.Animation
             _currentSpeed = speed;
         }
 
+        public void SetMantleState(bool isMantling, float normalizedTime)
+        {
+            _isMantling = isMantling;
+            _mantleT = Mathf.Clamp01(normalizedTime);
+        }
+
         public void NotifyLanding(float verticalImpactSpeed)
         {
             float impulse = Mathf.Clamp(Mathf.Abs(verticalImpactSpeed) * landingDipStrength, 0.03f, landingMaxDip);
@@ -115,8 +123,21 @@ namespace Studio.Game.Animation
         {
             if (_anim == null || !_anim.isHuman) return;
 
-            // 1. Respiracao sutil no Chest SOMENTE quando parado no chao (zero interferencia andando/correndo)
-            if (_isGrounded && _currentSpeed < 0.08f)
+            // 1. Pose de escalada de borda (SOMENTE durante Ledge Grab / Mantle — zero efeito andando/correndo!)
+            if (_isMantling)
+            {
+                // Fase 1 (0..0.55): estende ambos os bracos para frente/cima segurando a borda; Fase 2 (0.55..1): empurra pra baixo subindo
+                float weight = Mathf.Sin(_mantleT * Mathf.PI);
+                float armPitchDeg = Mathf.Lerp(-115f, -35f, _mantleT) * weight;
+                Transform lArm = _anim.GetBoneTransform(HumanBodyBones.LeftUpperArm);
+                Transform rArm = _anim.GetBoneTransform(HumanBodyBones.RightUpperArm);
+                Transform chestM = _anim.GetBoneTransform(HumanBodyBones.Chest);
+                if (lArm != null) lArm.rotation = Quaternion.AngleAxis(armPitchDeg, transform.right) * lArm.rotation;
+                if (rArm != null) rArm.rotation = Quaternion.AngleAxis(armPitchDeg, transform.right) * rArm.rotation;
+                if (chestM != null) chestM.rotation = Quaternion.AngleAxis(18f * weight, transform.right) * chestM.rotation;
+            }
+            // 2. Respiracao sutil no Chest SOMENTE quando parado no chao (zero interferencia andando/correndo)
+            else if (_isGrounded && _currentSpeed < 0.08f)
             {
                 float phase = (Time.time / Mathf.Max(0.5f, breathCycleSec)) * Mathf.PI * 2f;
                 float breath = Mathf.Sin(phase);
