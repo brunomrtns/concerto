@@ -1,0 +1,104 @@
+{
+  "run": "RUN mega_v4 — TAREFA 3 (Re-geracao Porca + Dez com FLUX.1-dev FP8)",
+  "date": "2026-11-22",
+  "model": "Comfy-Org/flux1-dev-fp8",
+  "plan": "docs/art/plano-producao-personagens.md",
+  "candidates": [
+    {
+      "character": "porca",
+      "candidate": "A",
+      "seed": 42,
+      "height_m": 0.45,
+      "elapsed_sec": 59.13,
+      "peak_vram_mib": 9726,
+      "guard_ok": true,
+      "weights_sha256": "8e91b68084b53a7fc44ed2a3756d821e355ac1a7b6fe29be760c1db532f3d88a",
+      "raw_png": "evidence/concepts/c5_personagens_flux/porca_A.png",
+      "review_png": "director_review/2026-11-22_c5_conceitos_porca_dez_flux/porca_A.png"
+    },
+    {
+      "character": "porca",
+      "candidate": "B",
+      "seed": 142,
+      "height_m": 0.45,
+      "elapsed_sec": 45.28,
+      "peak_vram_mib": 9856,
+      "guard_ok": true,
+      "weights_sha256": "8e91b68084b53a7fc44ed2a3756d821e355ac1a7b6fe29be760c1db532f3d88a",
+      "raw_png": "evidence/concepts/c5_personagens_flux/porca_B.png",
+      "review_png": "director_review/2026-11-22_c5_conceitos_porca_dez_flux/porca_B.png"
+    },
+    {
+      "character": "porca",
+      "candidate": "C",
+      "seed": 242,
+      "height_m": 0.45,
+      "elapsed_sec": 45.28,
+      "peak_vram_mib": 9907,
+      "guard_ok": true,
+      "weights_sha256": "8e91b68084b53a7fc44ed2a3756d821e355ac1a7b6fe29be760c1db532f3d88a",
+      "raw_png": "evidence/concepts/c5_personagens_flux/porca_C.png",
+      "review_png": "director_review/2026-11-22_c5_conceitos_porca_dez_flux/porca_C.png"
+    },
+    {
+      "character": "porca",
+      "candidate": "D",
+      "seed": 342,
+      "height_m": 0.45,
+      "elapsed_sec": 46.09,
+      "peak_vram_mib": 9759,
+      "guard_ok": true,
+      "weights_sha256": "8e91b68084b53a7fc44ed2a3756d821e355ac1a7b6fe29be760c1db532f3d88a",
+      "raw_png": "evidence/concepts/c5_personagens_flux/porca_D.png",
+      "review_png": "director_review/2026-11-22_c5_conceitos_porca_dez_flux/porca_D.png"
+    },
+    {
+      "character": "dez",
+      "candidate": "A",
+      "seed": 42,
+      "height_m": 1.25,
+      "elapsed_sec": 46.12,
+      "peak_vram_mib": 9787,
+      "guard_ok": true,
+      "weights_sha256": "8e91b68084b53a7fc44ed2a3756d821e355ac1a7b6fe29be760c1db532f3d88a",
+      "raw_png": "evidence/concepts/c5_personagens_flux/dez_A.png",
+      "review_png": "director_review/2026-11-22_c5_conceitos_porca_dez_flux/dez_A.png"
+    },
+    {
+      "character": "dez",
+      "candidate": "B",
+      "seed": 142,
+      "height_m": 1.25,
+      "elapsed_sec": 46.09,
+      "peak_vram_mib": 9759,
+      "guard_ok": true,
+      "weights_sha256": "8e91b68084b53a7fc44ed2a3756d821e355ac1a7b6fe29be760c1db532f3d88a",
+      "raw_png": "evidence/concepts/c5_personagens_flux/dez_B.png",
+      "review_png": "director_review/2026-11-22_c5_conceitos_porca_dez_flux/dez_B.png"
+    },
+    {
+      "character": "dez",
+      "candidate": "C",
+      "seed": 242,
+      "height_m": 1.25,
+      "elapsed_sec": 46.09,
+      "peak_vram_mib": 9851,
+      "guard_ok": true,
+      "weights_sha256": "8e91b68084b53a7fc44ed2a3756d821e355ac1a7b6fe29be760c1db532f3d88a",
+      "raw_png": "evidence/concepts/c5_personagens_flux/dez_C.png",
+      "review_png": "director_review/2026-11-22_c5_conceitos_porca_dez_flux/dez_C.png"
+    },
+    {
+      "character": "dez",
+      "candidate": "D",
+      "seed": 342,
+      "height_m": 1.25,
+      "elapsed_sec": 46.09,
+      "peak_vram_mib": 9855,
+      "guard_ok": true,
+      "weights_sha256": "8e91b68084b53a7fc44ed2a3756d821e355ac1a7b6fe29be760c1db532f3d88a",
+      "raw_png": "evidence/concepts/c5_personagens_flux/dez_D.png",
+      "review_png": "director_review/2026-11-22_c5_conceitos_porca_dez_flux/dez_D.png"
+    }
+  ]
+}
