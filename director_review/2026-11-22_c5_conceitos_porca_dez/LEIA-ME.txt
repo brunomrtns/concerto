@@ -1,0 +1,3 @@
+O QUE É: Painel unificado de conceitos 2D para gate humano do diretor — 4 candidatas da Porca (A–D, H=0.45m) e 4 candidatas do Dez Base (A–D, H=1.25m), geradas via concept_bridge.py (stabilityai/sdxl-turbo local, art-bible.yaml, fuso caldeiral, Kit 4.0).
+O QUE VOCÊ DECIDE: Escolher 1 candidata vencedora para Porca (A/B/C/D ou Rota Híbrida) e 1 para Dez Base (A/B/C/D ou Rota Híbrida).
+ZERO 3D foi gerado nesta tarefa — o 3D só começa após sua escolha.

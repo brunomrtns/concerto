@@ -1,0 +1,84 @@
+{
+  "run": "RUN mega_v3 — TAREFA 3 (Conceitos Porca + Dez Base)",
+  "date": "2026-11-22",
+  "model": "stabilityai/sdxl-turbo",
+  "art_bible": "docs/art/art-bible.yaml",
+  "plan": "docs/art/plano-producao-personagens.md",
+  "fuso": "caldeiral",
+  "size": 768,
+  "steps": 4,
+  "candidates": [
+    {
+      "character": "porca",
+      "candidate": "A",
+      "seed": 42,
+      "height_m": 0.45,
+      "raw_png": "evidence/concepts/c5_personagens/porca_A.png",
+      "review_png": "director_review/2026-11-22_c5_conceitos_porca_dez/porca_A.png",
+      "timestamp_utc": "2026-11-23T00:12:41.510476+00:00"
+    },
+    {
+      "character": "porca",
+      "candidate": "B",
+      "seed": 142,
+      "height_m": 0.45,
+      "raw_png": "evidence/concepts/c5_personagens/porca_B.png",
+      "review_png": "director_review/2026-11-22_c5_conceitos_porca_dez/porca_B.png",
+      "timestamp_utc": "2026-11-23T00:13:02.700877+00:00"
+    },
+    {
+      "character": "porca",
+      "candidate": "C",
+      "seed": 242,
+      "height_m": 0.45,
+      "raw_png": "evidence/concepts/c5_personagens/porca_C.png",
+      "review_png": "director_review/2026-11-22_c5_conceitos_porca_dez/porca_C.png",
+      "timestamp_utc": "2026-11-23T00:13:25.449314+00:00"
+    },
+    {
+      "character": "porca",
+      "candidate": "D",
+      "seed": 342,
+      "height_m": 0.45,
+      "raw_png": "evidence/concepts/c5_personagens/porca_D.png",
+      "review_png": "director_review/2026-11-22_c5_conceitos_porca_dez/porca_D.png",
+      "timestamp_utc": "2026-11-23T00:13:47.601822+00:00"
+    },
+    {
+      "character": "dez",
+      "candidate": "A",
+      "seed": 42,
+      "height_m": 1.25,
+      "raw_png": "evidence/concepts/c5_personagens/dez_A.png",
+      "review_png": "director_review/2026-11-22_c5_conceitos_porca_dez/dez_A.png",
+      "timestamp_utc": "2026-11-23T00:14:12.790619+00:00"
+    },
+    {
+      "character": "dez",
+      "candidate": "B",
+      "seed": 142,
+      "height_m": 1.25,
+      "raw_png": "evidence/concepts/c5_personagens/dez_B.png",
+      "review_png": "director_review/2026-11-22_c5_conceitos_porca_dez/dez_B.png",
+      "timestamp_utc": "2026-11-23T00:14:37.766399+00:00"
+    },
+    {
+      "character": "dez",
+      "candidate": "C",
+      "seed": 242,
+      "height_m": 1.25,
+      "raw_png": "evidence/concepts/c5_personagens/dez_C.png",
+      "review_png": "director_review/2026-11-22_c5_conceitos_porca_dez/dez_C.png",
+      "timestamp_utc": "2026-11-23T00:15:00.993019+00:00"
+    },
+    {
+      "character": "dez",
+      "candidate": "D",
+      "seed": 342,
+      "height_m": 1.25,
+      "raw_png": "evidence/concepts/c5_personagens/dez_D.png",
+      "review_png": "director_review/2026-11-22_c5_conceitos_porca_dez/dez_D.png",
+      "timestamp_utc": "2026-11-23T00:15:23.322519+00:00"
+    }
+  ]
+}

@@ -11,8 +11,8 @@
 - [x] **S-artbib-01:** `docs/art/art-bible.yaml` completado com os 6 personagens/inimigos faltantes (`vo_segunda`, `tio_horario`, `censor`, `ferrugem_trabalhadora`, `ferrugem_espelho`, `ferrugem_coletora`) e validado com `concept_bridge.py --resolve-only`.
 
 ## Marco M1 — Produção de Personagens (Vertical Slice Caldeiral)
-- [ ] **S-char-01 (Porca):** conceito (4 candidatas → aprovação do dono ou Rota Híbrida) → 3D ≤ 2.5k tris → hover/lente procedural → prefab + captura.
-- [ ] **S-char-02 (Dez base):** conceito (aprovação do dono ou Rota Híbrida) → 3D ≤ 8k tris → UniRig + Humanoid + UAL → captura.
+- [ ] **S-char-01 (Porca):** conceitos 2D A–D (`sdxl-turbo`, Kit 4.0) gerados em `director_review/2026-11-22_c5_conceitos_porca_dez/` (**AGUARDANDO APROVAÇÃO DO BRUNO** ou A/B FLUX no `mega_v4`; zero 3D ainda) → 3D ≤ 2.5k tris → hover/lente procedural → prefab + captura.
+- [ ] **S-char-02 (Dez base):** conceitos 2D A–D (`sdxl-turbo`, Kit 4.0) gerados em `director_review/2026-11-22_c5_conceitos_porca_dez/` (**AGUARDANDO APROVAÇÃO DO BRUNO**; nota honesta: `sdxl-turbo` falhou em manter macacão + 4 braços — forte candidato a re-conceito com FLUX.1-dev FP8 no `mega_v4` ou Rota Híbrida; zero 3D ainda) → 3D ≤ 8k tris → UniRig + Humanoid + UAL → captura.
 - [ ] **S-char-03 (Dez — 2 braços auxiliares + IK):** 2 bones acessórios fora do Humanoid + curvas/IK de interação (`repair_kneel`).
 - [ ] **S-char-04 (NPCs — Vó Segunda + Tio Horário):** Humanoid UAL + 1 conversa + 2 barks com `DialoguePresenter` + VO.
 - [ ] **S-char-05 (Ferrugens):** 3 famílias ≤ 3.5k + FSM Patrulha→Perseguição→Ataque.
