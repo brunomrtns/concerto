@@ -1,0 +1,138 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &7288678519078712692
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 3b5378f1dc08a964d9d3020918cda3fc,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3b5378f1dc08a964d9d3020918cda3fc,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3b5378f1dc08a964d9d3020918cda3fc,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3b5378f1dc08a964d9d3020918cda3fc,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3b5378f1dc08a964d9d3020918cda3fc,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3b5378f1dc08a964d9d3020918cda3fc,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3b5378f1dc08a964d9d3020918cda3fc,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3b5378f1dc08a964d9d3020918cda3fc,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3b5378f1dc08a964d9d3020918cda3fc,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3b5378f1dc08a964d9d3020918cda3fc,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5611937939878399962, guid: 3b5378f1dc08a964d9d3020918cda3fc,
+        type: 3}
+      propertyPath: m_UpdateWhenOffscreen
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -5611937939878399962, guid: 3b5378f1dc08a964d9d3020918cda3fc,
+        type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: b4d7684db7046d34eb44950f634e9670, type: 2}
+    - target: {fileID: 919132149155446097, guid: 3b5378f1dc08a964d9d3020918cda3fc,
+        type: 3}
+      propertyPath: m_Name
+      value: npc_mecanico_brito_humanoid
+      objectReference: {fileID: 0}
+    - target: {fileID: 4005736074477287003, guid: 3b5378f1dc08a964d9d3020918cda3fc,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.013590675
+      objectReference: {fileID: 0}
+    - target: {fileID: 4005736074477287003, guid: 3b5378f1dc08a964d9d3020918cda3fc,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.03456336
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 3b5378f1dc08a964d9d3020918cda3fc,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: e1908a30e1e5f2948a3db3270860b051, type: 2}
+    - target: {fileID: 5866666021909216657, guid: 3b5378f1dc08a964d9d3020918cda3fc,
+        type: 3}
+      propertyPath: m_CullingMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 3b5378f1dc08a964d9d3020918cda3fc,
+        type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3b5378f1dc08a964d9d3020918cda3fc,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4451697568658554856}
+  m_SourcePrefab: {fileID: 100100000, guid: 3b5378f1dc08a964d9d3020918cda3fc, type: 3}
+--- !u!1 &7631349221219223589 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 3b5378f1dc08a964d9d3020918cda3fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 7288678519078712692}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4451697568658554856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7631349221219223589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: debf8739454608f45979d3003751353d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Studio.Game.Animation.DezProceduralAnimator
+  landingDipStrength: 0.022
+  landingMaxDip: 0.14
+  landingSpringK: 180
+  landingDamping: 20
+  breathCycleSec: 3.8
+  breathChestDeg: 1.8
+  enableContactShadow: 1
+  shadowBaseRadius: 0.34
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
