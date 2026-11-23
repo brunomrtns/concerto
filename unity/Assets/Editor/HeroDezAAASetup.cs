@@ -67,7 +67,8 @@ namespace Studio.Editor
                     clips[i].loopTime = loop;
                     clips[i].loopPose = loop;
                     clips[i].lockRootRotation = true;
-                    clips[i].keepOriginalOrientation = true;
+                    clips[i].keepOriginalOrientation = false;
+                    clips[i].rotationOffset = 0f;
                     clips[i].lockRootHeightY = true;
                     clips[i].keepOriginalPositionY = false;
                     clips[i].heightFromFeet = true;
@@ -176,14 +177,15 @@ namespace Studio.Editor
             if (avatar == null || !avatar.isValid || !avatar.isHuman)
                 throw new Exception("Avatar Humanoid do hero_dez_humanoid.fbx invalido!");
 
-            // 2. Arquitetura AAA Hibrida (ADR-012 v2):
-            //    - Idle expressivo: MoMask dez_idle_breath (aprovado pelo diretor!)
-            //    - Locomocao ciclica + Pulo em 3 fases reais: UAL1_Standard.fbx (CC0 profissional, 100% ciclico, pes retos!)
+            // 2. Arquitetura AAA Hibrida v8 (Melhor dos dois mundos):
+            //    - Idle / Walk / Run: MoMask 60fps (postura ereta, natural, humana, sem corcunda nem perna aberta!)
+            //      com Body Orientation 0 deg + Foot IK flat-safe (zero pe torto!).
+            //    - Pulo em 3 fases reais: UAL1_Standard.fbx (Jump_Start -> Jump_Loop -> Jump_Land).
             var ual = ConfigureAndLoadUalClips(Ual1FbxPath);
             var cIdle      = ImportMoMaskClip("dez_idle_breath", true) ?? (ual.ContainsKey("Idle_Loop") ? ual["Idle_Loop"] : FindUalFallback("Idle_Loop"));
-            var cWalk      = ual.ContainsKey("Walk_Loop")    ? ual["Walk_Loop"]    : ImportMoMaskClip("dez_walk_loop", true);
-            var cJog       = ual.ContainsKey("Jog_Fwd_Loop") ? ual["Jog_Fwd_Loop"] : cWalk;
-            var cRun       = ual.ContainsKey("Sprint_Loop")  ? ual["Sprint_Loop"]  : ImportMoMaskClip("dez_run_loop", true);
+            var cWalk      = ImportMoMaskClip("dez_walk_loop", true)   ?? (ual.ContainsKey("Walk_Loop") ? ual["Walk_Loop"] : FindUalFallback("Walk_Loop"));
+            var cRun       = ImportMoMaskClip("dez_run_loop", true)    ?? (ual.ContainsKey("Sprint_Loop") ? ual["Sprint_Loop"] : FindUalFallback("Sprint_Loop"));
+            var cJog       = cWalk;
             var cJumpStart = ual.ContainsKey("Jump_Start")   ? ual["Jump_Start"]   : ImportMoMaskClip("dez_jump_full", false);
             var cJumpLoop  = ual.ContainsKey("Jump_Loop")    ? ual["Jump_Loop"]    : cJumpStart;
             var cJumpLand  = ual.ContainsKey("Jump_Land")    ? ual["Jump_Land"]    : cIdle;
@@ -217,11 +219,10 @@ namespace Studio.Editor
             AssetDatabase.AddObjectToAsset(blendTree, ctrl);
 
             blendTree.AddChild(cIdle, new Vector2( 0.0f, 0.00f));
-            // Turn in Place usa Walk_Loop com passo suave acompanhando o giro (nunca luta contra o Transform!)
+            // Turn in Place usa dez_walk_loop com passo suave acompanhando o giro (nunca luta contra o Transform!)
             blendTree.AddChild(cWalk, new Vector2(-0.85f, 0.00f));
             blendTree.AddChild(cWalk, new Vector2( 0.85f, 0.00f));
             blendTree.AddChild(cWalk, new Vector2( 0.0f, 1.45f));
-            blendTree.AddChild(cJog,  new Vector2( 0.0f, 2.45f));
             blendTree.AddChild(cRun,  new Vector2( 0.0f, 3.45f));
             // Ajusta timeScale dos filhos Turn para passos pivo naturais (0.78x)
             var ch = blendTree.children;

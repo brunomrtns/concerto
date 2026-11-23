@@ -97,6 +97,35 @@ namespace Studio.Editor
                 if (ShouldIgnore(go.transform)) continue;
                 checkedCount++;
 
+                var mf = go.GetComponent<MeshFilter>();
+                string low = go.name.ToLowerInvariant();
+                bool isHollowOrPortal =
+                    low.Contains("arch") || low.Contains("portal") || low.Contains("tunnel") ||
+                    low.Contains("door") || low.Contains("gate") || low.Contains("ring") ||
+                    low.Contains("ceiling") || low.Contains("frame") || low.Contains("parapet") ||
+                    low.Contains("railing") || low.Contains("corrimao");
+
+                // Regra critica da fabrica: NUNCA deixar BoxCollider em portais/arcos/tuneis (cria barreira invisivel!)
+                if (isHollowOrPortal)
+                {
+                    var existingBox = go.GetComponent<BoxCollider>();
+                    if (existingBox != null)
+                    {
+                        UnityEngine.Object.DestroyImmediate(existingBox);
+                        EditorUtility.SetDirty(go);
+                    }
+                    if (go.GetComponent<MeshCollider>() == null && mf != null && mf.sharedMesh != null)
+                    {
+                        var mc = go.AddComponent<MeshCollider>();
+                        mc.sharedMesh = mf.sharedMesh;
+                        mc.convex = false;
+                        addedMesh++;
+                        addedNames.Add(go.name + " (PortalFix->MeshCol)");
+                        EditorUtility.SetDirty(go);
+                    }
+                    continue;
+                }
+
                 if (HasColliderInHierarchy(go.transform))
                 {
                     alreadyHad++;
@@ -107,13 +136,11 @@ namespace Studio.Editor
                 Bounds b = mr.bounds;
                 if (b.size.x < 0.04f && b.size.y < 0.04f && b.size.z < 0.04f) continue;
 
-                var mf = go.GetComponent<MeshFilter>();
-                string low = go.name.ToLowerInvariant();
                 bool useMeshCollider = mf != null && mf.sharedMesh != null &&
                     (low.Contains("ramp") || low.Contains("pipe") || low.Contains("cano") ||
                      low.Contains("cylinder") || low.Contains("cilindro") || low.Contains("rail") ||
-                     low.Contains("corrimao") || low.Contains("bridge") || low.Contains("ponte") ||
-                     low.Contains("arch") || low.Contains("valve") || low.Contains("valvula"));
+                     low.Contains("bridge") || low.Contains("ponte") ||
+                     low.Contains("valve") || low.Contains("valvula"));
 
                 if (useMeshCollider)
                 {

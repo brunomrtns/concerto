@@ -1,9 +1,9 @@
 {
   "scene": "Assets/Game/Scenes/Caldeiral.unity",
   "solid_renderers_checked": 167,
-  "already_had_collider": 97,
-  "added_box_colliders": 47,
-  "added_mesh_colliders": 23,
-  "total_added": 70,
-  "sample_fixed_objects": ["caldeiral_env_portal_pillar", "Z3_BridgeZ4_Ceiling", "c5_prop_sirene_mestra", "Z4_C3_RingRailings_And_ExitArch", "c5_prop_no_resincronia", "caldeiral_env_portal_pillar", "caldeiral_env_portal_pillar", "Z2_TunnelZ3_Ceiling", "caldeiral_env_portal_pillar", "caldeiral_env_portal_pillar", "caldeiral_env_portal_pillar", "caldeiral_env_portal_pillar", "Z4_C3_DomeRibs_And_Columns", "caldeiral_env_vapor_pipe", "Z1_ArchTunnel_Ceiling", "caldeiral_env_portal_pillar", "caldeiral_env_vapor_pipe", "Z1_CeilingBeam_A", "caldeiral_env_vapor_pipe", "Z5_C3_Mirante_OpenParapet", "Z1_C3_LeadingPipes", "caldeiral_env_vapor_pipe", "Z1_C3_Architecture_Trim", "Z2_CeilingBeam_A", "Z3_Patio_Ceiling"]
+  "already_had_collider": 113,
+  "added_box_colliders": 0,
+  "added_mesh_colliders": 48,
+  "total_added": 48,
+  "sample_fixed_objects": ["Z1_CeilingBeam_A (PortalFix->MeshCol)", "caldeiral_env_portal_pillar (PortalFix->MeshCol)", "Z4_RingDeck_East (PortalFix->MeshCol)", "Z2_TunnelZ3_Ceiling (PortalFix->MeshCol)", "caldeiral_env_portal_pillar (PortalFix->MeshCol)", "caldeiral_env_portal_pillar (PortalFix->MeshCol)", "caldeiral_env_portal_pillar (PortalFix->MeshCol)", "caldeiral_env_portal_pillar (PortalFix->MeshCol)", "Z2_TunnelZ3_WallS (PortalFix->MeshCol)", "Z2_ArchZ3_Lintel (PortalFix->MeshCol)", "Z2_ArchZ3_Pillar_S (PortalFix->MeshCol)", "caldeiral_env_portal_pillar (PortalFix->MeshCol)", "Z3_Patio_Ceiling (PortalFix->MeshCol)", "Z1_Arch_Pillar_S (PortalFix->MeshCol)", "Z1_ArchTunnel_Floor (PortalFix->MeshCol)", "Z2_TunnelZ3_Floor (PortalFix->MeshCol)", "caldeiral_env_portal_pillar (PortalFix->MeshCol)", "Z5_C3_Portals_And_MiranteFrame (PortalFix->MeshCol)", "Z2_TunnelZ3_WallN (PortalFix->MeshCol)", "Z4_RingDeck_South (PortalFix->MeshCol)", "Z2_CeilingBeam_A (PortalFix->MeshCol)", "Z5_Mirante_WindowFrame_Top (PortalFix->MeshCol)", "Z4_RingDeck_West (PortalFix->MeshCol)", "caldeiral_env_portal_pillar (PortalFix->MeshCol)", "caldeiral_env_portal_pillar (PortalFix->MeshCol)"]
 }

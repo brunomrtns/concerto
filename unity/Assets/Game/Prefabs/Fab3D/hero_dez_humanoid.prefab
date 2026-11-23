@@ -140,9 +140,11 @@ MonoBehaviour:
   landingDamping: 20
   breathCycleSec: 3.8
   breathChestDeg: 2.8
-  maxBankDeg: 14
-  runForwardLeanDeg: 9.5
+  maxBankDeg: 10
+  runForwardLeanDeg: 6
   idleWeightSwayMeters: 0.012
+  legAdductionDeg: 0
+  handDynamicAmpDeg: 11
   enableContactShadow: 1
   shadowBaseRadius: 0.34
   lookTarget: {fileID: 0}

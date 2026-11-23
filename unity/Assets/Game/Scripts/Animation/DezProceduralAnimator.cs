@@ -29,11 +29,11 @@ namespace Studio.Game.Animation
         [Header("Idle Vivo, Corrida, Passada & Maos")]
         public float breathCycleSec = 3.8f;
         public float breathChestDeg = 2.8f;
-        public float maxBankDeg = 12f;
-        public float runForwardLeanDeg = 8.5f;
+        public float maxBankDeg = 10f;
+        public float runForwardLeanDeg = 6.0f;
         public float idleWeightSwayMeters = 0.012f;
-        [Tooltip("Fecha as coxas andando/correndo em personagens estilizados/chibi (evita pernas abertas demais vistas por tras).")]
-        public float legAdductionDeg = 14.0f;
+        [Tooltip("Desativado por padrao (0) para nunca entortar joelhos; use apenas se um clip especifico abrir demais.")]
+        public float legAdductionDeg = 0.0f;
         [Tooltip("Movimento dinamico e relaxamento natural dos pulsos/maos.")]
         public float handDynamicAmpDeg = 11.0f;
 
