@@ -1,0 +1,13 @@
+{
+  "asset_name": "c5_prop_bancada_relogio",
+  "category": "env_tile",
+  "preset": "prop",
+  "texture_size": 1024,
+  "astc": "ASTC_6x6",
+  "collider": "box",
+  "max_tris": 2000,
+  "tris_final": 2000,
+  "rigged": false,
+  "source_mode": "from_glb",
+  "source_glb": "c5_prop_bancada_relogio__pbr_4k.glb"
+}

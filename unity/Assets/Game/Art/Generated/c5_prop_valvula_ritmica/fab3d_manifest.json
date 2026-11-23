@@ -1,0 +1,13 @@
+{
+  "asset_name": "c5_prop_valvula_ritmica",
+  "category": "env_tile",
+  "preset": "prop",
+  "texture_size": 1024,
+  "astc": "ASTC_6x6",
+  "collider": "box",
+  "max_tris": 1200,
+  "tris_final": 1200,
+  "rigged": false,
+  "source_mode": "from_glb",
+  "source_glb": "c5_prop_valvula_ritmica__pbr_4k.glb"
+}

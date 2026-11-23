@@ -1,0 +1,13 @@
+{
+  "asset_name": "c5_prop_no_resincronia",
+  "category": "env_tile",
+  "preset": "prop",
+  "texture_size": 1024,
+  "astc": "ASTC_6x6",
+  "collider": "box",
+  "max_tris": 1500,
+  "tris_final": 1500,
+  "rigged": false,
+  "source_mode": "from_glb",
+  "source_glb": "c5_prop_no_resincronia__pbr_4k.glb"
+}

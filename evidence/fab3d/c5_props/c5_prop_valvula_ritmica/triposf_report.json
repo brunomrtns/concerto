@@ -1,0 +1,24 @@
+{
+ "label": "pipeline",
+ "mesh_path": "/home/bruno/printer3d-work/c5_props/c5_prop_valvula_ritmica/shape_gen/1_triposg/mesh.obj",
+ "config": "/mnt/c/Users/Bruno/workspace/3dprinter-setup-ia/tools/generator/triposf/TripoSFVAE_o512.yaml",
+ "erros": [],
+ "vram_wait_s": 0.1,
+ "vram_baseline_mib": 856,
+ "tempo_total_s": 47.52,
+ "exit_code": 0,
+ "vram_pico_mib": 7386,
+ "guard_tripped": false,
+ "tempo_normalize_s": 7.65,
+ "tempo_load_s": 4.81,
+ "tempo_recon_s": 13.01,
+ "mesh_recon": "/home/bruno/printer3d-work/c5_props/c5_prop_valvula_ritmica/shape_gen/2_triposf512/mesh_reconstruction.obj",
+ "vertices": 746817,
+ "faces": 1493656,
+ "bbox": [
+  0.6991,
+  1.0001,
+  0.5783
+ ],
+ "watertight": false
+}

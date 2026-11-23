@@ -1,0 +1,18 @@
+{
+  "mode": "concept",
+  "model": "stabilityai/sdxl-turbo",
+  "device": "cuda",
+  "size": [
+    768,
+    768
+  ],
+  "steps": 4,
+  "seed": 442,
+  "circular_layers": 0,
+  "elapsed_sec": 30.92,
+  "output_png": "/mnt/c/Users/Bruno/workspace/game-concerto/evidence/concepts/c5_props/c5_prop_sirene_mestra.png",
+  "prompt": "ONE isolated standalone solid chunky brass and dark iron vertical steam boiler tower siren monument, centered in frame with huge empty plain white background around all four sides, NO room, NO background pillars, NO ceiling, compact closed cylindrical copper tank body, thick riveted iron base, heavy brass bell horn on top, chunky solid 3D stylized game prop, stylized detailed 3d game concept art, clockwork-whimsy, brass and copper clockwork, mechanical details with visible function (gears, rivets, gauges), warm workshop glow, clean silhouette readable in 3 seconds, hand-painted texture feel, strong shape language, single subject, neutral studio background, caldeiral palette (#e8a13c, #b3542c, #2e2419, #6e5a4a, #3d342c)",
+  "name": "c5_prop_sirene_mestra",
+  "art_bible": "docs/art/art-bible.yaml",
+  "output_win": "C:\\Users\\Bruno\\workspace\\game-concerto\\evidence\\concepts\\c5_props\\c5_prop_sirene_mestra.png"
+}

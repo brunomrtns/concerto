@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Passed" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-23 00:09:04Z" end-time="2026-11-23 00:09:04Z" duration="0,1320826">
+  <test-suite type="TestSuite" id="1011" name="NeonDistrictServer" fullname="NeonDistrictServer" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-23 00:09:04Z" end-time="2026-11-23 00:09:04Z" duration="0.132083" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1004" name="Studio.Tests.PlayMode.dll" fullname="C:/Users/Bruno/workspace/game-concerto/unity/Library/ScriptAssemblies/Studio.Tests.PlayMode.dll" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-23 00:09:04Z" end-time="2026-11-23 00:09:04Z" duration="0.123872" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="55848" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1005" name="Studio" fullname="Studio" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-23 00:09:04Z" end-time="2026-11-23 00:09:04Z" duration="0.123162" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1006" name="Tests" fullname="Studio.Tests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-23 00:09:04Z" end-time="2026-11-23 00:09:04Z" duration="0.122951" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1007" name="PlayMode" fullname="Studio.Tests.PlayMode" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-23 00:09:04Z" end-time="2026-11-23 00:09:04Z" duration="0.122718" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1001" name="ConcertoM1M2BaselinePlayModeTests" fullname="Studio.Tests.PlayMode.ConcertoM1M2BaselinePlayModeTests" classname="Studio.Tests.PlayMode.ConcertoM1M2BaselinePlayModeTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-23 00:09:04Z" end-time="2026-11-23 00:09:04Z" duration="0.121639" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1003" name="PlayMode_Baseline_M1Objective_CompletesViaInteractionSystem" fullname="Studio.Tests.PlayMode.ConcertoM1M2BaselinePlayModeTests.PlayMode_Baseline_M1Objective_CompletesViaInteractionSystem" methodname="PlayMode_Baseline_M1Objective_CompletesViaInteractionSystem" classname="Studio.Tests.PlayMode.ConcertoM1M2BaselinePlayModeTests" runstate="Runnable" seed="1728890383" result="Passed" start-time="2026-11-23 00:09:04Z" end-time="2026-11-23 00:09:04Z" duration="0.104348" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1002" name="PlayMode_Baseline_SceneLoads_PlayerSpawns_ZeroExceptions" fullname="Studio.Tests.PlayMode.ConcertoM1M2BaselinePlayModeTests.PlayMode_Baseline_SceneLoads_PlayerSpawns_ZeroExceptions" methodname="PlayMode_Baseline_SceneLoads_PlayerSpawns_ZeroExceptions" classname="Studio.Tests.PlayMode.ConcertoM1M2BaselinePlayModeTests" runstate="Runnable" seed="773973875" result="Passed" start-time="2026-11-23 00:09:04Z" end-time="2026-11-23 00:09:04Z" duration="0.004611" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/Bruno/AppData/LocalLow/StudioAI/NeonDistrictServer\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

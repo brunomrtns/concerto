@@ -1,26 +1,29 @@
 {
-    "generatedAt": "2026-11-22T21:06:47.3398004Z",
-    "assetsProcessed": 4,
+    "generatedAt": "2026-11-23T00:07:07.2683852Z",
+    "assetsProcessed": 8,
     "animationsImported": 0,
     "humanoidAvatarsValid": 0,
     "ualClipsBound": 0,
     "materials": [
+        "Assets/Game/Materials/Fab3D/Mat_Fab3D_c5_prop_bancada_relogio.mat",
+        "Assets/Game/Materials/Fab3D/Mat_Fab3D_c5_prop_no_resincronia.mat",
+        "Assets/Game/Materials/Fab3D/Mat_Fab3D_c5_prop_sirene_mestra.mat",
+        "Assets/Game/Materials/Fab3D/Mat_Fab3D_c5_prop_valvula_ritmica.mat",
         "Assets/Game/Materials/Fab3D/Mat_Fab3D_caldeiral_env_floor_tile.mat",
         "Assets/Game/Materials/Fab3D/Mat_Fab3D_caldeiral_env_portal_pillar.mat",
         "Assets/Game/Materials/Fab3D/Mat_Fab3D_caldeiral_env_vapor_pipe.mat",
         "Assets/Game/Materials/Fab3D/Mat_Fab3D_caldeiral_env_wall_panel.mat"
     ],
     "prefabs": [
+        "Assets/Game/Prefabs/Fab3D/c5_prop_bancada_relogio.prefab",
+        "Assets/Game/Prefabs/Fab3D/c5_prop_no_resincronia.prefab",
+        "Assets/Game/Prefabs/Fab3D/c5_prop_sirene_mestra.prefab",
+        "Assets/Game/Prefabs/Fab3D/c5_prop_valvula_ritmica.prefab",
         "Assets/Game/Prefabs/Fab3D/caldeiral_env_floor_tile.prefab",
         "Assets/Game/Prefabs/Fab3D/caldeiral_env_portal_pillar.prefab",
         "Assets/Game/Prefabs/Fab3D/caldeiral_env_vapor_pipe.prefab",
         "Assets/Game/Prefabs/Fab3D/caldeiral_env_wall_panel.prefab"
     ],
-    "captures": [
-        "C:\\Users\\Bruno\\workspace\\game-concerto\\unity\\..\\evidence\\captures\\fab3d_caldeiral_env_floor_tile_20261122_210648.png",
-        "C:\\Users\\Bruno\\workspace\\game-concerto\\unity\\..\\evidence\\captures\\fab3d_caldeiral_env_portal_pillar_20261122_210649.png",
-        "C:\\Users\\Bruno\\workspace\\game-concerto\\unity\\..\\evidence\\captures\\fab3d_caldeiral_env_vapor_pipe_20261122_210651.png",
-        "C:\\Users\\Bruno\\workspace\\game-concerto\\unity\\..\\evidence\\captures\\fab3d_caldeiral_env_wall_panel_20261122_210652.png"
-    ],
+    "captures": [],
     "errors": []
 }

@@ -1,0 +1,3 @@
+O QUE É: Checkpoint CONCERTO C5 Props Batch-1 — 4 hero props gerados pelo pipeline oficial TripoSG -> TripoSF 512 -> Hunyuan3D-Paint -> pack_glb e importados in-place no Caldeiral (6/6 instâncias).
+PROPS: c5_prop_sirene_mestra (Z4, 16m), c5_prop_no_resincronia (Z4, 2m), c5_prop_valvula_ritmica (Z4 x3), c5_prop_bancada_relogio (Z1).
+O QUE VOCÊ DECIDE: Aprovar a substituição visual dos 4 props Batch-1 dentro das zonas Z1 e Z4 do Caldeiral.

@@ -1,0 +1,16 @@
+{
+ "label": "pipeline",
+ "mesh_path": "/home/bruno/printer3d-work/c5_props/c5_prop_sirene_mestra/shape_gen/1_triposg/mesh.obj",
+ "config": "/mnt/c/Users/Bruno/workspace/3dprinter-setup-ia/tools/generator/triposf/TripoSFVAE_o512.yaml",
+ "erros": [
+  "GUARD_VRAM_EXCEDIDO: pico 11110 MiB > 11000 MiB \u2014 job morto"
+ ],
+ "vram_wait_s": 0.1,
+ "vram_baseline_mib": 874,
+ "tempo_total_s": 63.52,
+ "exit_code": -9,
+ "vram_pico_mib": 11110,
+ "guard_tripped": true,
+ "tempo_normalize_s": 16.58,
+ "tempo_load_s": 9.81
+}

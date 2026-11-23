@@ -1,0 +1,14 @@
+{
+  "id": "c5_prop_sirene_mestra",
+  "category": "env_structure",
+  "max_tris": 5000,
+  "engine": "triposg",
+  "shape_pipeline": "preproc C2 -> TripoSG",
+  "triposf512_guard_tripped": true,
+  "shape_sec": 190.2,
+  "paint_sec": 527.1,
+  "total_sec": 717.3,
+  "master_glb_4k": "/home/bruno/printer3d-work/c5_props/c5_prop_sirene_mestra/run/staged_models/c5_prop_sirene_mestra__pbr_4k.glb",
+  "master_glb_4k_bytes": 11652560,
+  "timestamp_utc": "2026-11-22T23:33:31.286791+00:00"
+}

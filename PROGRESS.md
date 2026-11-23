@@ -43,7 +43,8 @@
   - **C4 (Direção de Arte, Vestimenta Visual & Câmeras):** LIBERADO EM 2026-11-22
     - **Kit 4.0 APROVADO por Bruno em 2026-11-22 — linguagem visual oficial: latão/cobre/ferro escuro, rebitado, clockwork-industrial; motor de forma oficial = TripoSG via pipeline 3dprinter-setup-ia (run_asset.py → Hunyuan3D-Paint → pack_glb)** (`director_review/2026-11-22_c4_0_kit_direcao_arte/`, commit `73ce70f`).
     - **Fase 4.1 (Vestimenta Z1→Z5 + Iluminação Real + Walkthrough):** APROVADA por Bruno em 2026-11-22 (`director_review/2026-11-22_c4_1_caldeiral_vestido/`, commit `d3f28bd`; C4 completo encerrado).
-  - **C5 (Props & Heróis Fábrica 3D):** LIBERADO EM 2026-11-22 *(aguardando início após run fab3d_mega_v2).*
+  - **C5 (Props & Heróis Fábrica 3D):** EM ANDAMENTO (2026-11-22)
+    - **C5 Props Batch-1 (`sirene_mestra`, `no_resincronia`, `valvula_ritmica` ×3, `bancada_relogio`):** **AGUARDANDO APROVAÇÃO DO BRUNO** (`director_review/2026-11-22_c5_props_batch1/`). Pipeline oficial TripoSG → TripoSF 512 → Hunyuan3D-Paint → 05_trellis_pbr → pack_glb (`seed 42`, guard 10 GB, 0 OOM). Gates: `glTF-Validator` 4/4 PASS · `validate_asset` 4/4 PASS · `validate_visual` 4/4 PASS · `validate_scene --strict` PASS (`lights=5/5`, `tris~=67k/150k`, `draw_calls~=15/120`, `static_batch=94%`) · PlayMode M1–M2 `2/2 PASSED`. Substituição in-place em Z1 e Z4 preservando `InteractableBase`, `IkHandTarget`, `BoxCollider` e caminhos congelados.
 
 ---
 

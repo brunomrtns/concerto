@@ -1,0 +1,48 @@
+{
+  "run": "RUN mega_v3 — TAREFA 2 (CONCERTO C5 Props Batch-1)",
+  "date": "2026-11-22",
+  "image_model": "stabilityai/sdxl-turbo",
+  "runner": "tools/art/ai_generator/concept_bridge.py (WSL ~/.venvs/hunyuan/bin/python, local weights only, zero downloads)",
+  "style_contract": "Kit 4.0 APROVADO (latao/cobre/ferro escuro, rebitado, clockwork-industrial, art-bible.yaml)",
+  "entry_checklist": [
+    "objeto unico e isolado",
+    "fundo 100% branco limpo",
+    "silhueta legivel de contorno sem pilares ou cenario",
+    "zero reflexo especular forte no corpo principal",
+    "angulo 3/4 estavel para image-to-3D"
+  ],
+  "props": [
+    {
+      "id": "c5_prop_sirene_mestra",
+      "file": "c5_prop_sirene_mestra.png",
+      "seed": 442,
+      "rejected_attempts": ["seed 42 (v1 rejeitada no checklist: fundo com pilares e engrenagens vazadas causaram malha >2.3M faces)"],
+      "prompt": "monumental chunky solid industrial clockwork steam boiler tower with large brass megaphone horn at top, riveted dark iron base, thick solid copper pipes, single isolated game prop object, 3/4 view, centered, pure solid white background, matte weathered metal, diffuse studio lighting, no background scenery, no pillars, no floating parts, no text",
+      "checklist_pass": true
+    },
+    {
+      "id": "c5_prop_no_resincronia",
+      "file": "c5_prop_no_resincronia.png",
+      "seed": 443,
+      "rejected_attempts": ["seed 42 (v1 rejeitada no checklist: pilares laterais no fundo)"],
+      "prompt": "chunky octagonal dark iron and weathered brass clockwork pedestal cradling a glowing warm golden amber crystal core on top, riveted steampunk industrial console, single isolated game prop object, 3/4 view, centered, pure solid white background, diffuse studio lighting, no background scenery, no pillars, no text",
+      "checklist_pass": true
+    },
+    {
+      "id": "c5_prop_valvula_ritmica",
+      "file": "c5_prop_valvula_ritmica.png",
+      "seed": 42,
+      "rejected_attempts": [],
+      "prompt": "weathered brass and dark iron industrial steam valve pedestal with red-painted iron handwheel, pressure gauge dial and riveted brass pipes, clockwork-industrial game prop, single isolated object, 3/4 view, centered, pure solid white background, diffuse studio lighting, no background scenery, no text",
+      "checklist_pass": true
+    },
+    {
+      "id": "c5_prop_bancada_relogio",
+      "file": "c5_prop_bancada_relogio.png",
+      "seed": 42,
+      "rejected_attempts": [],
+      "prompt": "clockmaker repair workbench made of dark riveted iron frame, weathered timber top, brass vise, small brass gears and oil lamp on table, clockwork-industrial game prop, single isolated object, 3/4 view, centered, pure solid white background, diffuse studio lighting, no background scenery, no text",
+      "checklist_pass": true
+    }
+  ]
+}

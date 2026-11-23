@@ -1,0 +1,97 @@
+{
+  "validator": "validate_visual.py",
+  "version": "1.1.0",
+  "timestamp": "2026-11-23T00:05:50.275763+00:00",
+  "asset_name": "c5_prop_sirene_mestra",
+  "asset_path": "unity/Assets/Game/Art/Generated/c5_prop_sirene_mestra/c5_prop_sirene_mestra.fbx",
+  "class": "env_structure",
+  "is_biped": false,
+  "applied_checks": [
+    "pivot_base_grounded_on_floor",
+    "uniform_scale_identity_transform",
+    "prop_exempt_from_biped_vertical_ratio",
+    "no_ngons",
+    "class_tri_budget",
+    "uv_texel_density_world_scale",
+    "material_basemap",
+    "scale_meters"
+  ],
+  "passed": true,
+  "checks": {
+    "orientation": {
+      "passed": true,
+      "details": {
+        "is_biped": false,
+        "branch": "prop_grounded_uniform_scale",
+        "applied_checks": [
+          "pivot_base_grounded_on_floor",
+          "uniform_scale_identity_transform",
+          "prop_exempt_from_biped_vertical_ratio"
+        ],
+        "identity_transform": true,
+        "uniform_scale": true,
+        "pivot_grounded_on_floor": true,
+        "grounded_y_min": -0.9322,
+        "bounds_unity_y_up": {
+          "width_x": 1.6397,
+          "height_y": 1.8644,
+          "depth_z": 1.3858,
+          "y_min": -0.9322,
+          "y_max": 0.9322
+        },
+        "torso_bounds": null,
+        "aspect_height_over_min_horiz": null,
+        "aspect_height_over_torso_depth": null,
+        "required_biped_aspect": null,
+        "errors": []
+      }
+    },
+    "budget": {
+      "passed": true,
+      "details": {
+        "class": "env_structure",
+        "tris": 4999,
+        "max_tris": 5000,
+        "ngons": 0,
+        "errors": []
+      }
+    },
+    "uv_texel_density": {
+      "passed": true,
+      "details": {
+        "uv_valid": true,
+        "uv_total_area": 4.6694,
+        "uv_inside01": 1.0,
+        "mesh_area_m2": 15.36488,
+        "uv_world_ratio": 0.3039,
+        "allowed_ratio_range": [
+          0.005,
+          50.0
+        ],
+        "errors": []
+      }
+    },
+    "material": {
+      "passed": true,
+      "details": {
+        "material_slots": 1,
+        "basecolor_texture": "unity/Assets/Game/Art/Generated/c5_prop_sirene_mestra/c5_prop_sirene_mestra_basecolor.png",
+        "unity_material_checked": null,
+        "errors": []
+      }
+    },
+    "scale_meters": {
+      "passed": true,
+      "details": {
+        "reference_dimension_m": 1.8644,
+        "allowed_range_m": [
+          0.5,
+          60.0
+        ],
+        "errors": []
+      }
+    }
+  },
+  "errors": [],
+  "warnings": []
+}

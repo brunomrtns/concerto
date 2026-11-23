@@ -1,0 +1,14 @@
+{
+  "id": "c5_prop_no_resincronia",
+  "category": "env_tile",
+  "max_tris": 1500,
+  "engine": "triposg",
+  "shape_pipeline": "preproc C2 -> TripoSG -> TripoSF 512",
+  "triposf512_guard_tripped": false,
+  "shape_sec": 186.5,
+  "paint_sec": 485.5,
+  "total_sec": 672.0,
+  "master_glb_4k": "/home/bruno/printer3d-work/c5_props/c5_prop_no_resincronia/run/staged_models/c5_prop_no_resincronia__pbr_4k.glb",
+  "master_glb_4k_bytes": 11212480,
+  "timestamp_utc": "2026-11-22T23:44:43.536604+00:00"
+}

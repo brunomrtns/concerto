@@ -1,0 +1,58 @@
+[
+  {
+    "id": "c5_prop_sirene_mestra",
+    "category": "env_structure",
+    "max_tris": 5000,
+    "engine": "triposg",
+    "shape_pipeline": "preproc C2 -> TripoSG",
+    "triposf512_guard_tripped": true,
+    "shape_sec": 190.2,
+    "paint_sec": 527.1,
+    "total_sec": 717.3,
+    "master_glb_4k": "/home/bruno/printer3d-work/c5_props/c5_prop_sirene_mestra/run/staged_models/c5_prop_sirene_mestra__pbr_4k.glb",
+    "master_glb_4k_bytes": 11652560,
+    "timestamp_utc": "2026-11-22T23:33:31.286791+00:00"
+  },
+  {
+    "id": "c5_prop_no_resincronia",
+    "category": "env_tile",
+    "max_tris": 1500,
+    "engine": "triposg",
+    "shape_pipeline": "preproc C2 -> TripoSG -> TripoSF 512",
+    "triposf512_guard_tripped": false,
+    "shape_sec": 186.5,
+    "paint_sec": 485.5,
+    "total_sec": 672.0,
+    "master_glb_4k": "/home/bruno/printer3d-work/c5_props/c5_prop_no_resincronia/run/staged_models/c5_prop_no_resincronia__pbr_4k.glb",
+    "master_glb_4k_bytes": 11212480,
+    "timestamp_utc": "2026-11-22T23:44:43.536604+00:00"
+  },
+  {
+    "id": "c5_prop_valvula_ritmica",
+    "category": "env_tile",
+    "max_tris": 1200,
+    "engine": "triposg",
+    "shape_pipeline": "preproc C2 -> TripoSG -> TripoSF 512",
+    "triposf512_guard_tripped": false,
+    "shape_sec": 150.7,
+    "paint_sec": 409.6,
+    "total_sec": 560.3,
+    "master_glb_4k": "/home/bruno/printer3d-work/c5_props/c5_prop_valvula_ritmica/run/staged_models/c5_prop_valvula_ritmica__pbr_4k.glb",
+    "master_glb_4k_bytes": 9965812,
+    "timestamp_utc": "2026-11-22T23:54:04.089286+00:00"
+  },
+  {
+    "id": "c5_prop_bancada_relogio",
+    "category": "env_tile",
+    "max_tris": 2000,
+    "engine": "triposg",
+    "shape_pipeline": "preproc C2 -> TripoSG",
+    "triposf512_guard_tripped": true,
+    "shape_sec": 182.7,
+    "paint_sec": 473.3,
+    "total_sec": 656.1,
+    "master_glb_4k": "/home/bruno/printer3d-work/c5_props/c5_prop_bancada_relogio/run/staged_models/c5_prop_bancada_relogio__pbr_4k.glb",
+    "master_glb_4k_bytes": 10363060,
+    "timestamp_utc": "2026-11-23T00:05:00.413768+00:00"
+  }
+]
