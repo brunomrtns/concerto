@@ -64,6 +64,7 @@ namespace Studio.Game.Cutscenes
         private bool _flickerActive;
         private ColorAdjustments _warpColorAdj;
         private Bloom _warpBloom;
+        private readonly CutsceneActorGuard _actorGuard = new CutsceneActorGuard();
 
         public bool IsPlaying => _isPlaying;
         public bool IsMemoryVolumeActive => pastMemoryVolume != null && pastMemoryVolume.gameObject.activeInHierarchy && pastMemoryVolume.weight > 0.01f;
@@ -113,10 +114,15 @@ namespace Studio.Game.Cutscenes
             Time.timeScale = 1f;
 
             if (_playerLoco != null) _playerLoco.enabled = false;
+            _actorGuard.BeginCutscene(_playerLoco != null ? _playerLoco.gameObject : null);
             if (_playerAnim != null) { _playerAnim.SetFloat("Speed", 0f); _playerAnim.SetBool("IsGrounded", true); }
 
-            // Posiciona Dez em frente a maquina para o Beat 1
-            TeleportDez(new Vector3(-27.2f, 0.02f, -15.6f), Quaternion.LookRotation(new Vector3(1f, 0f, 0.1f)));
+            // Posiciona Dez em frente a maquina para o Beat 1 (coreografado, sem colisao)
+            if (_playerLoco != null)
+            {
+                _playerLoco.transform.position = new Vector3(-27.2f, 0.02f, -15.6f);
+                _playerLoco.transform.rotation = Quaternion.LookRotation(new Vector3(1f, 0f, 0.1f));
+            }
 
             // Estado inicial Beat 1 (presente: lona ainda cobrindo, maquina completa pronta pra revelar)
             if (coveredMachineProp != null) coveredMachineProp.SetActive(true);
@@ -125,7 +131,12 @@ namespace Studio.Game.Cutscenes
             if (pastMemoryLightRig != null) pastMemoryLightRig.SetActive(false);
             if (pastMemoryVolume != null) { pastMemoryVolume.weight = 0f; pastMemoryVolume.gameObject.SetActive(false); }
             if (warpExposureVolume != null) { warpExposureVolume.weight = 0f; warpExposureVolume.gameObject.SetActive(true); }
-            if (camerasRoot != null) camerasRoot.SetActive(true);
+            if (camerasRoot != null)
+            {
+                camerasRoot.SetActive(true);
+                var bq = camerasRoot.transform.Find("VCam_CS02_B5_BlackEndCard/CS02_CutToBlack_Backdrop");
+                if (bq != null) bq.gameObject.SetActive(false);
+            }
             if (_cmBrain != null) _cmBrain.enabled = true;
 
             if (uiOverlay != null)
@@ -209,15 +220,20 @@ namespace Studio.Game.Cutscenes
                 }
             }
 
-            // 3. Pisca sutil das luzes da oficina durante Beat 1 (carga) e Beat 4 (o primeiro errinho!)
+            // 3. Pisca sutil das luzes da oficina durante Beat 1 (carga) e Beat 4 (nunca escuro >0.2s)
             if (_flickerActive && ceilingLightsRoot != null)
             {
-                bool on = Mathf.Sin(_elapsed * 28f) > -0.35f;
+                bool on = Mathf.Sin(_elapsed * 28f) > -0.78f;
                 ceilingLightsRoot.SetActive(on);
             }
 
-            // 4. Encerramento automatico ao fim do Timeline
+            // 4. Corte seco pro preto limitado a <=1.8s no fim do Beat 5 (regra QA <3.0s!) + encerramento automatico
             float dur = _config != null && _config.totalDurationSec > 1f ? _config.totalDurationSec : (float)_director.duration;
+            if (camerasRoot != null)
+            {
+                var bq = camerasRoot.transform.Find("VCam_CS02_B5_BlackEndCard/CS02_CutToBlack_Backdrop");
+                if (bq != null) bq.gameObject.SetActive(_elapsed >= dur - 1.8f);
+            }
             if (_elapsed >= dur - 0.05f || _director.state != PlayState.Playing)
             {
                 FinishCutscene(skipped: false);
@@ -236,14 +252,16 @@ namespace Studio.Game.Cutscenes
 
             // CRITICO (Gate 3): Restaura 100% a oficina do presente — ZERO vazamento de memoria/post-processing!
             RestorePresentStateImmediate(afterActivation: true);
-            if (_cmBrain != null) _cmBrain.enabled = false;
+            if (_cmBrain != null) _cmBrain.enabled = true;
 
             if (_playerLoco != null)
             {
-                TeleportDez(new Vector3(-28.5f, 0.02f, -18.5f), Quaternion.Euler(0f, 45f, 0f));
+                _playerLoco.transform.position = new Vector3(-28.5f, 0.02f, -18.5f);
+                _playerLoco.transform.rotation = Quaternion.Euler(0f, 45f, 0f);
                 if (_playerAnim != null) { _playerAnim.SetFloat("Speed", 0f); _playerAnim.SetBool("IsGrounded", true); }
-                _playerLoco.enabled = true;
             }
+            _actorGuard.EndCutscene();
+            if (_playerLoco != null) _playerLoco.enabled = true;
 
             Time.timeScale = 1f;
             Cursor.lockState = CursorLockMode.None;
@@ -326,9 +344,13 @@ namespace Studio.Game.Cutscenes
             if (uncoveredMachineProp != null) uncoveredMachineProp.SetActive(false);
             if (livingNpcsRoot != null) livingNpcsRoot.SetActive(false);
 
-            // Esposa Lira na bancada consertando a bugiganga + Dez ao lado dela!
+            // Esposa Lira na bancada consertando a bugiganga + Dez ao lado dela (coreografado, sem colisao)
             if (wifeLiraActor != null) wifeLiraActor.SetActive(true);
-            TeleportDez(new Vector3(-28.4f, 0.02f, -18.2f), Quaternion.LookRotation(new Vector3(-0.6f, 0f, 0.8f)));
+            if (_playerLoco != null)
+            {
+                _playerLoco.transform.position = new Vector3(-28.4f, 0.02f, -18.2f);
+                _playerLoco.transform.rotation = Quaternion.LookRotation(new Vector3(-0.6f, 0f, 0.8f));
+            }
 
             // Liga tratamento de memoria quente/suave (URP Volume + Luz suave)
             if (pastMemoryLightRig != null) pastMemoryLightRig.SetActive(true);
@@ -359,8 +381,9 @@ namespace Studio.Game.Cutscenes
         public void OnSignalBeat5CutToBlackCard()
         {
             _flickerActive = false;
-            if (ceilingLightsRoot != null) ceilingLightsRoot.SetActive(false);
-            if (pastMemoryLightRig != null) pastMemoryLightRig.SetActive(false);
+            // Mantem luz ambiente de memoria sob o Cartao Fim do Ato 1 (evita tela totalmente escura >3s!)
+            if (ceilingLightsRoot != null) ceilingLightsRoot.SetActive(true);
+            if (pastMemoryLightRig != null) pastMemoryLightRig.SetActive(true);
         }
 
         public void OnSignalCutscene02End()

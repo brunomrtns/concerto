@@ -65,6 +65,7 @@ namespace Studio.Game.Cutscenes
         private float _skipHoldTimer;
         private float _elapsed;
         private bool _dezWalkingToBoard;
+        private readonly CutsceneActorGuard _actorGuard = new CutsceneActorGuard();
 
         public bool IsPlaying => _isPlaying;
         public event Action OnCutsceneEnded;
@@ -97,7 +98,6 @@ namespace Studio.Game.Cutscenes
             if (cam != null)
             {
                 _cmBrain = cam.GetComponent<CinemachineBrain>();
-                if (_cmBrain != null) _cmBrain.enabled = false;
             }
 
             var dezGo = GameObject.Find("Player_Dez_Placeholder");
@@ -130,13 +130,13 @@ namespace Studio.Game.Cutscenes
             _dezWalkingToBoard = false;
             Time.timeScale = 1f;
 
-            // 1. Suspende controle de gameplay e rotina da Juno com seguranca
+            // 1. Suspende controle de gameplay, desabilita colliders de movimento e pausa rotinas de NPCs (zero travamento em props!)
             if (_playerLoco != null) _playerLoco.enabled = false;
-            if (_junoRoutine != null) _junoRoutine.enabled = false;
+            _actorGuard.BeginCutscene(_playerLoco != null ? _playerLoco.gameObject : null);
 
             // Posiciona Dez perto da bancada olhando a foto/caixinha e Juno pronta pro Beat 3
-            TeleportActor(_playerLoco != null ? _playerLoco.transform : null, _playerCc, dezStartPos, Quaternion.LookRotation(new Vector3(1f, 0f, 0.35f)));
-            TeleportActor(_junoRoutine != null ? _junoRoutine.transform : null, _junoCc, junoMarkPos, Quaternion.LookRotation(dezBoardPos - junoMarkPos));
+            TeleportChoreographed(_playerLoco != null ? _playerLoco.transform : null, dezStartPos, Quaternion.LookRotation(new Vector3(1f, 0f, 0.35f)));
+            TeleportChoreographed(_junoRoutine != null ? _junoRoutine.transform : null, junoMarkPos, Quaternion.LookRotation(dezBoardPos - junoMarkPos));
             if (_playerAnim != null) { _playerAnim.SetFloat("Speed", 0f); _playerAnim.SetBool("IsGrounded", true); }
             if (_junoAnim != null)   { _junoAnim.SetFloat("Speed", 0f);   _junoAnim.SetBool("IsGrounded", true); }
 
@@ -242,16 +242,15 @@ namespace Studio.Game.Cutscenes
             if (_playerLoco == null) return;
             Transform dezT = _playerLoco.transform;
 
-            // Beat 3 (25s..45s): Dez caminha ate o quadro de checklist e depois vira para Juno
+            // Beat 3 (25s..45s): Dez caminha coreografado (SEM colisao fisica!) ate o quadro de checklist e depois vira para Juno
             if (_dezWalkingToBoard && _elapsed < 45f)
             {
-                Vector3 toBoard = dezBoardPos - dezT.position;
+                Vector3 target = new Vector3(dezBoardPos.x, dezT.position.y, dezBoardPos.z);
+                Vector3 toBoard = target - dezT.position;
                 toBoard.y = 0f;
-                if (toBoard.magnitude > 0.15f)
+                if (toBoard.magnitude > 0.08f)
                 {
-                    Vector3 step = toBoard.normalized * 1.45f * dt;
-                    if (_playerCc != null && _playerCc.enabled) _playerCc.Move(step + Vector3.down * 2f * dt);
-                    else dezT.position += step;
+                    dezT.position = Vector3.MoveTowards(dezT.position, target, 1.55f * dt);
                     dezT.rotation = Quaternion.RotateTowards(dezT.rotation, Quaternion.LookRotation(toBoard.normalized), 360f * dt);
                     if (_playerAnim != null) _playerAnim.SetFloat("Speed", 1.5f, 0.08f, dt);
                 }
@@ -288,19 +287,20 @@ namespace Studio.Game.Cutscenes
             if (machineHumSource != null) machineHumSource.Stop();
             if (sfxOneShotSource != null) sfxOneShotSource.Stop();
 
-            // Desliga rig de luz, post-processing, cameras virtuais e CinemachineBrain -> devolve camera 3a pessoa do gameplay!
+            // Desliga rig de luz, post-processing e cameras virtuais da cutscene -> devolve VCam_Gameplay_Dez do gameplay!
             SetCutsceneRigActive(false);
-            if (_cmBrain != null) _cmBrain.enabled = false;
+            if (_cmBrain != null) _cmBrain.enabled = true;
 
-            // Garante Dez posicionado de pe e limpo na oficina olhando para a Juno / oficina
+            // Garante Dez posicionado de pe e limpo na oficina antes de religar CharacterControllers e NPCs
             if (_playerLoco != null)
             {
                 Vector3 endPos = new Vector3(-29.2f, 0.02f, -18.8f);
                 Quaternion endRot = Quaternion.LookRotation((junoMarkPos - endPos).normalized);
-                TeleportActor(_playerLoco.transform, _playerCc, endPos, endRot);
+                TeleportChoreographed(_playerLoco.transform, endPos, endRot);
                 if (_playerAnim != null) { _playerAnim.SetFloat("Speed", 0f); _playerAnim.SetBool("IsGrounded", true); }
-                _playerLoco.enabled = true;
             }
+            _actorGuard.EndCutscene();
+            if (_playerLoco != null) _playerLoco.enabled = true;
             if (_junoRoutine != null) _junoRoutine.enabled = true;
 
             // Garante estado de gameplay 100% integro
@@ -324,6 +324,13 @@ namespace Studio.Game.Cutscenes
                 cutscenePostProcessVolume.weight = active ? 1f : 0f;
             }
             if (cutsceneCamerasRoot != null) cutsceneCamerasRoot.SetActive(active);
+        }
+
+        private static void TeleportChoreographed(Transform t, Vector3 pos, Quaternion rot)
+        {
+            if (t == null) return;
+            t.position = pos;
+            t.rotation = rot;
         }
 
         private static void TeleportActor(Transform t, CharacterController cc, Vector3 pos, Quaternion rot)

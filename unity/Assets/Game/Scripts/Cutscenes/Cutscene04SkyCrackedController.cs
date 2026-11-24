@@ -72,6 +72,7 @@ namespace Studio.Game.Cutscenes
         private float _skipHoldTimer;
         private AsyncOperation _preloadOp;
         private Coroutine _chainRoutine;
+        private readonly CutsceneActorGuard _actorGuard = new CutsceneActorGuard();
 
         public bool IsPlaying => _isPlaying;
         public bool IsInSectorScene => _inSectorScene;
@@ -177,13 +178,22 @@ namespace Studio.Game.Cutscenes
 
             CacheCurrentSceneActors();
             LockPlayer(true);
+            _actorGuard.BeginCutscene(_playerLoco != null ? _playerLoco.gameObject : null);
 
-            // BEAT 1 (0:00–0:10): Oficina cai para luzes de backup + alarme discreto + Juno entra apressada
+            // BEAT 1 (0:00–0:10): Oficina cai para luzes de backup (com intensidade legivel >= 6.8) + alarme + Juno entra apressada
             if (!_inSectorScene)
             {
                 if (DialogueController.Instance != null) DialogueController.Instance.enabled = false;
                 if (ceilingLightsRoot != null) ceilingLightsRoot.SetActive(false);
-                if (backupLightsRoot != null) backupLightsRoot.SetActive(true);
+                if (backupLightsRoot != null)
+                {
+                    backupLightsRoot.SetActive(true);
+                    foreach (var l in backupLightsRoot.GetComponentsInChildren<Light>(true))
+                    {
+                        l.intensity = Mathf.Max(l.intensity, 7.2f);
+                        l.range = Mathf.Max(l.range, 24f);
+                    }
+                }
 
                 TeleportDez(new Vector3(-25.6f, 0.02f, -18.0f), Quaternion.LookRotation(new Vector3(-0.75f, 0f, -0.65f)));
                 if (_junoRoutine != null) _junoRoutine.enabled = false;
@@ -356,14 +366,14 @@ namespace Studio.Game.Cutscenes
                 _doorFrame.localPosition = _doorFrameStartPos + new Vector3(openT * 2.2f, shake, 0f);
             }
 
-            // Camera se aproxima da porta abrindo pelo lado livre da oficina (sem parede no meio)
+            // Camera no corredor leste enquadrando Dez, Juno e a porta pesada abrindo (100% livre de paredes e iluminada!)
             var cam = Camera.main;
             if (cam != null)
             {
-                Vector3 c0 = new Vector3(-19.2f, 1.55f, -12.4f);
-                Vector3 c1 = new Vector3(-17.8f, 1.48f, -13.1f);
+                Vector3 c0 = new Vector3(-20.4f, 1.85f, -11.4f);
+                Vector3 c1 = new Vector3(-19.2f, 1.65f, -12.0f);
                 cam.transform.position = Vector3.Lerp(c0, c1, localT);
-                cam.transform.LookAt(new Vector3(-16.5f, 1.45f, -13.5f));
+                cam.transform.LookAt(new Vector3(-17.4f, 1.15f, -13.5f));
             }
 
             if (uiOverlay != null && _elapsed >= 17.55f)
@@ -498,6 +508,7 @@ namespace Studio.Game.Cutscenes
 
             // Posiciona Dez na entrada do Setor Externo e devolve controle 100% limpo
             TeleportDez(new Vector3(0f, 0.05f, 3.0f), Quaternion.identity);
+            _actorGuard.EndCutscene();
             LockPlayer(false);
             if (_cmBrain != null) _cmBrain.enabled = true;
             if (DialogueController.Instance != null) DialogueController.Instance.enabled = true;

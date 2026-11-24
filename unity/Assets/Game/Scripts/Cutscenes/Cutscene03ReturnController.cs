@@ -54,6 +54,7 @@ namespace Studio.Game.Cutscenes
         private float _elapsed;
         private float _skipHoldTimer;
         private bool _flickerActive;
+        private readonly CutsceneActorGuard _actorGuard = new CutsceneActorGuard();
 
         public bool IsPlaying => _isPlaying;
         public event Action OnCutscene03Ended;
@@ -111,13 +112,23 @@ namespace Studio.Game.Cutscenes
             Time.timeScale = 1f;
 
             if (_playerLoco != null) _playerLoco.enabled = false;
+            _actorGuard.BeginCutscene(_playerLoco != null ? _playerLoco.gameObject : null);
             if (_playerAnim != null) { _playerAnim.SetFloat("Speed", 0f); _playerAnim.SetBool("IsGrounded", true); }
 
-            // Posiciona Dez em frente a bancada com a foto e a bugiganga quebrada
-            TeleportDez(new Vector3(-28.4f, 0.02f, -18.2f), Quaternion.LookRotation(new Vector3(-0.45f, 0f, 0.89f)));
+            // Posiciona Dez em frente a bancada com a foto e a bugiganga quebrada (coreografado, sem colisao)
+            if (_playerLoco != null)
+            {
+                _playerLoco.transform.position = new Vector3(-28.4f, 0.02f, -18.2f);
+                _playerLoco.transform.rotation = Quaternion.LookRotation(new Vector3(-0.45f, 0f, 0.89f));
+            }
 
             if (brokenTrinketProp != null) brokenTrinketProp.SetActive(true);
-            if (camerasRoot != null) camerasRoot.SetActive(true);
+            if (camerasRoot != null)
+            {
+                camerasRoot.SetActive(true);
+                var bq = camerasRoot.transform.Find("VCam_CS03_B4_CutToBlack/CS03_CutToBlack_Backdrop");
+                if (bq != null) bq.gameObject.SetActive(false);
+            }
             if (returnFlashVolume != null) { returnFlashVolume.gameObject.SetActive(true); returnFlashVolume.weight = 1f; }
             if (_cmBrain != null) _cmBrain.enabled = true;
 
@@ -172,23 +183,29 @@ namespace Studio.Game.Cutscenes
                 }
             }
 
-            // Beat 1 (0..3.5s): Flash branco de retorno decai suavemente para oficina normal
+            // Beat 1 (0..1.8s): Flash branco de retorno decai rapido (<=1.8s, imagem util <1.2s, regra QA <=3s!)
             if (returnFlashVolume != null)
             {
-                if (_elapsed <= 3.5f)
-                    returnFlashVolume.weight = Mathf.Clamp01(1f - (_elapsed / 3.5f));
+                if (_elapsed <= 1.8f)
+                    returnFlashVolume.weight = Mathf.Clamp01(1f - (_elapsed / 1.8f));
                 else
                     returnFlashVolume.weight = 0f;
             }
 
-            // Beat 3 (20..26s): Lampada da oficina pisca enquanto o zumbido grave continua
+            // Beat 3 (20..26s): Lampada da oficina pisca breve (nunca escura por >0.2s)
             if (_flickerActive && ceilingLightsRoot != null)
             {
-                bool on = Mathf.Sin(_elapsed * 31f) > -0.30f;
+                bool on = Mathf.Sin(_elapsed * 31f) > -0.75f;
                 ceilingLightsRoot.SetActive(on);
             }
 
             float dur = _config != null && _config.totalDurationSec > 1f ? _config.totalDurationSec : (float)_director.duration;
+            // Corte seco final pro preto limitado a <=2.0s (regra QA <3.0s!)
+            if (camerasRoot != null)
+            {
+                var bq = camerasRoot.transform.Find("VCam_CS03_B4_CutToBlack/CS03_CutToBlack_Backdrop");
+                if (bq != null) bq.gameObject.SetActive(_elapsed >= dur - 2.0f);
+            }
             if (_elapsed >= dur - 0.05f || _director.state != PlayState.Playing)
             {
                 FinishCutscene(skipped: false);
@@ -216,10 +233,12 @@ namespace Studio.Game.Cutscenes
 
             if (_playerLoco != null)
             {
-                TeleportDez(new Vector3(-28.4f, 0.02f, -18.4f), Quaternion.Euler(0f, 35f, 0f));
+                _playerLoco.transform.position = new Vector3(-28.4f, 0.02f, -18.4f);
+                _playerLoco.transform.rotation = Quaternion.Euler(0f, 35f, 0f);
                 if (_playerAnim != null) { _playerAnim.SetFloat("Speed", 0f); _playerAnim.SetBool("IsGrounded", true); }
-                _playerLoco.enabled = true;
             }
+            _actorGuard.EndCutscene();
+            if (_playerLoco != null) _playerLoco.enabled = true;
 
             Time.timeScale = 1f;
             Cursor.lockState = CursorLockMode.None;
