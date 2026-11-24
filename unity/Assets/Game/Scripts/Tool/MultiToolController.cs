@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Studio.Game.Animation;
 using Studio.Game.Combat;
 using Studio.Game.Cutscenes;
 using Studio.Game.Dialogue;
@@ -60,6 +61,8 @@ namespace Studio.Game.Tool
         private CutsceneManager _cs01;
         private Cutscene02TravelController _cs02;
         private Cutscene03ReturnController _cs03;
+        private DezProceduralAnimator _dezProc;
+        private bool _toolMountedToHand;
 
         public MultiToolConfig Cfg
         {
@@ -112,8 +115,41 @@ namespace Studio.Game.Tool
             _cs01 = FindAnyObjectByType<CutsceneManager>();
             _cs02 = FindAnyObjectByType<Cutscene02TravelController>();
             _cs03 = FindAnyObjectByType<Cutscene03ReturnController>();
+            MountToolToRightHand();
             EquipModuleIndex(0, playSfx: false);
             RefreshHud();
+        }
+
+        private void MountToolToRightHand()
+        {
+            Transform root = PlayerTransform;
+            if (root == null) return;
+            _dezProc = root.GetComponentInChildren<DezProceduralAnimator>(true);
+            if (_toolMountedToHand || toolVisualTransform == null) return;
+
+            var anim = root.GetComponentInChildren<Animator>(true);
+            if (anim != null && anim.isHuman)
+            {
+                Transform rHand = anim.GetBoneTransform(HumanBodyBones.RightHand);
+                if (rHand != null)
+                {
+                    // Preserva escala mundial real da ferramenta ao acoplar no osso RightHand (evita distorcao de escala FBX!)
+                    Vector3 worldScale = toolVisualTransform.lossyScale;
+                    toolVisualTransform.SetParent(rHand, true);
+                    toolVisualTransform.position = rHand.position + rHand.TransformDirection(new Vector3(0.0f, 0.06f, 0.02f));
+                    toolVisualTransform.rotation = rHand.rotation * Quaternion.Euler(5f, 0f, -90f);
+                    // Garante escala legivel na palma da mao (~0.36m) independente da escala interna do rig
+                    Vector3 parentScale = rHand.lossyScale;
+                    toolVisualTransform.localScale = new Vector3(
+                        worldScale.x / Mathf.Max(0.0001f, Mathf.Abs(parentScale.x)),
+                        worldScale.y / Mathf.Max(0.0001f, Mathf.Abs(parentScale.y)),
+                        worldScale.z / Mathf.Max(0.0001f, Mathf.Abs(parentScale.z))
+                    );
+                    _toolRestLocalPos = toolVisualTransform.localPosition;
+                    _toolRestLocalRot = toolVisualTransform.localRotation;
+                    _toolMountedToHand = true;
+                }
+            }
         }
 
         public bool CanUseCombatActionsNow()
@@ -140,14 +176,14 @@ namespace Studio.Game.Tool
                 RefreshHud();
             }
 
-            // Animacao procedural curta de swing da ferramenta na mao
+            // Micro-inclinacao de punho na ferramenta acoplada a mao direita (o arco real vem do braco/ombro no DezProceduralAnimator!)
             if (_swingAnimTimer > 0f && toolVisualTransform != null)
             {
                 _swingAnimTimer = Mathf.Max(0f, _swingAnimTimer - Time.deltaTime);
                 float u = 1f - (_swingAnimTimer / (_swingHeavy ? 0.28f : 0.18f));
                 float arc = Mathf.Sin(u * Mathf.PI);
-                float yaw = (_swingCombo == 2 ? -85f : 85f) * arc;
-                float pitch = (_swingHeavy ? 65f : 25f) * arc;
+                float yaw = (_swingCombo == 2 ? -18f : 18f) * arc;
+                float pitch = (_swingHeavy ? 22f : 12f) * arc;
                 toolVisualTransform.localRotation = _toolRestLocalRot * Quaternion.Euler(pitch, yaw, 0f);
                 if (_swingAnimTimer <= 0f) toolVisualTransform.localRotation = _toolRestLocalRot;
             }
@@ -232,6 +268,8 @@ namespace Studio.Game.Tool
 
         public Vector3 GetMuzzleWorldPosition()
         {
+            if (toolVisualTransform != null && toolVisualTransform.gameObject.activeInHierarchy)
+                return toolVisualTransform.position + PlayerTransform.forward * 0.28f;
             return PlayerTransform.position + Vector3.up * 0.92f + PlayerTransform.forward * 0.65f + PlayerTransform.right * 0.25f;
         }
 
@@ -248,6 +286,7 @@ namespace Studio.Game.Tool
             _swingCombo = comboStep;
             _swingAnimTimer = isHeavy ? 0.28f : 0.18f;
             if (toolVisualTransform != null) toolVisualTransform.gameObject.SetActive(true);
+            if (_dezProc != null) _dezProc.TriggerCombatSwing(isHeavy, comboStep);
             if (sfxSource != null && meleeSwingClip != null)
             {
                 sfxSource.pitch = isHeavy ? 0.78f : (comboStep == 2 ? 1.12f : 0.98f);
@@ -257,6 +296,7 @@ namespace Studio.Game.Tool
 
         public void PlayBoltFireFeedback(Vector3 pos)
         {
+            if (_dezProc != null) _dezProc.TriggerBoltRecoil();
             if (hitSparksParticles != null) { hitSparksParticles.transform.position = pos; hitSparksParticles.Play(); }
             if (sfxSource != null && boltFireClip != null)
             {

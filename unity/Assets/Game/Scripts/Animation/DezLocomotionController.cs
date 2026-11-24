@@ -324,7 +324,16 @@ namespace Studio.Game.Animation
                 _jumpCutApplied = false;
                 if (!_wasGrounded && _lastAirVy < -2.0f)
                 {
-                    if (_proc != null) _proc.NotifyLanding(_lastAirVy);
+                    if (_currentSpeed > 2.0f)
+                    {
+                        // Pouso correndo: corta Jump_Land estatico (evita deslize!) e aplica absorcao/rolamento dinamico
+                        if (_anim != null) _anim.CrossFade("Locomotion", 0.06f);
+                        if (_proc != null) _proc.TriggerRunningRoll();
+                    }
+                    else
+                    {
+                        if (_proc != null) _proc.NotifyLanding(_lastAirVy);
+                    }
                     float impact = Mathf.Clamp01(Mathf.Abs(_lastAirVy) / 14f);
                     _landingBobOffset = -cfg.landingBobAmplitude * Mathf.Max(0.35f, impact);
                     PlaySurfaceSfx(landingThudClip, 0.55f + 0.35f * impact, 0.92f, 1.05f);

@@ -71,7 +71,7 @@ namespace Studio.Game.Animation
 
         private void Start()
         {
-            var playerGo = GameObject.Find("Player_Dez_Placeholder");
+            var playerGo = PlayerRegistry.Resolve();
             if (playerGo != null) _player = playerGo.transform;
             if (stops != null && stops.Length > 0)
             {
@@ -156,13 +156,22 @@ namespace Studio.Game.Animation
                 _verticalVel += gravity * dt;
             }
 
+            Vector3 prevPos = transform.position;
             Vector3 motion = (moveDir * _currentSpeed + Vector3.up * _verticalVel) * dt;
             _cc.Move(motion);
 
+            Vector3 moved = transform.position - prevPos;
+            moved.y = 0f;
+            float actualHorizSpeed = moved.magnitude / dt;
+
             if (_anim != null)
             {
-                _anim.SetFloat("Speed", _currentSpeed, 0.08f, dt);
+                float animSpeedVal = actualHorizSpeed > 0.08f ? actualHorizSpeed : 0f;
+                _anim.SetFloat("Speed", animSpeedVal, 0.08f, dt);
                 _anim.SetBool("IsGrounded", _cc.isGrounded);
+                // Casa cadencia dos passos com velocidade REAL percorrida no chao (ZERO moonwalk/deslize!)
+                float mult = animSpeedVal > 0.08f ? Mathf.Clamp(actualHorizSpeed / 2.15f, 0.45f, 1.25f) : 1.0f;
+                _anim.SetFloat("LocomotionSpeedMult", mult);
                 _anim.SetFloat("VerticalVel", _verticalVel);
             }
         }
