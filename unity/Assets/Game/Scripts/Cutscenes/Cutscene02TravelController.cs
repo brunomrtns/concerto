@@ -67,6 +67,7 @@ namespace Studio.Game.Cutscenes
         private readonly CutsceneActorGuard _actorGuard = new CutsceneActorGuard();
 
         public bool IsPlaying => _isPlaying;
+        public bool IsInPastMode => _inPastMode;
         public bool IsMemoryVolumeActive => pastMemoryVolume != null && pastMemoryVolume.gameObject.activeInHierarchy && pastMemoryVolume.weight > 0.01f;
         public event Action OnCutscene02Ended;
         public event Action OnCutscene02CompletedNaturally;

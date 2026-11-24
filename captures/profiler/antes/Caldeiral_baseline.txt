@@ -1,0 +1,11 @@
+Scene: Caldeiral
+Frames: 180
+Avg ms: 1,84
+P95 ms: 2,26
+Peak ms: 5,38
+Hitches (>33.4ms): 0
+Avg GC Bytes/frame: 1124
+Peak GC Bytes/frame: 2356
+Avg DrawCalls: 0
+Avg Batches: 0
+Avg SetPass: 0

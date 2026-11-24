@@ -180,6 +180,7 @@ namespace Studio.Game.Tool
         private float _speed;
         private float _damage;
         private float _lifeLeft;
+        private readonly RaycastHit[] _hitBuf = new RaycastHit[12];
 
         public void Launch(MultiToolController owner, Vector3 dir, float speed, float damage, float lifetime)
         {
@@ -198,13 +199,24 @@ namespace Studio.Game.Tool
             if (_lifeLeft <= 0f) { Destroy(gameObject); return; }
 
             float step = _speed * dt;
-            var hits = Physics.SphereCastAll(transform.position, 0.14f, _dir, step + 0.05f, Studio.Game.Collision.CollisionMatrixBootstrap.ProjectileHitMask, QueryTriggerInteraction.Collide);
-            if (hits != null && hits.Length > 0)
+            int count = Physics.SphereCastNonAlloc(transform.position, 0.14f, _dir, _hitBuf, step + 0.05f, Studio.Game.Collision.CollisionMatrixBootstrap.ProjectileHitMask, QueryTriggerInteraction.Collide);
+            if (count > 0)
             {
-                System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
-                for (int i = 0; i < hits.Length; i++)
+                // Ordenacao simples in-place (zero alocacao!) por distancia crescente
+                for (int a = 0; a < count - 1; a++)
                 {
-                    var hit = hits[i];
+                    for (int b = a + 1; b < count; b++)
+                    {
+                        if (_hitBuf[b].distance < _hitBuf[a].distance)
+                        {
+                            var tmp = _hitBuf[a]; _hitBuf[a] = _hitBuf[b]; _hitBuf[b] = tmp;
+                        }
+                    }
+                }
+
+                for (int i = 0; i < count; i++)
+                {
+                    var hit = _hitBuf[i];
                     if (hit.collider == null) continue;
                     if (_owner != null && hit.transform.root == _owner.PlayerTransform.root) continue;
 

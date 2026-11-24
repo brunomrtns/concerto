@@ -309,17 +309,27 @@ namespace Studio.Game.Tool
             }
         }
 
+        private int _lastHudCells = -1;
+        private string _lastHudModeId = string.Empty;
+
         public void RefreshHud()
         {
             var mod = ActiveModule;
-            if (modeLabelText != null && mod != null)
-                modeLabelText.text = $"[TAB] MODO: {mod.DisplayName}";
-            if (modeAccentBar != null && mod != null)
-                modeAccentBar.color = mod.AccentColor;
+            if (mod != null && mod.ModuleId != _lastHudModeId)
+            {
+                _lastHudModeId = mod.ModuleId;
+                if (modeLabelText != null)
+                    modeLabelText.text = $"[TAB] MODO: {mod.DisplayName}";
+                if (modeAccentBar != null)
+                    modeAccentBar.color = mod.AccentColor;
+            }
             if (energyBarFill != null)
                 energyBarFill.fillAmount = Mathf.Clamp01(_energyBar / Mathf.Max(1f, Cfg.maxEnergyBar));
-            if (cellsCountText != null)
+            if (cellsCountText != null && _energyCells != _lastHudCells)
+            {
+                _lastHudCells = _energyCells;
                 cellsCountText.text = $"CÉLULAS: {_energyCells}/{Cfg.maxCells}";
+            }
         }
     }
 }

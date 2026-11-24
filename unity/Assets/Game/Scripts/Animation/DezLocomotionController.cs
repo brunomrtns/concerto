@@ -621,14 +621,14 @@ namespace Studio.Game.Animation
             var cfg = Cfg;
             _stepTimer = running ? cfg.runStepIntervalSec : cfg.walkStepIntervalSec;
 
-            // Detecta superficie sob os pes (metal / poca / piso)
+            // Detecta superficie sob os pes (metal / poca / piso) sem alocar string
             _lastSurfaceType = "floor";
             if (Physics.Raycast(transform.position + Vector3.up * 0.25f, Vector3.down, out RaycastHit hit, 0.75f, ~0, QueryTriggerInteraction.Collide))
             {
-                string n = hit.collider != null ? hit.collider.name.ToLowerInvariant() : "";
-                if (n.Contains("puddle") || n.Contains("poca") || n.Contains("water") || n.Contains("oil"))
+                string n = hit.collider != null ? hit.collider.name : string.Empty;
+                if (ContainsIgnoreCase(n, "puddle") || ContainsIgnoreCase(n, "poca") || ContainsIgnoreCase(n, "water") || ContainsIgnoreCase(n, "oil"))
                     _lastSurfaceType = "puddle";
-                else if (n.Contains("metal") || n.Contains("grate") || n.Contains("pipe") || n.Contains("catwalk") || n.Contains("door") || n.Contains("ramp"))
+                else if (ContainsIgnoreCase(n, "metal") || ContainsIgnoreCase(n, "grate") || ContainsIgnoreCase(n, "pipe") || ContainsIgnoreCase(n, "catwalk") || ContainsIgnoreCase(n, "door") || ContainsIgnoreCase(n, "ramp"))
                     _lastSurfaceType = "metal";
             }
 
@@ -784,17 +784,24 @@ namespace Studio.Game.Animation
             }
         }
 
+        private readonly RaycastHit[] _probeBuf = new RaycastHit[12];
+
+        private static bool ContainsIgnoreCase(string source, string token)
+        {
+            return !string.IsNullOrEmpty(source) && source.IndexOf(token, System.StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
         private bool SphereCastIgnoreSelf(Vector3 origin, float radius, Vector3 dir, float maxDist, out RaycastHit bestHit)
         {
             bestHit = default;
-            var hits = Physics.SphereCastAll(origin, radius, dir, maxDist, ~0, QueryTriggerInteraction.Ignore);
+            int count = Physics.SphereCastNonAlloc(origin, radius, dir, _probeBuf, maxDist, ~0, QueryTriggerInteraction.Ignore);
             float bestDist = float.MaxValue;
             bool found = false;
-            for (int i = 0; i < hits.Length; i++)
+            for (int i = 0; i < count; i++)
             {
-                if (hits[i].transform == null || hits[i].transform.root == transform.root) continue;
-                if (hits[i].distance <= 0.001f) continue;
-                if (hits[i].distance < bestDist) { bestDist = hits[i].distance; bestHit = hits[i]; found = true; }
+                if (_probeBuf[i].transform == null || _probeBuf[i].transform.root == transform.root) continue;
+                if (_probeBuf[i].distance <= 0.001f) continue;
+                if (_probeBuf[i].distance < bestDist) { bestDist = _probeBuf[i].distance; bestHit = _probeBuf[i]; found = true; }
             }
             return found;
         }
@@ -802,13 +809,13 @@ namespace Studio.Game.Animation
         private bool RaycastIgnoreSelf(Vector3 origin, Vector3 dir, float maxDist, out RaycastHit bestHit)
         {
             bestHit = default;
-            var hits = Physics.RaycastAll(origin, dir, maxDist, ~0, QueryTriggerInteraction.Ignore);
+            int count = Physics.RaycastNonAlloc(origin, dir, _probeBuf, maxDist, ~0, QueryTriggerInteraction.Ignore);
             float bestDist = float.MaxValue;
             bool found = false;
-            for (int i = 0; i < hits.Length; i++)
+            for (int i = 0; i < count; i++)
             {
-                if (hits[i].transform == null || hits[i].transform.root == transform.root) continue;
-                if (hits[i].distance < bestDist) { bestDist = hits[i].distance; bestHit = hits[i]; found = true; }
+                if (_probeBuf[i].transform == null || _probeBuf[i].transform.root == transform.root) continue;
+                if (_probeBuf[i].distance < bestDist) { bestDist = _probeBuf[i].distance; bestHit = _probeBuf[i]; found = true; }
             }
             return found;
         }

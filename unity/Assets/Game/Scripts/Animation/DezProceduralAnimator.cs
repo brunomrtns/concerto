@@ -66,6 +66,7 @@ namespace Studio.Game.Animation
         private float _mantleT;
         private Transform _shadowQuad;
         private Material _shadowMat;
+        private readonly RaycastHit[] _shadowHitBuf = new RaycastHit[8];
 
         private void Awake()
         {
@@ -257,22 +258,22 @@ namespace Studio.Game.Animation
                 }
             }
 
-            // 3. Sombra de contato dinamica no piso
+            // 3. Sombra de contato dinamica no piso (zero-alloc via RaycastNonAlloc)
             if (_shadowQuad != null)
             {
                 Vector3 origin = transform.position + Vector3.up * 0.6f;
-                var hits = Physics.RaycastAll(origin, Vector3.down, 4.0f, groundMask, QueryTriggerInteraction.Ignore);
+                int hitCount = Physics.RaycastNonAlloc(origin, Vector3.down, _shadowHitBuf, 4.0f, groundMask, QueryTriggerInteraction.Ignore);
                 float bestDist = float.MaxValue;
                 RaycastHit groundHit = default;
                 bool hasGround = false;
                 Transform selfRoot = transform.root;
-                for (int i = 0; i < hits.Length; i++)
+                for (int i = 0; i < hitCount; i++)
                 {
-                    if (hits[i].transform.root == selfRoot) continue;
-                    if (hits[i].distance < bestDist)
+                    if (_shadowHitBuf[i].transform.root == selfRoot) continue;
+                    if (_shadowHitBuf[i].distance < bestDist)
                     {
-                        bestDist = hits[i].distance;
-                        groundHit = hits[i];
+                        bestDist = _shadowHitBuf[i].distance;
+                        groundHit = _shadowHitBuf[i];
                         hasGround = true;
                     }
                 }

@@ -1,0 +1,11 @@
+Scene: SetorExterno
+Frames: 150
+Avg ms: 1,03
+P95 ms: 1,53
+Peak ms: 1,81
+Hitches (>33.4ms): 0
+Avg GC Bytes/frame: 752
+Peak GC Bytes/frame: 1456
+Avg DrawCalls: 0
+Avg Batches: 0
+Avg SetPass: 0

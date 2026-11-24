@@ -280,6 +280,9 @@ namespace Studio.Game.Dialogue
             OnConversationFinished?.Invoke(finishedId);
         }
 
+        private readonly Collider[] _scanBuf = new Collider[24];
+        private string _lastPromptShown = string.Empty;
+
         public void ScanFocusedInteractable()
         {
             if (_player == null) return;
@@ -294,15 +297,16 @@ namespace Studio.Game.Dialogue
                 if (cf.sqrMagnitude > 0.01f) aimFwd = cf.normalized;
             }
 
-            var hits = Physics.OverlapSphere(_player.position + Vector3.up * 0.6f, interactRadius, ~0, QueryTriggerInteraction.Collide);
+            int hitCount = Physics.OverlapSphereNonAlloc(_player.position + Vector3.up * 0.6f, interactRadius, _scanBuf, ~0, QueryTriggerInteraction.Collide);
             IInteractable best = null;
             NpcDialogueInteractable bestNpc = null;
             float bestScore = float.MinValue;
 
-            for (int i = 0; i < hits.Length; i++)
+            for (int i = 0; i < hitCount; i++)
             {
-                if (hits[i] == null || hits[i].transform.root == _player.root) continue;
-                var cand = hits[i].GetComponentInParent<IInteractable>();
+                var col = _scanBuf[i];
+                if (col == null || col.transform.root == _player.root) continue;
+                var cand = col.GetComponentInParent<IInteractable>();
                 if (cand == null || !cand.CanInteract(_player.gameObject)) continue;
 
                 // Prioriza NpcDialogueInteractable quando dentro do cone de mira
@@ -339,9 +343,18 @@ namespace Studio.Game.Dialogue
             if (promptGroup != null)
             {
                 bool show = _focused != null;
-                promptGroup.alpha = show ? 1f : 0f;
+                float targetAlpha = show ? 1f : 0f;
+                if (!Mathf.Approximately(promptGroup.alpha, targetAlpha))
+                    promptGroup.alpha = targetAlpha;
                 if (show && promptText != null)
-                    promptText.text = _focused.PromptText;
+                {
+                    string nextPrompt = _focused.PromptText;
+                    if (nextPrompt != _lastPromptShown)
+                    {
+                        _lastPromptShown = nextPrompt;
+                        promptText.text = nextPrompt;
+                    }
+                }
             }
         }
 

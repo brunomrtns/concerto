@@ -1,0 +1,4 @@
+scene,frames,avg_ms,p95_ms,peak_ms,hitches_gt_2frames,avg_gc_bytes,peak_gc_bytes,avg_draw_calls,avg_batches,avg_setpass
+MainMenu,120,0,26,0,28,0,94,0,375,1032,0,0,0
+Caldeiral,180,1,71,2,30,4,88,0,616,1900,0,0,0
+SetorExterno,150,0,96,1,34,1,58,0,620,1380,0,0,0

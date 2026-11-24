@@ -1,0 +1,11 @@
+Scene: MainMenu
+Frames: 120
+Avg ms: 0,25
+P95 ms: 0,28
+Peak ms: 1,05
+Hitches (>33.4ms): 0
+Avg GC Bytes/frame: 375
+Peak GC Bytes/frame: 1032
+Avg DrawCalls: 0
+Avg Batches: 0
+Avg SetPass: 0
