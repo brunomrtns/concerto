@@ -1,0 +1,10 @@
+{
+  "dialogueId": "dlg_juno_teste_sistema",
+  "promptKey": "prompt_talk",
+  "postObjectiveKey": "obj_test_proof",
+  "partsTotal": 5,
+  "lines": [
+    { "speakerKey": "speaker_juno", "textKey": "juno_test_01" },
+    { "speakerKey": "speaker_dez",  "textKey": "juno_test_02" }
+  ]
+}

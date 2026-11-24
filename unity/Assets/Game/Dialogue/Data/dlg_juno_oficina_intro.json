@@ -1,0 +1,13 @@
+{
+  "dialogueId": "dlg_juno_oficina_intro",
+  "promptKey": "prompt_talk",
+  "postObjectiveKey": "obj_find_parts",
+  "partsTotal": 3,
+  "lines": [
+    { "speakerKey": "speaker_juno", "textKey": "juno_intro_01" },
+    { "speakerKey": "speaker_juno", "textKey": "juno_intro_02" },
+    { "speakerKey": "speaker_dez",  "textKey": "dez_intro_03"  },
+    { "speakerKey": "speaker_juno", "textKey": "juno_intro_04" },
+    { "speakerKey": "speaker_juno", "textKey": "juno_intro_05" }
+  ]
+}

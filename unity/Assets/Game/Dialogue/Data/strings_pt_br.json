@@ -1,0 +1,25 @@
+{
+  "locale": "pt-BR",
+  "entries": [
+    { "key": "prompt_talk", "value": "[E] Falar" },
+    { "key": "prompt_interact", "value": "[E] Interagir" },
+    { "key": "prompt_advance", "value": "[E] Continuar" },
+    { "key": "prompt_finish", "value": "[E] Encerrar" },
+    { "key": "objective_prefix", "value": "OBJETIVO" },
+    { "key": "obj_talk_juno", "value": "Fale com Juno" },
+    { "key": "obj_find_parts", "value": "Encontre as peças da máquina (0/{0})" },
+    { "key": "obj_test_proof", "value": "Objetivo de teste validado (0/{0})" },
+
+    { "key": "speaker_juno", "value": "Juno" },
+    { "key": "speaker_dez", "value": "Dez" },
+
+    { "key": "juno_intro_01", "value": "Até que enfim saiu da bancada, Dez. Tenho uma notícia ótima e outra que vai te dar dor de cabeça." },
+    { "key": "juno_intro_02", "value": "O Projeto Echo está completamente travado. O delivery com as peças principais tombou na entrega e espalhou os módulos pela oficina e pelos corredores." },
+    { "key": "dez_intro_03", "value": "Maravilha... E o conselho quer tudo montado antes do próximo ciclo. Quantas peças ficaram faltando?" },
+    { "key": "juno_intro_04", "value": "Três componentes críticos. Se você conseguir recuperar as peças espalhadas pelo setor, eu preparo a calibração aqui no terminal." },
+    { "key": "juno_intro_05", "value": "Olha pelo lado positivo: se a gente atrasar mais um dia, pelo menos você não precisa explicar pro conselho por que a máquina ainda parece uma torradeira gigante." },
+
+    { "key": "juno_test_01", "value": "[PROVA DE SISTEMA] Esta segunda conversa foi carregada trocando apenas o arquivo JSON de dados." },
+    { "key": "juno_test_02", "value": "[PROVA DE SISTEMA] Nenhuma linha de código C# foi alterada para exibir este diálogo." }
+  ]
+}

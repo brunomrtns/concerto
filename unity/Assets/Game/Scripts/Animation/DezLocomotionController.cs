@@ -151,7 +151,9 @@ namespace Studio.Game.Animation
                     _camPitch = Mathf.Clamp(_camPitch - my * camMouseSens * 0.8f, -10f, 55f);
                 }
                 if (Input.GetKey(KeyCode.Q)) { _camYaw -= 110f * dt; manualCam = true; }
-                if (Input.GetKey(KeyCode.E)) { _camYaw += 110f * dt; manualCam = true; }
+                // Tecla E so gira a camera quando NAO ha um interagivel focado (evita conflito com [E] Falar)
+                bool focusInteract = Studio.Game.Dialogue.DialogueController.Instance != null && Studio.Game.Dialogue.DialogueController.Instance.HasFocusedInteractable;
+                if (!focusInteract && Input.GetKey(KeyCode.E)) { _camYaw += 110f * dt; manualCam = true; }
                 if (manualCam) _lastManualCamTime = Time.time;
 
                 // Smart Auto-Align AAA (padrao Zelda BotW / Mario 3D / Ratchet):
