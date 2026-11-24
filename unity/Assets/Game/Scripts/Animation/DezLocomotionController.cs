@@ -31,6 +31,13 @@ namespace Studio.Game.Animation
         public AudioSource thrusterAudio;
         public AudioClip dashSfxClip;
 
+        [Header("Feedback de Passos por Superficie & Pouso")]
+        public AudioSource footstepAudio;
+        public AudioClip footstepFloorClip;
+        public AudioClip footstepMetalClip;
+        public AudioClip footstepPuddleClip;
+        public AudioClip landingThudClip;
+
         private CharacterController _cc;
         private Animator _anim;
         private DezProceduralAnimator _proc;
@@ -38,6 +45,9 @@ namespace Studio.Game.Animation
         private CinemachineThirdPersonFollow _tpFollow;
         private CutsceneManager _cs01;
         private Cutscene02TravelController _cs02;
+        private Cutscene03ReturnController _cs03;
+        private Renderer[] _playerRenderers;
+        private bool _playerHiddenByCamera;
 
         private DezMovementConfig _runtimeCfg;
         private Vector3 _horizVelocity;
@@ -45,6 +55,16 @@ namespace Studio.Game.Animation
         private float _verticalVel;
         private bool _wasGrounded = true;
         private float _lastAirVy;
+        private float _stepTimer;
+        private float _landingBobOffset;
+        private string _lastSurfaceType = "floor";
+        private Vector3 _lastWallNormal;
+        private float _lastWallHitTime = -10f;
+
+        // Flag de comparacao QA (reproduz skinWidth=0.01 e sem wallSlide para video ANTES vs DEPOIS)
+        public bool SimulateLegacySnagMode { get; set; }
+        public string LastSurfaceType => _lastSurfaceType;
+        public int WallSlideCount { get; private set; }
 
         // Coyote Time + Jump Buffer
         private float _coyoteTimer;
@@ -117,22 +137,37 @@ namespace Studio.Game.Animation
                 _cc.height = 1.25f;
                 _cc.radius = 0.28f;
                 _cc.center = new Vector3(0f, 0.625f, 0f);
-                _cc.slopeLimit = 45f;
-                _cc.stepOffset = 0.28f;
-                _cc.skinWidth = 0.01f;
             }
-            else
-            {
-                _cc.skinWidth = 0.01f;
-            }
+            ApplyControllerAntiSnagTuning();
 
             _anim = GetComponentInChildren<Animator>(true);
             _proc = GetComponentInChildren<DezProceduralAnimator>(true);
+            _playerRenderers = GetComponentsInChildren<Renderer>(true);
             _camYaw = transform.eulerAngles.y;
             _currentCamDist = Cfg.cameraDistance;
 
             if (gameplayVcam != null)
                 _tpFollow = gameplayVcam.GetComponent<CinemachineThirdPersonFollow>();
+        }
+
+        public void ApplyControllerAntiSnagTuning()
+        {
+            if (_cc == null) return;
+            var cfg = Cfg;
+            if (SimulateLegacySnagMode)
+            {
+                _cc.skinWidth = 0.01f;
+                _cc.stepOffset = 0.24f;
+                _cc.slopeLimit = 45f;
+                _cc.minMoveDistance = 0.001f;
+            }
+            else
+            {
+                _cc.skinWidth = Mathf.Clamp(cfg.capsuleSkinWidth, 0.02f, 0.08f);
+                _cc.stepOffset = Mathf.Clamp(cfg.stepOffset, 0.20f, 0.45f);
+                _cc.slopeLimit = Mathf.Clamp(cfg.slopeLimit, 35f, 60f);
+                _cc.minMoveDistance = 0f;
+            }
         }
 
         private void Start()
@@ -141,6 +176,7 @@ namespace Studio.Game.Animation
             if (cam != null) _cmBrain = cam.GetComponent<CinemachineBrain>();
             _cs01 = FindAnyObjectByType<CutsceneManager>();
             _cs02 = FindAnyObjectByType<Cutscene02TravelController>();
+            _cs03 = FindAnyObjectByType<Cutscene03ReturnController>();
             SyncCinemachineGameplayCamera();
         }
 
@@ -151,7 +187,10 @@ namespace Studio.Game.Animation
 
         private bool IsAnyCutscenePlaying()
         {
-            return (_cs01 != null && _cs01.IsPlaying) || (_cs02 != null && _cs02.IsPlaying);
+            return (_cs01 != null && _cs01.IsPlaying)
+                || (_cs02 != null && _cs02.IsPlaying)
+                || (_cs03 != null && _cs03.IsPlaying)
+                || (Cutscene04SkyCrackedController.ActiveInstance != null && Cutscene04SkyCrackedController.ActiveInstance.IsPlaying);
         }
 
         private void SyncCinemachineGameplayCamera()
@@ -217,8 +256,13 @@ namespace Studio.Game.Animation
             {
                 _coyoteTimer = cfg.coyoteTimeSec;
                 _jumpCutApplied = false;
-                if (!_wasGrounded && _lastAirVy < -2.0f && _proc != null)
-                    _proc.NotifyLanding(_lastAirVy);
+                if (!_wasGrounded && _lastAirVy < -2.0f)
+                {
+                    if (_proc != null) _proc.NotifyLanding(_lastAirVy);
+                    float impact = Mathf.Clamp01(Mathf.Abs(_lastAirVy) / 14f);
+                    _landingBobOffset = -cfg.landingBobAmplitude * Mathf.Max(0.35f, impact);
+                    PlaySurfaceSfx(landingThudClip, 0.55f + 0.35f * impact, 0.92f, 1.05f);
+                }
             }
             else
             {
@@ -387,6 +431,10 @@ namespace Studio.Game.Animation
             Vector3 totalMove = (_horizVelocity + Vector3.up * _verticalVel) * dt;
             _cc.Move(totalMove);
 
+            // Recupera landing bob da camera + dispara passos por superficie
+            _landingBobOffset = Mathf.MoveTowards(_landingBobOffset, 0f, cfg.landingBobRecoverSpeed * dt);
+            UpdateSurfaceFootsteps(dt, wantRun);
+
             if (_anim != null)
             {
                 _anim.SetFloat("Speed", _currentSpeed, 0.05f, dt);
@@ -421,10 +469,11 @@ namespace Studio.Game.Animation
             if (IsAnyCutscenePlaying()) return;
 
             var cfg = Cfg;
+            UpdateCameraProximityPlayerFade(cfg);
             if (cameraFollowTarget != null && gameplayVcam != null)
             {
-                // Atualiza pivot da CinemachineCamera 3.1.4 (CinemachineThirdPersonFollow + CinemachineDeoccluder!)
-                cameraFollowTarget.localPosition = new Vector3(0f, cfg.pivotHeight, 0f);
+                // Atualiza pivot da CinemachineCamera 3.1.4 com landing bob sutil
+                cameraFollowTarget.localPosition = new Vector3(0f, cfg.pivotHeight + _landingBobOffset, 0f);
                 cameraFollowTarget.rotation = Quaternion.Euler(_camPitch, _camYaw, 0f);
                 if (_tpFollow != null)
                 {
@@ -461,6 +510,121 @@ namespace Studio.Game.Animation
             }
             cam.transform.position = _camSmoothPos;
             cam.transform.LookAt(pivot);
+        }
+
+        private void OnControllerColliderHit(ControllerColliderHit hit)
+        {
+            if (SimulateLegacySnagMode || !Cfg.wallSlideEnabled) return;
+            if (hit.collider == null || hit.collider.isTrigger) return;
+
+            // Apenas paredes/quinas laterais (normal quase horizontal)
+            if (Mathf.Abs(hit.normal.y) > 0.38f) return;
+
+            Vector3 wallN = new Vector3(hit.normal.x, 0f, hit.normal.z);
+            if (wallN.sqrMagnitude < 0.001f) return;
+            wallN.Normalize();
+            _lastWallNormal = wallN;
+            _lastWallHitTime = Time.time;
+
+            if (_isDashing)
+            {
+                float dot = Vector3.Dot(_dashDir, wallN);
+                if (dot < Cfg.dashWallStopDot)
+                {
+                    // Dash frontal contra parede: encerra limpo sem ficar preso empurrando!
+                    _isDashing = false;
+                    _dashTimer = 0f;
+                    _horizVelocity = Vector3.zero;
+                    _currentSpeed = 0f;
+                    WallSlideCount++;
+                }
+                else
+                {
+                    // Dash obliquo: projeta ao longo da parede para deslizar com fluidez
+                    Vector3 slide = Vector3.ProjectOnPlane(_dashDir, wallN);
+                    if (slide.sqrMagnitude > 0.01f)
+                    {
+                        _dashDir = slide.normalized;
+                        _horizVelocity = _dashDir * (Cfg.dashSpeed * 0.85f);
+                        WallSlideCount++;
+                    }
+                }
+            }
+            else if (_horizVelocity.sqrMagnitude > 0.04f)
+            {
+                float intoWall = Vector3.Dot(_horizVelocity, wallN);
+                if (intoWall < -0.05f)
+                {
+                    Vector3 projected = Vector3.ProjectOnPlane(_horizVelocity, wallN);
+                    // Micro-desvio de quina quando a componente tangente e muito pequena mas ainda existe intencao
+                    if (projected.magnitude < 0.35f && Cfg.cornerNudgeStrength > 0f)
+                    {
+                        Vector3 tangent = Vector3.Cross(Vector3.up, wallN);
+                        float side = Vector3.Dot(transform.right, tangent) >= 0f ? 1f : -1f;
+                        projected += tangent * (side * Cfg.cornerNudgeStrength);
+                    }
+                    _horizVelocity = projected;
+                    WallSlideCount++;
+                }
+            }
+        }
+
+        private void UpdateSurfaceFootsteps(float dt, bool running)
+        {
+            if (!_cc.isGrounded || _isDashing || _currentSpeed < 0.45f)
+            {
+                _stepTimer = 0.08f;
+                return;
+            }
+
+            _stepTimer -= dt;
+            if (_stepTimer > 0f) return;
+
+            var cfg = Cfg;
+            _stepTimer = running ? cfg.runStepIntervalSec : cfg.walkStepIntervalSec;
+
+            // Detecta superficie sob os pes (metal / poca / piso)
+            _lastSurfaceType = "floor";
+            if (Physics.Raycast(transform.position + Vector3.up * 0.25f, Vector3.down, out RaycastHit hit, 0.75f, ~0, QueryTriggerInteraction.Collide))
+            {
+                string n = hit.collider != null ? hit.collider.name.ToLowerInvariant() : "";
+                if (n.Contains("puddle") || n.Contains("poca") || n.Contains("water") || n.Contains("oil"))
+                    _lastSurfaceType = "puddle";
+                else if (n.Contains("metal") || n.Contains("grate") || n.Contains("pipe") || n.Contains("catwalk") || n.Contains("door") || n.Contains("ramp"))
+                    _lastSurfaceType = "metal";
+            }
+
+            AudioClip clip = _lastSurfaceType switch
+            {
+                "metal"  => footstepMetalClip != null ? footstepMetalClip : footstepFloorClip,
+                "puddle" => footstepPuddleClip != null ? footstepPuddleClip : footstepFloorClip,
+                _        => footstepFloorClip,
+            };
+            PlaySurfaceSfx(clip, running ? 0.55f : 0.36f, 0.92f, 1.08f);
+        }
+
+        private void PlaySurfaceSfx(AudioClip clip, float vol, float minPitch, float maxPitch)
+        {
+            if (clip == null) return;
+            var src = footstepAudio != null ? footstepAudio : thrusterAudio;
+            if (src == null) return;
+            src.pitch = Random.Range(minPitch, maxPitch);
+            src.PlayOneShot(clip, vol * GameSettingsManager.SfxVolume);
+        }
+
+        private void UpdateCameraProximityPlayerFade(DezMovementConfig cfg)
+        {
+            var cam = Camera.main;
+            if (cam == null || _playerRenderers == null || _playerRenderers.Length == 0) return;
+            float dist = Vector3.Distance(cam.transform.position, transform.position + Vector3.up * cfg.pivotHeight);
+            bool shouldHide = dist < cfg.playerHideDist;
+            if (shouldHide == _playerHiddenByCamera) return;
+            _playerHiddenByCamera = shouldHide;
+            for (int i = 0; i < _playerRenderers.Length; i++)
+            {
+                if (_playerRenderers[i] != null)
+                    _playerRenderers[i].enabled = !shouldHide;
+            }
         }
 
         // === LEDGE GRAB / MANTLE (Preservado integralmente) ===

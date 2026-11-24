@@ -76,6 +76,30 @@ namespace Studio.Game.Animation
         [Tooltip("Raio de colisao da camera com paredes (CinemachineDeoccluder).")]
         public float wallCollisionRadius = 0.24f;
 
+        [Header("Anti-Travamento & Colisao Suave")]
+        [Tooltip("SkinWidth recomendado (~15-18% do radius) para eliminar ghost collision em emendas de colliders.")]
+        public float capsuleSkinWidth = 0.05f;
+        [Tooltip("Altura maxima de degrau que o Dez sobe automaticamente sem travar.")]
+        public float stepOffset = 0.36f;
+        [Tooltip("Inclinacao maxima caminhavel (graus).")]
+        public float slopeLimit = 50f;
+        [Tooltip("Ativa projecao tangencial de parede/quina e dash deslizante contra parede.")]
+        public bool wallSlideEnabled = true;
+        [Tooltip("Forca de micro-desvio lateral ao raspar em quina estreita (0 = desligado).")]
+        [Range(0f, 1.5f)] public float cornerNudgeStrength = 0.45f;
+        [Tooltip("Dot minimo (frontal) para encerrar o dash suavemente contra parede em vez de deslizar.")]
+        [Range(-1f, -0.3f)] public float dashWallStopDot = -0.78f;
+
+        [Header("Feel — Passos por Superficie, Landing Bob & Fade de Oclusao")]
+        public float walkStepIntervalSec = 0.44f;
+        public float runStepIntervalSec = 0.28f;
+        [Tooltip("Amplitude do bob vertical sutil da camera ao aterrissar (m).")]
+        public float landingBobAmplitude = 0.11f;
+        [Tooltip("Velocidade de recuperacao do bob de aterrissagem.")]
+        public float landingBobRecoverSpeed = 8.5f;
+        [Tooltip("Distancia abaixo da qual o player oculta suavemente para evitar clipping da camera em paredes.")]
+        public float playerHideDist = 0.68f;
+
         [Header("Seguranca Anti-Limbo")]
         public float killFloorY = -3.0f;
     }
