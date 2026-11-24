@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfbbe54ad4e8282408583045574d4438, type: 3}
+  m_Name: RiftGuardianConfig
+  m_EditorClassIdentifier: Assembly-CSharp::Studio.Game.Boss.RiftGuardianConfig
+  maxHp: 320
+  phase2Threshold01: 0.5
+  exposedCoreDamageMultiplier: 1.65
+  armoredDamageMultiplier: 0.45
+  moveSpeed: 3.8
+  chargeTelegraphSec: 0.72
+  chargeSpeed: 12
+  chargeDurationSec: 0.55
+  slamTelegraphSec: 0.8
+  shockwaveMaxRadius: 11.5
+  shockwaveExpandSpeed: 13.5
+  coreExposedStaggerSec: 3
+  phase1CooldownSec: 1.6
+  attackDamageSegments: 1
+  phase2SummonEstilhacosCount: 2
+  phase2SprayProjectileCount: 7
+  phase2SpraySpreadDeg: 84
+  phase2SprayProjectileSpeed: 6.8
+  phase2CooldownSec: 1.3
+  hologramFlashDurationSec: 0.52
+  act3EndCardTitle: FIM DO ATO 3
+  act3EndCardSubtitle: "O Cora\xE7\xE3o da Fenda silenciou... mas a imagem permanece."

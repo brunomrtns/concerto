@@ -1,0 +1,187 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3447972089549287885
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 999850717049192991}
+  - component: {fileID: 6979156018033451300}
+  - component: {fileID: 6517326903099777250}
+  - component: {fileID: 8628052649801166649}
+  m_Layer: 23
+  m_Name: Boss_Guardiao_Da_Fenda
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &999850717049192991
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3447972089549287885}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7347722524401283041}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &6979156018033451300
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3447972089549287885}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.05
+  m_Height: 3.2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.6, z: 0}
+--- !u!114 &6517326903099777250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3447972089549287885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6086eedf21b81e240b5c86a1578502e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Studio.Game.Collision.ActorSolidSeparation
+  bodyKind: 2
+  solidRadius: 1.05
+  solidHeight: 3.2
+  createSolidCapsuleIfMissing: 1
+--- !u!114 &8628052649801166649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3447972089549287885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73a70bb1ab48857468ce5d904d4807e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Studio.Game.Boss.RiftGuardianBossController
+  config: {fileID: 11400000, guid: 866d383701fad2e4c93e85b5ff400f3b, type: 2}
+  minionBalanceConfig: {fileID: 11400000, guid: dc85fc77eefe5d7469a59ff575a29f63,
+    type: 2}
+  estilhacoPrefab: {fileID: 3614244055492274227, guid: 338d53993d0ed1f47b4994a2cc53e700,
+    type: 3}
+  hologramWorkshopWifeTexture: {fileID: 2800000, guid: 1a44aa09f15665340ab349b9040b0c33,
+    type: 3}
+  bossMusicClip: {fileID: 8300000, guid: 20e9fd751966e994189ed0ca1c110b94, type: 3}
+  telegraphClip: {fileID: 8300000, guid: 6b55d478b1f1be94080bd8bb8c47a623, type: 3}
+  slamClip: {fileID: 8300000, guid: 7d838c5fc7b955f4381135a50425a93b, type: 3}
+  dissolveClip: {fileID: 8300000, guid: 0f5eca424a669ed4b9def86ddb5b12d4, type: 3}
+  hologramFlashClip: {fileID: 8300000, guid: e1ba58c97f583e141bbc69d3ebda8920, type: 3}
+  arenaStub: {fileID: 0}
+  arenaCenter: {x: 116, y: 0.9, z: 0}
+  arenaRetryCheckpoint: {x: 104, y: 1.05, z: 0}
+--- !u!1001 &7093982818739308554
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 999850717049192991}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: f83de03743089f6419b17da8bc15c279,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f83de03743089f6419b17da8bc15c279,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f83de03743089f6419b17da8bc15c279,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f83de03743089f6419b17da8bc15c279,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071067
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f83de03743089f6419b17da8bc15c279,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f83de03743089f6419b17da8bc15c279,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f83de03743089f6419b17da8bc15c279,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f83de03743089f6419b17da8bc15c279,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f83de03743089f6419b17da8bc15c279,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f83de03743089f6419b17da8bc15c279,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: f83de03743089f6419b17da8bc15c279,
+        type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a5240bf351cf003449c2d5d77aa92cd5, type: 2}
+    - target: {fileID: 919132149155446097, guid: f83de03743089f6419b17da8bc15c279,
+        type: 3}
+      propertyPath: m_Name
+      value: boss_guardiao_fenda_TripoSG_Visual
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f83de03743089f6419b17da8bc15c279,
+        type: 3}
+      propertyPath: m_Layer
+      value: 23
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f83de03743089f6419b17da8bc15c279, type: 3}
+--- !u!4 &7347722524401283041 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f83de03743089f6419b17da8bc15c279,
+    type: 3}
+  m_PrefabInstance: {fileID: 7093982818739308554}
+  m_PrefabAsset: {fileID: 0}

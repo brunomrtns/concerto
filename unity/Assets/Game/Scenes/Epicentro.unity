@@ -24573,6 +24573,79 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -65}
   m_SizeDelta: {x: 580, y: 44}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1001 &2021134544
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 999850717049192991, guid: 133d74b4021ad184c8829e69066fc518,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 122.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 999850717049192991, guid: 133d74b4021ad184c8829e69066fc518,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 999850717049192991, guid: 133d74b4021ad184c8829e69066fc518,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 999850717049192991, guid: 133d74b4021ad184c8829e69066fc518,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 999850717049192991, guid: 133d74b4021ad184c8829e69066fc518,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 999850717049192991, guid: 133d74b4021ad184c8829e69066fc518,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 999850717049192991, guid: 133d74b4021ad184c8829e69066fc518,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 999850717049192991, guid: 133d74b4021ad184c8829e69066fc518,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 999850717049192991, guid: 133d74b4021ad184c8829e69066fc518,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 999850717049192991, guid: 133d74b4021ad184c8829e69066fc518,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3447972089549287885, guid: 133d74b4021ad184c8829e69066fc518,
+        type: 3}
+      propertyPath: m_Name
+      value: Boss_Guardiao_Da_Fenda
+      objectReference: {fileID: 0}
+    - target: {fileID: 8628052649801166649, guid: 133d74b4021ad184c8829e69066fc518,
+        type: 3}
+      propertyPath: arenaStub
+      value: 
+      objectReference: {fileID: 1613125289}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 133d74b4021ad184c8829e69066fc518, type: 3}
 --- !u!1 &2023751934
 GameObject:
   m_ObjectHideFlags: 0
@@ -25153,3 +25226,4 @@ SceneRoots:
   - {fileID: 898678526}
   - {fileID: 1948953222}
   - {fileID: 1068887237}
+  - {fileID: 2021134544}
