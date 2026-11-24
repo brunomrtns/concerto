@@ -128,12 +128,16 @@ namespace Studio.Game.Save
                 data.act1Completed      = parts.Act1Completed;
             }
 
-            // 5. Cutscenes assistidas & porta do Setor Externo
+            // 5. Cutscenes assistidas, porta do Setor Externo & Missao "Sinal"
             data.cs01Played = true;
             if (data.act1Completed) data.cs02Played = true;
             if (PlayerPrefs.GetInt("CONCERTO_CS04_PLAYED", 0) == 1) data.cs04Played = true;
             if (PlayerPrefs.GetInt("CONCERTO_SECTOR_EXTERNO_UNLOCKED", 0) == 1 || activeScene == "SetorExterno")
                 data.sectorDoorUnlocked = true;
+            if (Studio.Game.Quests.SignalQuestController.Instance != null)
+                data.signalQuestStep = Studio.Game.Quests.SignalQuestController.Instance.CurrentStepInt;
+            if (PlayerPrefs.GetInt("CONCERTO_EAST_GATE_UNLOCKED", 0) == 1)
+                data.eastGateUnlocked = true;
 
             // 6. Anomalias & Reparo do Ato 2
             var anomMgr = WorkshopAnomalyManager.Instance;
@@ -271,13 +275,18 @@ namespace Studio.Game.Save
             if (MultiToolController.Instance != null)
                 MultiToolController.Instance.RestoreStateFromSave(data.energyCells, data.energyBar, data.activeToolModeId);
 
-            // 5. Objetivo atual + Flags de Porta/CS04
+            // 5. Objetivo atual + Flags de Porta/CS04/Missao Sinal
             if (data.sectorDoorUnlocked)
                 PlayerPrefs.SetInt("CONCERTO_SECTOR_EXTERNO_UNLOCKED", 1);
             if (data.cs04Played)
                 PlayerPrefs.SetInt("CONCERTO_CS04_PLAYED", 1);
-            if (data.sectorDoorUnlocked || data.cs04Played)
+            if (data.eastGateUnlocked)
+                PlayerPrefs.SetInt("CONCERTO_EAST_GATE_UNLOCKED", 1);
+            if (data.sectorDoorUnlocked || data.cs04Played || data.eastGateUnlocked)
                 PlayerPrefs.Save();
+
+            if (Studio.Game.Quests.SignalQuestController.Instance != null)
+                Studio.Game.Quests.SignalQuestController.Instance.RestoreFromSave(data.signalQuestStep, data.eastGateUnlocked);
 
             if (!string.IsNullOrEmpty(data.currentObjective))
                 ObjectiveSystem.Set(data.currentObjective);

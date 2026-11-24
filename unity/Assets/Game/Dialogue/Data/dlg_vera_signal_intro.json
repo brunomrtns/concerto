@@ -1,0 +1,11 @@
+{
+  "dialogueId": "dlg_vera_signal_intro",
+  "promptKey": "prompt_talk",
+  "postObjectiveKey": "obj_signal_restore_feeders",
+  "lines": [
+    { "speakerKey": "speaker_vera", "textKey": "sig_intro_01" },
+    { "speakerKey": "speaker_vera", "textKey": "sig_intro_02" },
+    { "speakerKey": "speaker_vera", "textKey": "sig_intro_03" },
+    { "speakerKey": "speaker_dez",  "textKey": "sig_intro_04" }
+  ]
+}

@@ -37,6 +37,23 @@
     { "key": "dlg_vera_01", "value": "Dez... não encosta na grade. Eu estava sozinha aqui fora quando o céu rasgou." },
     { "key": "dlg_vera_02", "value": "Vera, respira. O que aconteceu com o gerador e a antena?" },
     { "key": "dlg_vera_03", "value": "Primeiro o vento parou. Depois a aurora subiu ao contrário e tudo no pátio começou a sair do compasso." },
-    { "key": "dlg_vera_04", "value": "Se você ainda tem sua ferramenta, estabiliza os três pontos do pátio antes que essa rachadura desça até a instalação." }
+    { "key": "dlg_vera_04", "value": "Se você ainda tem sua ferramenta, estabiliza os três pontos do pátio antes que essa rachadura desça até a instalação." },
+
+    { "key": "obj_signal_talk_vera", "value": "Fale com Vera" },
+    { "key": "obj_signal_restore_feeders", "value": "Restaure o alimentador do gerador" },
+    { "key": "obj_signal_capture_antenna", "value": "Capture a leitura da antena" },
+    { "key": "obj_signal_report_vera", "value": "Mostre a leitura para Vera" },
+    { "key": "obj_signal_reach_epicenter", "value": "Chegue ao epicentro" },
+
+    { "key": "sig_intro_01", "value": "Dez... ainda bem que você saiu. Eu tentei puxar telemetria da rachadura pela antena de comunicação, mas o barramento caiu." },
+    { "key": "sig_intro_02", "value": "A gente precisa saber o tamanho disso antes que a estrutura inteira entre em colapso." },
+    { "key": "sig_intro_03", "value": "Restaura os dois alimentadores do gerador aqui no pátio. Assim que a carga voltar, captura a leitura direto na antena." },
+    { "key": "sig_intro_04", "value": "Pode deixar comigo, Vera. Vou religar os alimentadores e trazer essa leitura." },
+
+    { "key": "sig_result_01", "value": "Consegui a captura da antena, Vera. O terminal cuspiu uma curva toda quebrada." },
+    { "key": "sig_result_02", "value": "Espera... isso não faz sentido. O pico inicial não é gradual. A perturbação começou num instante exato: 14h02m11s." },
+    { "key": "sig_result_03", "value": "Um pulso limpo no meio do nada... deve ser um registro corrompido, erro de relógio dos sensores da torre." },
+    { "key": "sig_result_04", "value": "Mas o vetor de propagação não mente: a origem está no epicentro, logo além do portão leste." },
+    { "key": "sig_result_05", "value": "Destravei a trava de emergência do portão leste. Vai até o epicentro e descobre o que está rasgando o céu." }
   ]
 }

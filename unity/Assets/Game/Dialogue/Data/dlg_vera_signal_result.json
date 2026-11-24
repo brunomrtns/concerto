@@ -1,0 +1,12 @@
+{
+  "dialogueId": "dlg_vera_signal_result",
+  "promptKey": "prompt_talk",
+  "postObjectiveKey": "obj_signal_reach_epicenter",
+  "lines": [
+    { "speakerKey": "speaker_dez",  "textKey": "sig_result_01" },
+    { "speakerKey": "speaker_vera", "textKey": "sig_result_02" },
+    { "speakerKey": "speaker_vera", "textKey": "sig_result_03" },
+    { "speakerKey": "speaker_vera", "textKey": "sig_result_04" },
+    { "speakerKey": "speaker_vera", "textKey": "sig_result_05" }
+  ]
+}

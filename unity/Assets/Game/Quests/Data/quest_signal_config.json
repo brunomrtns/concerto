@@ -1,0 +1,20 @@
+{
+  "questId": "quest_signal",
+  "title": "Sinal",
+  "feederAnomalyIds": [
+    "sector_anom_01_gerador",
+    "sector_anom_03_carga"
+  ],
+  "introDialogueId": "dlg_vera_signal_intro",
+  "resultDialogueId": "dlg_vera_signal_result",
+  "objectiveStep0TalkVera": "Fale com Vera",
+  "objectiveStep1RestoreFeedersPrefix": "Restaure o alimentador do gerador",
+  "objectiveStep2CaptureAntenna": "Capture a leitura da antena",
+  "objectiveStep3ReportVera": "Mostre a leitura para Vera",
+  "objectiveStep4ReachEpicenter": "Chegue ao epicentro",
+  "checkpointStep1": "cp_signal_step1_feeders",
+  "checkpointStep2": "cp_signal_step2_antenna_ready",
+  "checkpointStep3": "cp_signal_step3_reading_captured",
+  "checkpointStep4": "cp_signal_completed_east_gate",
+  "corruptedTimestampDisplay": "14:02:11.004 — REGISTRO CORROMPIDO"
+}

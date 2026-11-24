@@ -158,7 +158,7 @@ namespace Studio.Tests.PlayMode
 
             var objType = Type.GetType("Studio.Game.Dialogue.ObjectiveSystem, Assembly-CSharp");
             string act3Obj = (string)objType.GetProperty("CurrentObjective").GetValue(null);
-            Assert.IsTrue(act3Obj != null && act3Obj.Contains("Setor Externo"), $"Objetivo do Ato 3 nao foi setado apos Vera! Atual: '{act3Obj}'");
+            Assert.IsTrue(act3Obj != null && (act3Obj.Contains("Setor Externo") || act3Obj.Contains("alimentador")), $"Objetivo do Ato 3 nao foi setado apos Vera! Atual: '{act3Obj}'");
 
             // 5. Repara 1 anomalia do Setor Externo usando o MESMO sistema Repairable / RepairRitualController!
             _camOverride = false;

@@ -53,6 +53,8 @@ namespace Studio.Game.Save
         public bool cs03Played;
         public bool cs04Played;
         public bool sectorDoorUnlocked;
+        public int signalQuestStep;
+        public bool eastGateUnlocked;
 
         [Header("Ato 2 — Anomalias & Reparo")]
         public bool act2AnomaliesActive;

@@ -280,17 +280,17 @@ namespace Studio.Game.Repair
 
             EndRitualVisualsAndRestoreControl();
 
-            // 3. Atualiza contador & HUD ("Repare as anomalias (k/N)")
+            // 3. Atualiza contador & HUD ("Repare as anomalias (k/N)") antes de notificar ouvintes de missao
             RefreshTargets();
-            OnRepairProgressChanged?.Invoke(_repairedCount, _totalTargets);
-
             if (_totalTargets > 0 && _repairedCount >= _totalTargets && !_act2Completed)
             {
+                OnRepairProgressChanged?.Invoke(_repairedCount, _totalTargets);
                 StartCoroutine(RunAct2CanonicalFinalBeat());
             }
             else
             {
                 UpdateRepairObjective(flash: true);
+                OnRepairProgressChanged?.Invoke(_repairedCount, _totalTargets);
             }
         }
 
