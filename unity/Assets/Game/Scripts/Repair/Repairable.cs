@@ -67,6 +67,8 @@ namespace Studio.Game.Repair
         public bool CanInteract(GameObject interactor)
         {
             if (!CanBeRepairedNow) return false;
+            if (Studio.Game.Tool.MultiToolController.Instance != null && !Studio.Game.Tool.MultiToolController.Instance.IsRepairModeActive)
+                return false;
             if (RepairRitualController.Instance != null && RepairRitualController.Instance.IsRepairing)
                 return false;
             if (DialogueController.Instance != null && DialogueController.Instance.IsDialogueActive)

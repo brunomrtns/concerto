@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fb0aa430fc84454cad11209b6e77f09, type: 3}
+  m_Name: MultiToolConfig
+  m_EditorClassIdentifier: Assembly-CSharp::Studio.Game.Tool.MultiToolConfig
+  toggleModeKey: 9
+  startingCells: 3
+  maxCells: 6
+  maxEnergyBar: 100
+  boltCellCost: 1
+  boltEnergyCost: 25
+  energyPassiveRegenPerSec: 10
+  lightHit1Damage: 15
+  lightHit2Damage: 22
+  heavyChargedDamage: 45
+  chargeHoldThresholdSec: 0.45
+  comboWindowSec: 0.65
+  meleeCooldownSec: 0.28
+  meleeRange: 1.65
+  meleeRadius: 0.72
+  heavyRadius: 1.05
+  boltDamage: 30
+  boltSpeed: 18
+  boltLifetimeSec: 2.2
+  boltCooldownSec: 0.45
+  hitstopDurationSec: 0.065
+  cameraShakeAmplitude: 0.065
+  cameraShakeDurationSec: 0.12
