@@ -3,6 +3,7 @@
   "entries": [
     { "key": "prompt_talk", "value": "[E] Falar" },
     { "key": "prompt_pickup", "value": "[E] Pegar peça" },
+    { "key": "prompt_activate_machine", "value": "[E] Ativar máquina" },
     { "key": "prompt_interact", "value": "[E] Interagir" },
     { "key": "prompt_advance", "value": "[E] Continuar" },
     { "key": "prompt_finish", "value": "[E] Encerrar" },
@@ -11,7 +12,8 @@
     { "key": "obj_find_parts", "value": "Encontre as peças da máquina (0/{0})" },
     { "key": "obj_find_parts_progress", "value": "Peças ({0}/{1}) — Encontre as peças da máquina" },
     { "key": "obj_return_juno", "value": "Leve as peças para Juno" },
-    { "key": "obj_act1_done", "value": "Ato 1 concluído — Peças entregues!" },
+    { "key": "obj_activate_machine", "value": "Ative a máquina" },
+    { "key": "obj_act1_done", "value": "Ative a máquina" },
     { "key": "obj_test_proof", "value": "Objetivo de teste validado (0/{0})" },
 
     { "key": "speaker_juno", "value": "Juno" },

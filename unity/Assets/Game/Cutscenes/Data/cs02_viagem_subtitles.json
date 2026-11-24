@@ -1,0 +1,61 @@
+{
+  "cutsceneId": "cs02_a_viagem",
+  "locale": "pt-BR",
+  "totalDurationSec": 85.0,
+  "titleCardText": "FIM DO ATO 1\nCONCERTO",
+  "titleCardStartSec": 80.0,
+  "titleCardEndSec": 84.8,
+  "skipHintDelaySec": 3.0,
+  "skipHintText": "Segure [Espaço] ou [Esc] para pular",
+  "postObjectiveText": "Fim do Ato 1 — Pressione [F8] para rever a Cutscene 2",
+  "lines": [
+    {
+      "id": "cs02_b1_dez_01",
+      "startSec": 2.0,
+      "endSec": 5.5,
+      "speaker": "Dez",
+      "style": "dialogue",
+      "text": "Calibração travada no ponto exato. Sem volta agora."
+    },
+    {
+      "id": "cs02_b3_lira_01",
+      "startSec": 33.5,
+      "endSec": 38.2,
+      "speaker": "Lira",
+      "style": "dialogue",
+      "text": "Dez? Você chegou mais cedo hoje... quase consegui alinhar essa mola teimosa sozinha."
+    },
+    {
+      "id": "cs02_b3_dez_01",
+      "startSec": 39.2,
+      "endSec": 43.8,
+      "speaker": "Dez",
+      "style": "dialogue",
+      "text": "Lira... eu... só precisava ver você de novo. Deixa eu segurar a engrenagem."
+    },
+    {
+      "id": "cs02_b3_lira_02",
+      "startSec": 45.2,
+      "endSec": 51.0,
+      "speaker": "Lira",
+      "style": "dialogue",
+      "text": "Olha só essa cara séria. Você sempre conserta tudo, Dez — até quando eu digo que já está bom."
+    },
+    {
+      "id": "cs02_b3_dez_02",
+      "startSec": 53.0,
+      "endSec": 58.5,
+      "speaker": "Dez",
+      "style": "dialogue",
+      "text": "Dessa vez eu não vou soltar tão cedo."
+    },
+    {
+      "id": "cs02_b4_lira_03",
+      "startSec": 67.5,
+      "endSec": 71.5,
+      "speaker": "Lira",
+      "style": "dialogue",
+      "text": "O que foi? Ouviu alguma coisa lá fora? O céu hoje está completamente limpo..."
+    }
+  ]
+}
