@@ -5,6 +5,7 @@
         "Studio.UI",
         "Studio.Gameplay",
         "Unity.Timeline",
+        "Unity.Cinemachine",
         "Unity.RenderPipelines.Universal.Runtime",
         "Unity.RenderPipelines.Core.Runtime"
     ],

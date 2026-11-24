@@ -1,0 +1,85 @@
+{
+  "cutsceneId": "cs01_abertura_concerto",
+  "locale": "pt-BR",
+  "totalDurationSec": 72.0,
+  "titleCardText": "CONCERTO",
+  "titleCardStartSec": 62.5,
+  "titleCardEndSec": 69.5,
+  "skipHintDelaySec": 3.0,
+  "skipHintText": "Segure [Espaço] ou [Esc] para pular",
+  "postObjectiveText": "Fale com Juno",
+  "lines": [
+    {
+      "id": "cs01_b1_radio_01",
+      "startSec": 2.2,
+      "endSec": 6.2,
+      "speaker": "RÁDIO — PROJETO ECHO",
+      "style": "radio",
+      "text": "Transmissão interna. Projeto Echo entra na fase final de montagem. Acesso restrito ao setor da oficina."
+    },
+    {
+      "id": "cs01_b1_radio_02",
+      "startSec": 6.5,
+      "endSec": 9.8,
+      "speaker": "RÁDIO — PROJETO ECHO",
+      "style": "radio",
+      "text": "Lembrete: nenhum componente fora de especificação deve ser ativado sem calibração completa."
+    },
+    {
+      "id": "cs01_b2_ambient_01",
+      "startSec": 13.5,
+      "endSec": 18.5,
+      "speaker": "RÁDIO — PROJETO ECHO",
+      "style": "radio",
+      "text": "Prazo de entrega da estrutura principal mantido. O conselho aguarda o relatório de prontidão."
+    },
+    {
+      "id": "cs01_b3_juno_01",
+      "startSec": 27.5,
+      "endSec": 32.0,
+      "speaker": "Juno",
+      "style": "dialogue",
+      "text": "Boa notícia: o chassi segurou a carga. Má notícia... o comboio com o resto das peças se perdeu no Caldeiral."
+    },
+    {
+      "id": "cs01_b3_dez_01",
+      "startSec": 32.5,
+      "endSec": 35.8,
+      "speaker": "Dez",
+      "style": "dialogue",
+      "text": "De novo? O prazo já está no limite, Juno. Sem o núcleo e a bobina isso aqui não passa de sucata."
+    },
+    {
+      "id": "cs01_b3_juno_02",
+      "startSec": 36.2,
+      "endSec": 40.5,
+      "speaker": "Juno",
+      "style": "dialogue",
+      "text": "Olha pelo lado bom: pelo menos as peças caíram dentro do setor. Só precisa de alguém teimoso o bastante pra ir buscar."
+    },
+    {
+      "id": "cs01_b3_juno_03",
+      "startSec": 40.8,
+      "endSec": 44.2,
+      "speaker": "Juno",
+      "style": "dialogue",
+      "text": "Vou puxar o sinal da primeira remessa aqui no terminal. Fala comigo quando estiver pronto."
+    },
+    {
+      "id": "cs01_b4_memory_01",
+      "startSec": 48.0,
+      "endSec": 53.5,
+      "speaker": "",
+      "style": "memory",
+      "text": "“Você sempre conserta tudo, Dez.”"
+    },
+    {
+      "id": "cs01_b4_dez_02",
+      "startSec": 55.2,
+      "endSec": 58.8,
+      "speaker": "Dez",
+      "style": "dialogue",
+      "text": "...Desta vez não vai ser diferente."
+    }
+  ]
+}
