@@ -29806,6 +29806,67 @@ Transform:
   - {fileID: 601309656}
   m_Father: {fileID: 302004127}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &708527938
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 708527940}
+  - component: {fileID: 708527939}
+  m_Layer: 0
+  m_Name: CombatZone_Act2_Manifestacoes
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &708527939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 708527938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a499864208d6ee84c82e73c4abb576ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Studio.Game.Combat.CombatEncounterZone
+  encounterId: caldeiral_act2_first_manifestations
+  requireAct2FinalBeat: 1
+  triggerRadius: 9
+  estilhacoPrefab: {fileID: 3614244055492274227, guid: 338d53993d0ed1f47b4994a2cc53e700,
+    type: 3}
+  flutuantePrefab: {fileID: 2907476949305981287, guid: 091ad86f36ab38c468cdb86a64b15cab,
+    type: 3}
+  balanceConfig: {fileID: 11400000, guid: dc85fc77eefe5d7469a59ff575a29f63, type: 2}
+  telegraphClip: {fileID: 8300000, guid: 6b55d478b1f1be94080bd8bb8c47a623, type: 3}
+  dissolveReverseClip: {fileID: 8300000, guid: 0f5eca424a669ed4b9def86ddb5b12d4, type: 3}
+  waveSlots:
+  - enemyType: 0
+    localOffset: {x: 3.5, y: 0, z: 1.5}
+  - enemyType: 0
+    localOffset: {x: 4.5, y: 0, z: -1.8}
+  - enemyType: 1
+    localOffset: {x: 7.5, y: 0, z: 0.2}
+--- !u!4 &708527940
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 708527938}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -24, y: 0.05, z: -18}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &708789380
 GameObject:
   m_ObjectHideFlags: 0
@@ -34354,6 +34415,7 @@ GameObject:
   - component: {fileID: 857940242}
   - component: {fileID: 857940243}
   - component: {fileID: 857940244}
+  - component: {fileID: 857940245}
   m_Layer: 9
   m_Name: Player_Dez_Placeholder
   m_TagString: Player
@@ -34483,6 +34545,23 @@ MonoBehaviour:
   sfxSource: {fileID: 0}
   ecoReverseClip: {fileID: 8300000, guid: 82bc1a0fd7bedb641910e1416b7c9fe9, type: 3}
   stasisPulseClip: {fileID: 8300000, guid: 67bf79a6b8fcb6343b8bb4986971fa98, type: 3}
+--- !u!114 &857940245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 857940238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39ae63992ca5d0440a559fe8ee5ae20c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Studio.Game.Combat.PlayerHealthController
+  config: {fileID: 11400000, guid: dc85fc77eefe5d7469a59ff575a29f63, type: 2}
+  hurtAudioSource: {fileID: 0}
+  hurtClip: {fileID: 8300000, guid: 112ef9efbc160db42ae7c9e7549a013f, type: 3}
+  respawnPosition: {x: -30, y: 0.08, z: -18}
+  useStartPositionAsDefaultCheckpoint: 1
 --- !u!1 &861181857
 GameObject:
   m_ObjectHideFlags: 0
@@ -94221,3 +94300,4 @@ SceneRoots:
   - {fileID: 197793166}
   - {fileID: 569088683}
   - {fileID: 936126619}
+  - {fileID: 708527940}

@@ -41752,6 +41752,7 @@ GameObject:
   - component: {fileID: 1943931546}
   - component: {fileID: 1943931549}
   - component: {fileID: 1943931550}
+  - component: {fileID: 1943931551}
   m_Layer: 9
   m_Name: Player_Dez_Placeholder
   m_TagString: Player
@@ -41881,6 +41882,23 @@ MonoBehaviour:
   sfxSource: {fileID: 0}
   ecoReverseClip: {fileID: 8300000, guid: 82bc1a0fd7bedb641910e1416b7c9fe9, type: 3}
   stasisPulseClip: {fileID: 8300000, guid: 67bf79a6b8fcb6343b8bb4986971fa98, type: 3}
+--- !u!114 &1943931551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1943931544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39ae63992ca5d0440a559fe8ee5ae20c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Studio.Game.Combat.PlayerHealthController
+  config: {fileID: 11400000, guid: dc85fc77eefe5d7469a59ff575a29f63, type: 2}
+  hurtAudioSource: {fileID: 0}
+  hurtClip: {fileID: 8300000, guid: 112ef9efbc160db42ae7c9e7549a013f, type: 3}
+  respawnPosition: {x: -30, y: 0.08, z: -18}
+  useStartPositionAsDefaultCheckpoint: 1
 --- !u!1 &1947193111
 GameObject:
   m_ObjectHideFlags: 0

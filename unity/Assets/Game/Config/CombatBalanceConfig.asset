@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22144c8482e26a14aa8de97479e0f755, type: 3}
+  m_Name: CombatBalanceConfig
+  m_EditorClassIdentifier: Assembly-CSharp::Studio.Game.Combat.CombatBalanceConfig
+  playerMaxHpSegments: 4
+  playerPostHitInvulnSec: 0.75
+  damageVignetteDecaySec: 0.26
+  knockdownRespawnDelaySec: 1.6
+  estilhacoMaxHp: 32
+  estilhacoMoveSpeed: 5.4
+  estilhacoPatrolSpeed: 2
+  estilhacoAggroRange: 14
+  estilhacoAttackRange: 2.1
+  estilhacoTelegraphSec: 0.48
+  estilhacoLungeSpeed: 10.5
+  estilhacoLungeDurationSec: 0.26
+  estilhacoAttackCooldownSec: 1.45
+  estilhacoDamageSegments: 1
+  estilhacoStaggerSec: 0.35
+  estilhacoCellDropChance: 0.45
+  flutuanteMaxHp: 45
+  flutuanteHoverHeight: 1.6
+  flutuanteMoveSpeed: 3.2
+  flutuanteAggroRange: 17
+  flutuantePreferredDistance: 7.5
+  flutuanteTelegraphSec: 0.65
+  flutuanteProjectileSpeed: 7.2
+  flutuanteProjectileLifetimeSec: 4
+  flutuanteAttackCooldownSec: 2.4
+  flutuanteDamageSegments: 1
+  flutuanteStaggerSec: 0.4
+  flutuanteCellDropChance: 0.65
+  hitFlashDurationSec: 0.12
+  deathDissolveSec: 0.55
