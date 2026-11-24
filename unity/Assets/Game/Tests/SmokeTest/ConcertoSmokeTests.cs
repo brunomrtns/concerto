@@ -169,10 +169,14 @@ namespace Studio.Tests.SmokeTest
             pJumpHeld.SetValue(loco, true);
             pJump.SetValue(loco, true);
 
-            for (int f = 0; f < 30; f++)
+            float elapsedJump = 0f;
+            int jumpFrames = 0;
+            while (elapsedJump < 0.45f && jumpFrames < 300)
             {
                 yield return null;
-                if (f == 2) pJump.SetValue(loco, false);
+                jumpFrames++;
+                elapsedJump += Time.deltaTime;
+                if (jumpFrames == 2) pJump.SetValue(loco, false);
                 if (loco.transform.position.y > peakY)
                     peakY = loco.transform.position.y;
             }

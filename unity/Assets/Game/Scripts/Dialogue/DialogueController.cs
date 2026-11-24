@@ -282,6 +282,7 @@ namespace Studio.Game.Dialogue
 
         private readonly Collider[] _scanBuf = new Collider[24];
         private string _lastPromptShown = string.Empty;
+        private Camera _cachedMainCam;
 
         public void ScanFocusedInteractable()
         {
@@ -289,7 +290,9 @@ namespace Studio.Game.Dialogue
 
             Vector3 aimOrigin = _player.position + Vector3.up * 0.9f;
             Vector3 aimFwd = _player.forward;
-            var cam = Camera.main;
+            if (_cachedMainCam == null || !_cachedMainCam.isActiveAndEnabled)
+                _cachedMainCam = Camera.main;
+            var cam = _cachedMainCam;
             if (cam != null)
             {
                 Vector3 cf = cam.transform.forward;

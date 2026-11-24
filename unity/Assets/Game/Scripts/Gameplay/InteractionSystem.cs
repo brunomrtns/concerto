@@ -52,17 +52,21 @@ namespace Studio.Gameplay
         public IInteractable FocusedTarget { get; private set; }
         public event Action<IInteractable> OnFocusChanged;
 
+        private readonly Collider[] _interactBuf = new Collider[24];
+
         public IInteractable ScanNearest()
         {
-            var hits = Physics.OverlapSphere(transform.position, interactRadius, interactMask);
+            int hitCount = Physics.OverlapSphereNonAlloc(transform.position, interactRadius, _interactBuf, interactMask);
             IInteractable best = null;
             float bestDistSq = float.MaxValue;
 
-            for (int i = 0; i < hits.Length; i++)
+            for (int i = 0; i < hitCount; i++)
             {
-                var cand = hits[i].GetComponentInParent<IInteractable>();
+                var col = _interactBuf[i];
+                if (col == null) continue;
+                var cand = col.GetComponentInParent<IInteractable>();
                 if (cand == null || !cand.CanInteract(gameObject)) continue;
-                float dSq = (hits[i].transform.position - transform.position).sqrMagnitude;
+                float dSq = (col.transform.position - transform.position).sqrMagnitude;
                 if (dSq < bestDistSq)
                 {
                     bestDistSq = dSq;

@@ -1,0 +1,16 @@
+{
+  "act": "Act0_Menu",
+  "scene": "MainMenu",
+  "frames": 180,
+  "avg_ms": 0.237,
+  "p95_ms": 0.278,
+  "p99_ms": 0.838,
+  "max_ms": 1.381,
+  "avg_fps": 4224.2,
+  "hitch_count": 0,
+  "hitches_per_min": 0.00,
+  "avg_gc_bytes": 417.7,
+  "max_gc_bytes": 4530,
+  "avg_setpass": 0.0,
+  "avg_drawcalls": 0.0
+}

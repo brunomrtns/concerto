@@ -1,0 +1,16 @@
+{
+  "act": "Act3_Epicentro",
+  "scene": "Epicentro",
+  "frames": 180,
+  "avg_ms": 0.850,
+  "p95_ms": 1.261,
+  "p99_ms": 1.551,
+  "max_ms": 1.767,
+  "avg_fps": 1176.2,
+  "hitch_count": 0,
+  "hitches_per_min": 0.00,
+  "avg_gc_bytes": 596.9,
+  "max_gc_bytes": 4718,
+  "avg_setpass": 0.0,
+  "avg_drawcalls": 0.0
+}

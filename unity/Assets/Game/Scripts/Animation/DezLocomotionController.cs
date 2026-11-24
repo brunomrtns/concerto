@@ -97,6 +97,15 @@ namespace Studio.Game.Animation
         private float _lastManualCamTime = -10f;
         private Vector3 _camSmoothPos;
         private bool _camInit;
+        private Camera _cachedMainCam;
+        private readonly Collider[] _ledgeOverlapBuf = new Collider[16];
+
+        private Camera GetMainCamera()
+        {
+            if (_cachedMainCam == null || !_cachedMainCam.isActiveAndEnabled)
+                _cachedMainCam = Camera.main;
+            return _cachedMainCam;
+        }
 
         // Anti-Limbo
         private Vector3 _lastSafeGroundedPos;
@@ -584,7 +593,7 @@ namespace Studio.Game.Animation
 
             // Fallback seguro caso gameplayVcam nao esteja atribuida em cenas de teste isoladas
             if (UseScriptedInput) return;
-            var cam = Camera.main;
+            var cam = GetMainCamera();
             if (cam == null) return;
 
             Vector3 pivot = transform.position + Vector3.up * cfg.pivotHeight;
@@ -737,10 +746,11 @@ namespace Studio.Game.Animation
 
         private void UpdateDashFovKick(DezMovementConfig cfg)
         {
+            var mainCam = gameplayVcam == null ? GetMainCamera() : null;
             if (gameplayVcam != null && _dashFovKickTimer <= 0f && CurrentFovKickDeg <= 0.001f)
                 _baseFov = gameplayVcam.Lens.FieldOfView;
-            else if (gameplayVcam == null && Camera.main != null && _dashFovKickTimer <= 0f && CurrentFovKickDeg <= 0.001f)
-                _baseFov = Camera.main.fieldOfView;
+            else if (mainCam != null && _dashFovKickTimer <= 0f && CurrentFovKickDeg <= 0.001f)
+                _baseFov = mainCam.fieldOfView;
 
             if (_dashFovKickTimer > 0f)
             {
@@ -756,19 +766,25 @@ namespace Studio.Game.Animation
 
             if (gameplayVcam != null)
             {
-                var lens = gameplayVcam.Lens;
-                lens.FieldOfView = _baseFov + CurrentFovKickDeg;
-                gameplayVcam.Lens = lens;
+                float targetFov = _baseFov + CurrentFovKickDeg;
+                if (Mathf.Abs(gameplayVcam.Lens.FieldOfView - targetFov) > 0.001f)
+                {
+                    var lens = gameplayVcam.Lens;
+                    lens.FieldOfView = targetFov;
+                    gameplayVcam.Lens = lens;
+                }
             }
-            else if (Camera.main != null)
+            else if (mainCam != null)
             {
-                Camera.main.fieldOfView = _baseFov + CurrentFovKickDeg;
+                float targetFov = _baseFov + CurrentFovKickDeg;
+                if (Mathf.Abs(mainCam.fieldOfView - targetFov) > 0.001f)
+                    mainCam.fieldOfView = targetFov;
             }
         }
 
         private void UpdateCameraProximityPlayerFade(DezMovementConfig cfg)
         {
-            var cam = Camera.main;
+            var cam = GetMainCamera();
             if (cam == null || _playerRenderers == null || _playerRenderers.Length == 0) return;
             float dist = Vector3.Distance(cam.transform.position, transform.position + Vector3.up * cfg.pivotHeight);
             bool shouldHide = dist < cfg.playerHideDist;
@@ -810,10 +826,10 @@ namespace Studio.Game.Animation
             Vector3 standPos = new Vector3(topProbeOrigin.x, topHit.point.y + 0.02f, topProbeOrigin.z);
             Vector3 capBottom = standPos + Vector3.up * (_cc.radius + 0.06f);
             Vector3 capTop = standPos + Vector3.up * Mathf.Max(_cc.radius + 0.12f, _cc.height - _cc.radius - 0.04f);
-            var overlaps = Physics.OverlapCapsule(capBottom, capTop, _cc.radius * 0.85f, ~0, QueryTriggerInteraction.Ignore);
-            for (int i = 0; i < overlaps.Length; i++)
+            int overlapCount = Physics.OverlapCapsuleNonAlloc(capBottom, capTop, _cc.radius * 0.85f, _ledgeOverlapBuf, ~0, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < overlapCount; i++)
             {
-                if (overlaps[i] != null && overlaps[i].transform.root != transform.root)
+                if (_ledgeOverlapBuf[i] != null && _ledgeOverlapBuf[i].transform.root != transform.root)
                     return false;
             }
 

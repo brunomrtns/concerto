@@ -42,16 +42,28 @@ namespace Studio.Game.EditorTools
         [MenuItem("CONCERTO/QA/Start Recorder MP4")]
         public static void StartRecorderMp4()
         {
+            StartRecorderInternal(GetDefaultOutputNoExt(), 125.0f, 20.0f, CoreEncoderSettings.VideoEncodingQuality.Low);
+        }
+
+        [MenuItem("CONCERTO/QA/Start Performance Final Recorder MP4")]
+        public static void StartPerformanceFinalRecorderMp4()
+        {
+            string repoRoot = Path.GetFullPath(Path.Combine(Application.dataPath, "..", ".."));
+            string outNoExt = Path.Combine(repoRoot, "captures", "profiler", "performance_final");
+            StartRecorderInternal(outNoExt, 16.0f, 30.0f, CoreEncoderSettings.VideoEncodingQuality.Medium);
+        }
+
+        private static void StartRecorderInternal(string outNoExt, float durationSec, float fps, CoreEncoderSettings.VideoEncodingQuality quality)
+        {
             StopRecorderMp4();
 
-            string outNoExt = GetDefaultOutputNoExt();
             string outDir = Path.GetDirectoryName(outNoExt);
             if (!string.IsNullOrEmpty(outDir))
                 Directory.CreateDirectory(outDir);
 
             var controllerSettings = ScriptableObject.CreateInstance<RecorderControllerSettings>();
-            controllerSettings.SetRecordModeToTimeInterval(0.0f, 125.0f);
-            controllerSettings.FrameRate = 20.0f;
+            controllerSettings.SetRecordModeToTimeInterval(0.0f, durationSec);
+            controllerSettings.FrameRate = fps;
             controllerSettings.CapFrameRate = false;
 
             var movieSettings = ScriptableObject.CreateInstance<MovieRecorderSettings>();
@@ -61,7 +73,7 @@ namespace Studio.Game.EditorTools
             movieSettings.EncoderSettings = new CoreEncoderSettings
             {
                 Codec = CoreEncoderSettings.OutputCodec.MP4,
-                EncodingQuality = CoreEncoderSettings.VideoEncodingQuality.Low
+                EncodingQuality = quality
             };
             movieSettings.ImageInputSettings = new GameViewInputSettings
             {
@@ -76,7 +88,7 @@ namespace Studio.Game.EditorTools
             _controller = new RecorderController(controllerSettings);
             _controller.PrepareRecording();
             bool started = _controller.StartRecording();
-            Debug.Log($"[QA] Unity Recorder MP4 iniciado={started} -> {outNoExt}.mp4");
+            Debug.Log($"[QA] Unity Recorder MP4 iniciado={started} ({durationSec:F0}s @ {fps:F0}fps) -> {outNoExt}.mp4");
         }
 
         [MenuItem("CONCERTO/QA/Stop Recorder MP4")]

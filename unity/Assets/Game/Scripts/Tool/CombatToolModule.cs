@@ -178,24 +178,28 @@ namespace Studio.Game.Tool
             return true;
         }
 
+        private readonly Collider[] _meleeOverlapBuf = new Collider[24];
+        private readonly HashSet<IDamageable> _meleeHitSet = new HashSet<IDamageable>();
+
         private int PerformMeleeHitbox(float damage, float range, float radius, bool isHeavy)
         {
             Transform owner = Controller.PlayerTransform;
             Vector3 center = owner.position + Vector3.up * 0.78f + owner.forward * (range * 0.65f);
-            var cols = Physics.OverlapSphere(center, radius, ~0, QueryTriggerInteraction.Collide);
-            var hitSet = new HashSet<IDamageable>();
+            int colCount = Physics.OverlapSphereNonAlloc(center, radius, _meleeOverlapBuf, ~0, QueryTriggerInteraction.Collide);
+            _meleeHitSet.Clear();
 
-            for (int i = 0; i < cols.Length; i++)
+            for (int i = 0; i < colCount; i++)
             {
-                if (cols[i] == null || cols[i].transform.root == owner.root) continue;
-                var dmgTarget = cols[i].GetComponentInParent<IDamageable>();
-                if (dmgTarget == null || !dmgTarget.IsAlive || hitSet.Contains(dmgTarget)) continue;
+                var col = _meleeOverlapBuf[i];
+                if (col == null || col.transform.root == owner.root) continue;
+                var dmgTarget = col.GetComponentInParent<IDamageable>();
+                if (dmgTarget == null || !dmgTarget.IsAlive || _meleeHitSet.Contains(dmgTarget)) continue;
 
-                hitSet.Add(dmgTarget);
+                _meleeHitSet.Add(dmgTarget);
                 dmgTarget.ApplyDamage(new ToolHitInfo
                 {
                     Damage = damage,
-                    HitPoint = cols[i].ClosestPoint(center),
+                    HitPoint = col.ClosestPoint(center),
                     KnockbackDir = owner.forward,
                     IsHeavy = isHeavy,
                     IsRangedBolt = false,
@@ -203,9 +207,9 @@ namespace Studio.Game.Tool
                 });
             }
 
-            if (hitSet.Count > 0)
+            if (_meleeHitSet.Count > 0)
                 Controller.TriggerHitImpactFeedback(center, isHeavy);
-            return hitSet.Count;
+            return _meleeHitSet.Count;
         }
     }
 

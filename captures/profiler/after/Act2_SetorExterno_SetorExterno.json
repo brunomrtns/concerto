@@ -1,0 +1,16 @@
+{
+  "act": "Act2_SetorExterno",
+  "scene": "SetorExterno",
+  "frames": 180,
+  "avg_ms": 0.759,
+  "p95_ms": 1.119,
+  "p99_ms": 1.325,
+  "max_ms": 1.326,
+  "avg_fps": 1318.4,
+  "hitch_count": 0,
+  "hitches_per_min": 0.00,
+  "avg_gc_bytes": 606.6,
+  "max_gc_bytes": 4718,
+  "avg_setpass": 0.0,
+  "avg_drawcalls": 0.0
+}

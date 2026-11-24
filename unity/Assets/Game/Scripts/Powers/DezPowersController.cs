@@ -592,16 +592,29 @@ namespace Studio.Game.Powers
             cdText.text = "PRONTO";
         }
 
+        private float _lastEcoFill = -1f;
+        private float _lastStasisFill = -1f;
+
         private void RefreshHud(bool canUse)
         {
             if (_hudGroup != null)
-                _hudGroup.alpha = canUse ? 1f : 0f;
+            {
+                float targetAlpha = canUse ? 1f : 0f;
+                if (Mathf.Abs(_hudGroup.alpha - targetAlpha) > 0.001f)
+                    _hudGroup.alpha = targetAlpha;
+            }
             if (!canUse) return;
 
             if (_ecoFillImg != null && _ecoPower != null)
-                _ecoFillImg.fillAmount = _ecoPower.CooldownFill01;
+            {
+                float f = _ecoPower.CooldownFill01;
+                if (Mathf.Abs(f - _lastEcoFill) > 0.002f) { _lastEcoFill = f; _ecoFillImg.fillAmount = f; }
+            }
             if (_stasisFillImg != null && _stasisPower != null)
-                _stasisFillImg.fillAmount = _stasisPower.CooldownFill01;
+            {
+                float f = _stasisPower.CooldownFill01;
+                if (Mathf.Abs(f - _lastStasisFill) > 0.002f) { _lastStasisFill = f; _stasisFillImg.fillAmount = f; }
+            }
 
             int ecoDeci = _ecoPower != null ? Mathf.CeilToInt(_ecoPower.CooldownRemaining * 10f) : 0;
             if (ecoDeci != _lastEcoDeci && _ecoCdText != null)

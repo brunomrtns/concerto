@@ -1,0 +1,16 @@
+{
+  "act": "Act1_Oficina",
+  "scene": "Caldeiral",
+  "frames": 180,
+  "avg_ms": 1.542,
+  "p95_ms": 2.083,
+  "p99_ms": 2.448,
+  "max_ms": 4.331,
+  "avg_fps": 648.6,
+  "hitch_count": 0,
+  "hitches_per_min": 0.00,
+  "avg_gc_bytes": 610.8,
+  "max_gc_bytes": 4718,
+  "avg_setpass": 0.0,
+  "avg_drawcalls": 0.0
+}

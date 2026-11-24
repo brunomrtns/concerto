@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="11" result="Failed(Child)" total="11" passed="10" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-24 14:23:34Z" end-time="2026-11-24 14:23:50Z" duration="16,6129984">
+  <test-suite type="TestSuite" id="1102" name="NeonDistrictServer" fullname="NeonDistrictServer" runstate="Runnable" testcasecount="52" result="Failed" site="Child" start-time="2026-11-24 14:23:34Z" end-time="2026-11-24 14:23:50Z" duration="16.612998" total="11" passed="10" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1006" name="Studio.Tests.Performance.dll" fullname="C:/Users/Bruno/workspace/game-concerto/unity/Library/ScriptAssemblies/Studio.Tests.Performance.dll" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-24 14:23:34Z" end-time="2026-11-24 14:23:42Z" duration="8.253521" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="124424" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <output><![CDATA[There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+]]></output>
+      <test-suite type="TestSuite" id="1007" name="Studio" fullname="Studio" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-24 14:23:34Z" end-time="2026-11-24 14:23:42Z" duration="8.252358" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <output><![CDATA[There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+]]></output>
+        <test-suite type="TestSuite" id="1008" name="Tests" fullname="Studio.Tests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-24 14:23:34Z" end-time="2026-11-24 14:23:42Z" duration="8.251984" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <output><![CDATA[There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+]]></output>
+          <test-suite type="TestSuite" id="1009" name="Performance" fullname="Studio.Tests.Performance" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-24 14:23:34Z" end-time="2026-11-24 14:23:42Z" duration="8.251600" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <output><![CDATA[There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+]]></output>
+            <test-suite type="TestFixture" id="1001" name="ConcertoPerformanceBenchmarks" fullname="Studio.Tests.Performance.ConcertoPerformanceBenchmarks" classname="Studio.Tests.Performance.ConcertoPerformanceBenchmarks" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-24 14:23:34Z" end-time="2026-11-24 14:23:42Z" duration="8.250386" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <output><![CDATA[There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+]]></output>
+              <test-case id="1002" name="Bench_00_MainMenu_Hub" fullname="Studio.Tests.Performance.ConcertoPerformanceBenchmarks.Bench_00_MainMenu_Hub" methodname="Bench_00_MainMenu_Hub" classname="Studio.Tests.Performance.ConcertoPerformanceBenchmarks" runstate="Runnable" seed="528843032" result="Passed" start-time="2026-11-24 14:23:34Z" end-time="2026-11-24 14:23:35Z" duration="0.888072" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Category" value="Performance" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+[PerfBench] Act0_Menu (MainMenu): avg=0,24ms (4224,2fps), p99=0,84ms, max=1,38ms, hitches/min=0,0, gc=418B/frame (max 4530B), draws=0
+FrameTimeMs in Milliseconds
+Min:		0,21 ms
+Median:		0,22 ms
+Max:		1,38 ms
+Avg:		0,24 ms
+StdDev:		0,11 ms
+SampleCount:	180
+Sum:		42,61 ms
+First samples:	▅█▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▂▁▁▁▁▁▁▄▁▁▁▁▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+Histogram:	█▁▁▁▁▁▁▁▁▁
+
+GCAllocBytes in Bytes
+Min:		272,00 b
+Median:		370,00 b
+Max:		4530,00 b
+Avg:		417,72 b
+StdDev:		358,07 b
+SampleCount:	180
+Sum:		75190,00 b
+First samples:	▁▂▁▁▁▁▁▁▁▂▁▁▁▁▁▁▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▃▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▅▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+Histogram:	█▁▁▁▁▁▁▁▁▁
+
+
+##performancetestresult2:{"Name":"Studio.Tests.Performance.ConcertoPerformanceBenchmarks.Bench_00_MainMenu_Hub","ClassName":"Studio.Tests.Performance.ConcertoPerformanceBenchmarks","MethodName":"Bench_00_MainMenu_Hub","Version":"1","Categories":["Performance"],"SampleGroups":[{"Name":"FrameTimeMs","Unit":2,"IncreaseIsBetter":false,"Samples":[0.8377975900657475,1.3812995748594404,0.2519983099773526,0.21570295211859048,0.21299603395164014,0.21990505047142507,0.21849489712622018,0.21200397168286146,0.21389596804510803,0.21410147019196303,0.212301587453112,0.2272037963848561,0.21219530026428402,0.2213010156992823,0.21279761858750136,0.21750283485744149,0.21379676763899625,0.2203018666477874,0.22300169803202153,0.21770125022158028,0.21349915186874569,0.21459750132635237,0.2203018666477874,0.22079789778217674,0.2321003412362188,0.21240078785922379,0.21099773584865035,0.2125000028172508,0.21110402303747834,0.2194019325543195,0.21369756723288448,0.21379676763899625,0.21079932048451156,0.21240078785922379,0.21850198390893639,0.22190334857441486,0.20959466928616167,0.21270550496410579,0.212096085306257,0.21099773584865035,0.2184027835028246,0.2538973931223154,0.2401998353889212,0.31530612614005806,0.23300028988160194,0.21479591669049115,0.22400084708351643,0.21870039927307517,0.21699971694033594,0.21210317208897323,0.6997945019975305,0.23480017262045295,0.2184027835028246,0.21760203526355327,0.21559665037784726,0.27750141452997925,0.293296470772475,0.21600056788884104,0.2234056155430153,0.2458970993757248,0.22329931380227209,0.2222009643446654,0.2303004584973678,0.2170989173464477,0.23529620375484229,0.2845025446731597,0.26570295449346306,0.27019556728191676,0.2611040254123509,0.2644982887431979,0.27920209686271849,0.2696995506994426,0.27429847978055479,0.24039823620114476,0.21460458810906858,0.21359835227485747,0.2213010156992823,0.27349774609319868,0.2696995506994426,0.21619898325297982,0.21100482263136656,0.2122945006703958,0.2115008537657559,0.20999858679715545,0.210501704714261,0.2113024384016171,0.20980017143301667,0.2115008537657559,0.21799886599183083,0.2152990346075967,0.24489796487614513,0.2353032905375585,0.22660147806163878,0.24259494966827334,0.2174036344513297,0.21420068514999003,0.21799886599183083,0.2350977883907035,0.2363024395890534,0.2241992624476552,0.21979874873068185,0.2293013094458729,0.227997443289496,0.21670210117008538,0.21410147019196303,0.21950113296043129,0.21259920322336257,0.21179846953600646,0.21199688490014524,0.2102040743920952,0.21070012007839979,0.21160005417186768,0.20989937183912844,0.2529974444769323,0.2691043191589415,0.21679421479348094,0.2125000028172508,0.22350481594912709,0.2110969362547621,0.21009778720326723,0.2710034023039043,0.2222009643446654,0.212096085306257,0.21120323799550534,0.21400226978585125,0.2112953516189009,0.22080498456489296,0.2272959245601669,0.21799886599183083,0.23060516105033458,0.22279619588516653,0.21310232114046813,0.21369756723288448,0.21160005417186768,0.2125000028172508,0.21120323799550534,0.21070012007839979,0.21039540297351778,0.21160005417186768,0.21789966558571906,0.2114016388077289,0.2153982495656237,0.21220238704700024,0.21339993691071869,0.21780045062769205,0.28409864171408119,0.24500425206497312,0.3004960308317095,0.2293013094458729,0.21310232114046813,0.2140943834092468,0.21620607003569604,0.22369614453054965,0.22249858011491598,0.2194019325543195,0.22660147806163878,0.21659579942934216,0.22000425087753684,0.2153982495656237,0.2115008537657559,0.22200254898052663,0.21139455202501268,0.20970095647498966,0.2204010816058144,0.21290390577632935,0.21089852089062334,0.2173965476686135,0.21460458810906858,0.21169926912989468,0.21009778720326723,0.20960175606887788,0.20710034004878254,0.2072987554129213,0.2115008537657559,0.2082979044644162,0.24240362108685077,0.22139314387459309,0.22400084708351643,0.210501704714261,0.2114016388077289],"Min":0.20710034004878254,"Max":1.3812995748594404,"Median":0.21704931714339183,"Average":0.23673221358977673,"StandardDeviation":0.10501559341831692,"Sum":42.61179844615981},{"Name":"GCAllocBytes","Unit":4,"IncreaseIsBetter":false,"Samples":[272.0,610.0,370.0,370.0,370.0,562.0,370.0,370.0,370.0,690.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,946.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,1458.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,2482.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,4530.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0],"Min":272.0,"Max":4530.0,"Median":370.0,"Average":417.72222222222225,"StandardDeviation":358.0673284850148,"Sum":75190.0}]}
+##performancetestruninfo2:{"TestSuite":"Playmode","Date":1795530205397,"Player":{"Development":true,"ScreenWidth":2560,"ScreenHeight":1440,"ScreenRefreshRate":165,"Fullscreen":false,"Vsync":1,"AntiAliasing":0,"Batchmode":true,"RenderThreadingMode":"SingleThreaded","MtRendering":false,"GraphicsJobs":false,"GpuSkinning":true,"Platform":"WindowsEditor","ColorSpace":"Linear","AnisotropicFiltering":"ForceEnable","BlendWeights":"FourBones","GraphicsApi":"Direct3D12","ScriptingBackend":"Mono2x","AndroidTargetSdkVersion":"AndroidApiLevelAuto","AndroidBuildSystem":"Gradle","BuildTarget":"StandaloneWindows64","StereoRenderingPath":"MultiPass"},"Hardware":{"OperatingSystem":"Windows 11  (10.0.26200)","DeviceModel":"B550M AORUS ELITE (Gigabyte Technology Co., Ltd.)","DeviceName":"BRUNO","ProcessorType":"AMD Ryzen 5 3600 6-Core Processor ","ProcessorCount":12,"GraphicsDeviceName":"NVIDIA GeForce RTX 3060","SystemMemorySizeMB":65456},"Editor":{"Version":"6000.3.26f1","Branch":"6000.3/staging","Changeset":"de8167e7440c","Date":1790706048},"Dependencies":["com.unity.2d.sprite@1.0.0","com.unity.2d.tilemap@1.0.0","com.unity.ai.navigation@2.0.15","com.unity.animation.rigging@1.3.0","com.unity.bindings.openimageio@1.0.2","com.unity.burst@1.8.30","com.unity.cinemachine@3.1.4","com.unity.collab-proxy@2.13.6","com.unity.collections@2.6.8","com.unity.ext.nunit@2.0.5","com.unity.ide.rider@3.0.40","com.unity.ide.visualstudio@2.0.26","com.unity.ide.vscode@1.2.3","com.unity.inputsystem@1.20.0","com.unity.mathematics@1.3.3","com.unity.modules.accessibility@1.0.0","com.unity.modules.adaptiveperformance@1.0.0","com.unity.modules.ai@1.0.0","com.unity.modules.androidjni@1.0.0","com.unity.modules.animation@1.0.0","com.unity.modules.assetbundle@1.0.0","com.unity.modules.audio@1.0.0","com.unity.modules.cloth@1.0.0","com.unity.modules.director@1.0.0","com.unity.modules.hierarchycore@1.0.0","com.unity.modules.imageconversion@1.0.0","com.unity.modules.imgui@1.0.0","com.unity.modules.jsonserialize@1.0.0","com.unity.modules.particlesystem@1.0.0","com.unity.modules.physics@1.0.0","com.unity.modules.physics2d@1.0.0","com.unity.modules.screencapture@1.0.0","com.unity.modules.subsystems@1.0.0","com.unity.modules.terrain@1.0.0","com.unity.modules.terrainphysics@1.0.0","com.unity.modules.tilemap@1.0.0","com.unity.modules.ui@1.0.0","com.unity.modules.uielements@1.0.0","com.unity.modules.umbra@1.0.0","com.unity.modules.unityanalytics@1.0.0","com.unity.modules.unitywebrequest@1.0.0","com.unity.modules.unitywebrequestassetbundle@1.0.0","com.unity.modules.unitywebrequestaudio@1.0.0","com.unity.modules.unitywebrequesttexture@1.0.0","com.unity.modules.unitywebrequestwww@1.0.0","com.unity.modules.vectorgraphics@1.0.0","com.unity.modules.vehicles@1.0.0","com.unity.modules.video@1.0.0","com.unity.modules.vr@1.0.0","com.unity.modules.wind@1.0.0","com.unity.modules.xr@1.0.0","com.unity.multiplayer.center@1.0.1","com.unity.netcode.gameobjects@2.13.3","com.unity.nuget.mono-cecil@1.11.6","com.unity.nuget.newtonsoft-json@3.2.2","com.unity.pipeline@0.8.0-exp.1","com.unity.polybrush@1.2.1","com.unity.postprocessing@3.5.4","com.unity.probuilder@6.1.2","com.unity.recorder@5.1.2","com.unity.render-pipelines.core@17.3.0","com.unity.render-pipelines.universal@17.3.0","com.unity.render-pipelines.universal-config@17.0.3","com.unity.sdk.linux-arm64@1.1.1","com.unity.sdk.linux-x86_64@1.1.1","com.unity.searcher@4.9.5","com.unity.settings-manager@2.1.1","com.unity.shadergraph@17.3.0","com.unity.splines@2.9.1","com.unity.sysroot.base@1.1.1","com.unity.test-framework.performance@3.5.0","com.unity.test-framework@1.6.0","com.unity.timeline@1.8.13","com.unity.toolchain.win-x86_64-linux@1.1.1","com.unity.transport@2.7.4","com.unity.ugui@2.0.0","com.unity.visualscripting@1.9.12","company.takashi.playcaller@0.1.4"],"Results":[]}
+]]></output>
+              </test-case>
+              <test-case id="1003" name="Bench_01_Act1_Caldeiral" fullname="Studio.Tests.Performance.ConcertoPerformanceBenchmarks.Bench_01_Act1_Caldeiral" methodname="Bench_01_Act1_Caldeiral" classname="Studio.Tests.Performance.ConcertoPerformanceBenchmarks" runstate="Runnable" seed="25923880" result="Passed" start-time="2026-11-24 14:23:35Z" end-time="2026-11-24 14:23:38Z" duration="3.394538" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Category" value="Performance" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Playcaller] Connection failed: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente.
+
+[SaveSystem] Jogo salvo em C:/Users/Bruno/AppData/LocalLow/StudioAI/NeonDistrictServer\concerto_save.json (cp=cp_oficina_inicio, obj='Fale com Juno', cells=3, anomActive=False, resolved=5)
+[ObjectiveSystem] Objetivo ativo: Fale com Juno
+[PerfBench] Act1_Oficina (Caldeiral): avg=1,54ms (648,6fps), p99=2,45ms, max=4,33ms, hitches/min=0,0, gc=611B/frame (max 4718B), draws=0
+FrameTimeMs in Milliseconds
+Min:		1,04 ms
+Median:		1,46 ms
+Max:		4,33 ms
+Avg:		1,54 ms
+StdDev:		0,36 ms
+SampleCount:	180
+Sum:		277,50 ms
+First samples:	▂▃▃▂▂▁▂▂▂▂▁▁▄▃▃▄▄▂▃▁▁▂▃▂▂▂▂▁▂▃▃▂▁▄▄▂▂▂▂▂▂▃▄▃▂▃▂▂▂▂▃▃▂▃▃▂▃▂█▃▃▂▂▂▁▁▁▂▃▂▃▃▂▂▁▂▂▃▂▂▂▁▁▂▁▁▃▃▂▁▂▂▂▁▂▂▂▁▁▂
+Histogram:	█▃▂▁▁▁▁▁▁▁
+
+GCAllocBytes in Bytes
+Min:		558,00 b
+Median:		558,00 b
+Max:		4718,00 b
+Avg:		610,78 b
+StdDev:		359,31 b
+SampleCount:	180
+Sum:		109940,00 b
+First samples:	▁▁▁▁▁▁▁▁▁▂▁▁▁▁▁▁▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▃▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▂▁▁▁▁▁▁▅▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+Histogram:	█▂▂▁▁▁▁▁▁▁
+
+
+##performancetestresult2:{"Name":"Studio.Tests.Performance.ConcertoPerformanceBenchmarks.Bench_01_Act1_Caldeiral","ClassName":"Studio.Tests.Performance.ConcertoPerformanceBenchmarks","MethodName":"Bench_01_Act1_Caldeiral","Version":"1","Categories":["Performance"],"SampleGroups":[{"Name":"FrameTimeMs","Unit":2,"IncreaseIsBetter":false,"Samples":[1.7116001108661295,1.9198979716748,2.0580003038048746,1.4571003848686815,1.7134991940110922,1.2149022659286857,1.3473001308739186,1.4378968626260758,1.5966978389769793,1.2790036853402854,1.2540958123281599,1.0381023166701198,2.3097009398043157,1.7818027408793569,2.0825963001698257,2.4272038135677578,2.2425949573516847,1.6606008866801859,2.0399021450430157,1.2546981452032924,1.2566043296828867,1.6422973712906242,2.047002548351884,1.5555981080979109,1.732397940941155,1.7000992083922029,1.6078018816187978,1.177997444756329,1.424702350050211,1.7529973993077875,1.8309027655050159,1.4332978753373027,1.2224985985085369,2.4481008294969799,2.2237033117562534,1.6544004902243615,1.648398581892252,1.6594033222645522,1.612096093595028,1.5186012024059892,1.581200398504734,1.88449549023062,2.39100051112473,2.082801889628172,1.5379039105027915,1.7545989248901606,1.3695011148229242,1.411295379512012,1.3509991113096476,1.4928996097296477,1.7502055270597339,2.0969954784959556,1.595401088707149,1.8400014378130437,1.7684027552604676,1.6291950596496463,1.814299845136702,1.701700733974576,4.331200383603573,1.916198991239071,1.7794996965676547,1.7065050778910518,1.5075963456183673,1.4516015071421862,1.223901635967195,1.1208971263840795,1.2670989381149412,1.6674036160111428,2.083000261336565,1.2923965696245433,1.828302163630724,2.1751984022557737,1.6132015734910966,1.3606009306386114,1.2469954090192915,1.6167020658031107,1.7158021219074727,1.8401006236672402,1.7071994952857495,1.5438988339155913,1.3958971248939634,1.2286989949643613,1.1825042311102152,1.4092969940975309,1.1857993667945266,1.088803866878152,1.8315971828997136,1.8702027155086399,1.4823980163782836,1.190702896565199,1.4518990647047759,1.4002976240590215,1.3118976494297386,1.1380030773580075,1.37300172355026,1.6734977252781392,1.3674036599695683,1.1931973276659847,1.1273029958829284,1.4199971919879318,1.513102324679494,1.4085954753682018,1.1334042064845563,1.2448979541659356,1.3553004246205092,1.5231008874252439,1.404995797201991,1.1571003124117852,1.3955002650618554,1.4598993584513665,1.5283022075891495,1.1473994236439467,1.6007014783099294,1.457001082599163,1.4091978082433344,1.3318026904016734,1.1729946127161384,1.3410997344180942,1.6207058215513826,1.5010983915999532,1.1804988607764245,1.6576034249737859,1.9716979004442692,1.796201802790165,1.318098045885563,1.3338010758161545,1.4294005231931806,1.3803004985675216,1.216397387906909,1.5687996055930853,1.4553996734321118,1.3843041379004717,1.252699876204133,1.1168933706358076,1.1033021146431566,1.3453018618747593,1.4260984025895596,1.1580995051190258,1.399801578372717,1.3355016708374024,1.4150014612823725,1.4248937368392945,1.2413052609190345,1.8424957524985076,1.5862032305449248,1.7116001108661295,1.7466978169977666,1.485097804106772,1.8035005778074265,1.4303004136309028,1.2614016886800528,1.464002300053835,1.3880952028557659,1.213201554492116,1.2067034840583802,1.8122944748029113,1.9773030653595925,1.312301610596478,1.5670988941565157,1.3876984594389797,1.559204887598753,1.4606930781155825,1.7077026423066855,1.467198133468628,1.5381022822111846,1.5386975137516857,1.227402244694531,1.3046981766819955,1.3718041591346264,1.3036989839747549,1.144798705354333,1.4624999603256584,1.5288974391296507,1.4348002150654793,1.1877055512741209,1.3116000918671489,1.1014952324330807,1.318601192906499,1.860600896179676,1.5089993830770255],"Min":1.0381023166701198,"Max":4.331200383603573,"Median":1.4615965192206205,"Average":1.5416638731646042,"StandardDeviation":0.35709914855282617,"Sum":277.49949716962876},{"Name":"GCAllocBytes","Unit":4,"IncreaseIsBetter":false,"Samples":[660.0,750.0,718.0,558.0,558.0,750.0,558.0,558.0,558.0,878.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,1134.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,1646.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,1048.0,558.0,558.0,558.0,558.0,558.0,558.0,2670.0,558.0,558.0,558.0,558.0,558.0,610.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,614.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,4718.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0],"Min":558.0,"Max":4718.0,"Median":558.0,"Average":610.7777777777778,"StandardDeviation":359.30756796240976,"Sum":109940.0}]}
+]]></output>
+              </test-case>
+              <test-case id="1004" name="Bench_02_Act2_SetorExterno" fullname="Studio.Tests.Performance.ConcertoPerformanceBenchmarks.Bench_02_Act2_SetorExterno" methodname="Bench_02_Act2_SetorExterno" classname="Studio.Tests.Performance.ConcertoPerformanceBenchmarks" runstate="Runnable" seed="275329117" result="Passed" start-time="2026-11-24 14:23:38Z" end-time="2026-11-24 14:23:39Z" duration="1.011749" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Category" value="Performance" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[SaveSystem] Jogo salvo em C:/Users/Bruno/AppData/LocalLow/StudioAI/NeonDistrictServer\concerto_save.json (cp=cp_setor_externo_entrada, obj='Fale com Juno', cells=3, anomActive=False, resolved=3)
+[PerfBench] Act2_SetorExterno (SetorExterno): avg=0,76ms (1318,4fps), p99=1,33ms, max=1,33ms, hitches/min=0,0, gc=607B/frame (max 4718B), draws=0
+FrameTimeMs in Milliseconds
+Min:		0,63 ms
+Median:		0,70 ms
+Max:		1,33 ms
+Avg:		0,76 ms
+StdDev:		0,16 ms
+SampleCount:	180
+Sum:		136,53 ms
+First samples:	▁▂▃▄▅▄▂▂▂▃▅▆▅▂▂▂▂▆▃▂▂▂▁▁▂▃▄▂▂▁▂▂▄█▇▅▂▁▁▃▃█▂▁▁▁▇▆▂▂▅▅▂▃▆▂▂▂▁▁▁▃▂▃▂▆▅▃▃▃▂▂▂▁▁▁▃▅▅▂▁▁▁▁▂▂▁▁▁▂▁▁▁▅▂▁▇▁▁▁
+Histogram:	█▃▂▁▁▁▁▁▁▁
+
+GCAllocBytes in Bytes
+Min:		380,00 b
+Median:		558,00 b
+Max:		4718,00 b
+Avg:		606,57 b
+StdDev:		358,22 b
+SampleCount:	180
+Sum:		109182,00 b
+First samples:	▁▂▁▁▂▂▁▁▁▂▁▁▁▁▁▁▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▃▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▅▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+Histogram:	█▂▂▁▁▁▁▁▁▁
+
+
+##performancetestresult2:{"Name":"Studio.Tests.Performance.ConcertoPerformanceBenchmarks.Bench_02_Act2_SetorExterno","ClassName":"Studio.Tests.Performance.ConcertoPerformanceBenchmarks","MethodName":"Bench_02_Act2_SetorExterno","Version":"1","Categories":["Performance"],"SampleGroups":[{"Name":"FrameTimeMs","Unit":2,"IncreaseIsBetter":false,"Samples":[0.6569019169546664,0.7342970347963274,0.799298461060971,0.9642007062211633,1.0008999379351736,0.8858985383994877,0.7694019004702568,0.7065050886012614,0.7013959693722427,0.8142006699927151,1.0536989429965616,1.1293012648820878,0.98699692171067,0.7734055980108678,0.7081986987031996,0.7216978701762855,0.7595025235787034,1.1666950304061175,0.8035005885176361,0.7401006296277046,0.7176020299084485,0.6831986829638481,0.650701520498842,0.6402990547940135,0.6788973696529865,0.8256023284047842,0.9392006904818118,0.7185019785538316,0.717899645678699,0.6536989822052419,0.7203018758445978,0.7231009076349437,0.9591978741809726,1.3250992633402348,1.2740008533000947,1.032596337608993,0.7035997696220875,0.6425028550438583,0.6535005522891879,0.7834963034838438,0.8655045530758798,1.325999153777957,0.7563988328911364,0.6676020566374064,0.6718962686136365,0.6375000230036676,1.1977041140198708,1.0866000084206463,0.7618976524099708,0.7647037855349481,0.9933956898748875,1.068898825906217,0.6920989253558219,0.7940051145851612,1.1017007054761053,0.7278982666321099,0.6997023592703044,0.6802933639846742,0.6364016444422305,0.6620039930567145,0.6570011610165238,0.8331987191922963,0.7333970861509442,0.7853033021092415,0.7383007323369384,1.1186932679265738,1.0710033820942045,0.8047973387874663,0.8500991971231997,0.788903038483113,0.6823979783803225,0.6806051824241877,0.6846938631497324,0.6568027311004698,0.643700419459492,0.6456986884586513,0.8142006699927151,1.0561011731624604,0.9950964013114572,0.7279053097590804,0.6597009487450123,0.6512967520393431,0.6383999716490507,0.6367984460666776,0.7387046352960169,0.6821995484642685,0.6483985343948007,0.6490008672699332,0.668494903948158,0.6995039875619113,0.6537981680594385,0.6393991061486304,0.6482001044787467,1.0303996969014407,0.7350056548602879,0.6496952846646309,1.237903954461217,0.6633999291807413,0.646896252874285,0.6425028550438583,0.6413973751477897,0.6696003256365657,0.6419005221687257,0.6506023346446455,0.6287982105277479,0.6481009186245501,0.6414966192096472,0.6395053933374584,0.6491992389783263,0.6758999661542475,1.1229945812374354,1.174404751509428,0.7804988417774439,0.7370960665866733,0.7301020668819547,0.7795989513397217,0.6498015718534589,0.7558035431429744,0.7110969163477421,0.8106009336188436,0.6471017841249704,0.6465986371040344,0.6584963412024081,0.6353032658807933,0.6467970670200884,0.6332058110274375,0.6564980139955878,0.6495960988104343,0.6392998620867729,0.6645054090768099,0.6402990547940135,0.6313988124020398,0.7026998209767044,0.6739016389474273,0.6430980865843594,0.6389030604623258,0.6633999291807413,0.64339570235461,0.6386975874193013,0.6349064642563462,0.6397959077730775,0.6408021436072886,0.6390022463165224,0.6440972210839391,0.643700419459492,0.7226970046758652,0.6798044196330011,0.6407950422726572,0.6356008816510439,0.6498015718534589,0.7846017833799124,0.6355016957968473,0.6464994512498379,0.6594954757019877,0.6660997751168907,0.9178996551781893,1.08320580329746,0.8098993566818535,0.8246952784247696,0.6624999805353582,0.6451034569181502,0.6681972881779075,0.6868976633995771,0.6683035753667355,0.6520975148305297,0.6672051968052983,0.6491000531241298,0.6902990280650556,0.7754960097372532,0.7098001660779119,0.803103728685528,0.7257015095092356,0.7168934098444879,0.690306129399687,0.7411990081891418,0.7775014382787049,0.7787981885485351,0.9744968847371638,0.7383999181911349,0.919401936698705],"Min":0.6287982105277479,"Max":1.325999153777957,"Median":0.6958014564588666,"Average":0.7585016696894955,"StandardDeviation":0.15783886595937439,"Sum":136.5303005441092},{"Name":"GCAllocBytes","Unit":4,"IncreaseIsBetter":false,"Samples":[380.0,750.0,558.0,558.0,718.0,750.0,558.0,558.0,558.0,878.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,1134.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,1646.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,2670.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,626.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,4718.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,610.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0],"Min":380.0,"Max":4718.0,"Median":558.0,"Average":606.5666666666667,"StandardDeviation":358.2196269205685,"Sum":109182.0}]}
+]]></output>
+              </test-case>
+              <test-case id="1005" name="Bench_03_Act3_Epicentro" fullname="Studio.Tests.Performance.ConcertoPerformanceBenchmarks.Bench_03_Act3_Epicentro" methodname="Bench_03_Act3_Epicentro" classname="Studio.Tests.Performance.ConcertoPerformanceBenchmarks" runstate="Runnable" seed="41027719" result="Passed" start-time="2026-11-24 14:23:39Z" end-time="2026-11-24 14:23:42Z" duration="2.942604" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Category" value="Performance" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[SaveSystem] Jogo salvo em C:/Users/Bruno/AppData/LocalLow/StudioAI/NeonDistrictServer\concerto_save.json (cp=cp_runtime_update, obj='Fale com Juno', cells=3, anomActive=False, resolved=3)
+[Epicenter] Checkpoint da Secao 1 ativado em (0.00, 0.25, 0.00).
+[PerfBench] Act3_Epicentro (Epicentro): avg=0,85ms (1176,2fps), p99=1,55ms, max=1,77ms, hitches/min=0,0, gc=597B/frame (max 4718B), draws=0
+FrameTimeMs in Milliseconds
+Min:		0,61 ms
+Median:		0,79 ms
+Max:		1,77 ms
+Avg:		0,85 ms
+StdDev:		0,21 ms
+SampleCount:	180
+Sum:		153,04 ms
+First samples:	▁▁▁▁▁▂▆▄▁▁▂▁▆▆▂▂▁▁▁▂▂▂▂▁▁▁▁▂▃▃▃▃▁▁▁▂▂▂▁▁▂▁▁▂▃▃▂▂▁▁▁▅▅▄▃▁▂▂▂▂▂▁▃▅▄▄▄▃▁▃▂▂▄▃▂▁▁▁▂▃▆▂▁▁▁▂▄▃▃▂▂▂▁▃▄▃▂▁▂▁
+Histogram:	█▃▂▁▁▁▁▁▁▁
+
+GCAllocBytes in Bytes
+Min:		380,00 b
+Median:		558,00 b
+Max:		4718,00 b
+Avg:		596,93 b
+StdDev:		359,79 b
+SampleCount:	180
+Sum:		107448,00 b
+First samples:	▁▁▁▁▁▁▁▁▁▂▁▁▁▁▁▁▁▂▁▁▁▁▁▁▁▂▁▁▁▁▁▁▁▃▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▅▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+Histogram:	█▃▂▁▁▁▁▁▁▁
+
+
+##performancetestresult2:{"Name":"Studio.Tests.Performance.ConcertoPerformanceBenchmarks.Bench_03_Act3_Epicentro","ClassName":"Studio.Tests.Performance.ConcertoPerformanceBenchmarks","MethodName":"Bench_03_Act3_Epicentro","Version":"1","Categories":["Performance"],"SampleGroups":[{"Name":"FrameTimeMs","Unit":2,"IncreaseIsBetter":false,"Samples":[0.6160005577839911,0.6165037048049271,0.6098994053900242,0.6107001099735498,0.6175949820317328,0.8370039868168533,1.4776006573811174,1.1794004822149873,0.660898513160646,0.682497164234519,0.8008999284356833,0.6300028180703521,1.5118976589292288,1.4035997446626425,0.7836025906726718,0.7112953462637961,0.6620039930567145,0.6324971909634769,0.6886054179631174,0.8194940746761859,0.8374007884413004,0.7232000934891403,0.7293013040907681,0.6511975661851466,0.6371031631715596,0.6557964952662587,0.6447066552937031,0.7044997182674706,0.8790958090685308,0.859601772390306,0.8949971524998546,0.9481009328737855,0.633503426797688,0.6375000230036676,0.6201955839060247,0.7371031679213047,0.8506023441441357,0.7375992136076093,0.6788973696529865,0.6309027667157352,0.6934949196875095,0.6815051310695708,0.6758999661542475,0.7948979618959129,0.9940972086042166,0.9949050145223737,0.7785997586324811,0.6958970916457474,0.6690972368232906,0.6727040745317936,0.6738024530932307,1.3211946934461594,1.2245039688423277,1.0673964861780406,0.9142006747424603,0.6437996053136885,0.8051020558923483,0.6932964897714555,0.8316042949445546,0.8242984768003225,0.7446995587088168,0.682497164234519,0.9361040429212153,1.233900198712945,1.160097774118185,1.0562996612861753,1.1621031444519759,0.8621952729299665,0.6660005892626941,0.8759991615079343,0.7144061964936554,0.8562995935790241,1.0720946593210102,0.9169005206786096,0.7408021483570337,0.6762967677786946,0.679102900903672,0.6728032603859901,0.8023951086215675,1.001303899101913,1.397200976498425,0.7669997285120189,0.6767006707377732,0.6766935694031417,0.6881023291498423,0.7836025906726718,1.0732993250712753,0.8864016272127628,0.9111961699090898,0.7300028228200972,0.7177012739703059,0.7149943266995251,0.6808035541325808,0.926799897570163,1.09620182774961,0.9322987752966583,0.8048965246416628,0.6842049187980592,0.7028982508927584,0.6624007946811616,0.8249999955296516,1.0599985253065825,0.9089994127862155,0.8750000270083547,0.6667021079920232,0.6817956455051899,0.6605017115361989,1.0301020229235292,1.3598994119092823,1.7666028579697014,0.7718962733633816,0.6640022620558739,0.6857000989839435,0.820195593405515,1.163201523013413,1.0513038141652942,0.738796778023243,0.6755031063221395,0.6556972512044013,0.7684027659706771,1.1099985567852855,0.9807965252548456,1.0054988088086248,1.00370601285249,0.7255952223204076,0.8256023284047842,0.699999975040555,0.8440972305834293,1.019798801280558,1.0383006883785129,0.9730017045512796,0.8084041764959693,0.6797973182983697,0.6804988952353597,0.8980017155408859,0.9186011739075184,0.7656958769075573,0.7181051769293845,0.6791949854232371,1.0623015696182848,0.9260983788408339,1.001899130642414,1.1232993565499783,0.9990008547902107,0.7177012739703059,0.6862032460048795,0.6691964226774871,0.6642998778261244,0.672604888677597,1.335494569502771,1.0824050987139345,1.047697034664452,0.7742984453216195,0.6708049913868308,0.6949971430003643,0.8385983528569341,0.8507015299983323,0.9928996441885829,0.8318027248606086,0.809800170827657,0.7228954345919192,0.7295989198610187,0.7208049646578729,0.9392998763360083,1.20569730643183,0.9468041243962944,0.8047973387874663,0.7995960768312216,0.9528061491437256,1.2607993558049203,0.9983985219150782,1.5507015632465482,0.7845946820452809,0.6890022777952254,0.6895975093357265,0.7939058705233038,0.9997944580391049,1.1667021317407489,0.9310019668191671,0.7742984453216195],"Min":0.6098994053900242,"Max":1.7666028579697014,"Median":0.7944019162096083,"Average":0.8502027825064337,"StandardDeviation":0.21205960865703853,"Sum":153.03650085115806},{"Name":"GCAllocBytes","Unit":4,"IncreaseIsBetter":false,"Samples":[380.0,670.0,478.0,478.0,478.0,670.0,478.0,478.0,478.0,798.0,478.0,478.0,478.0,478.0,478.0,478.0,478.0,1054.0,478.0,478.0,478.0,478.0,478.0,478.0,478.0,918.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,1646.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,2670.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,612.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,4718.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,558.0,610.0,558.0,558.0,558.0,558.0],"Min":380.0,"Max":4718.0,"Median":558.0,"Average":596.9333333333333,"StandardDeviation":359.78891342316526,"Sum":107448.0}]}
+[Playcaller] Connection failed: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente.
+
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+    <test-suite type="Assembly" id="1095" name="Studio.Tests.SmokeTest.dll" fullname="C:/Users/Bruno/workspace/game-concerto/unity/Library/ScriptAssemblies/Studio.Tests.SmokeTest.dll" runstate="Runnable" testcasecount="7" result="Failed" site="Child" start-time="2026-11-24 14:23:42Z" end-time="2026-11-24 14:23:50Z" duration="8.349651" total="7" passed="6" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="124424" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1096" name="Studio" fullname="Studio" runstate="Runnable" testcasecount="7" result="Failed" site="Child" start-time="2026-11-24 14:23:42Z" end-time="2026-11-24 14:23:50Z" duration="8.348073" total="7" passed="6" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1097" name="Tests" fullname="Studio.Tests" runstate="Runnable" testcasecount="7" result="Failed" site="Child" start-time="2026-11-24 14:23:42Z" end-time="2026-11-24 14:23:50Z" duration="8.346966" total="7" passed="6" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestSuite" id="1098" name="SmokeTest" fullname="Studio.Tests.SmokeTest" runstate="Runnable" testcasecount="7" result="Failed" site="Child" start-time="2026-11-24 14:23:42Z" end-time="2026-11-24 14:23:50Z" duration="8.346172" total="7" passed="6" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1087" name="ConcertoSmokeTests" fullname="Studio.Tests.SmokeTest.ConcertoSmokeTests" classname="Studio.Tests.SmokeTest.ConcertoSmokeTests" runstate="Runnable" testcasecount="7" result="Failed" site="Child" start-time="2026-11-24 14:23:42Z" end-time="2026-11-24 14:23:50Z" duration="8.345372" total="7" passed="6" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1088" name="Smoke_01_MainMenuLoadsWithoutConsoleErrors" fullname="Studio.Tests.SmokeTest.ConcertoSmokeTests.Smoke_01_MainMenuLoadsWithoutConsoleErrors" methodname="Smoke_01_MainMenuLoadsWithoutConsoleErrors" classname="Studio.Tests.SmokeTest.ConcertoSmokeTests" runstate="Runnable" seed="38700232" result="Passed" start-time="2026-11-24 14:23:42Z" end-time="2026-11-24 14:23:42Z" duration="0.350104" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1089" name="Smoke_02_Act1_CaldeiralLoadsWithoutConsoleErrors" fullname="Studio.Tests.SmokeTest.ConcertoSmokeTests.Smoke_02_Act1_CaldeiralLoadsWithoutConsoleErrors" methodname="Smoke_02_Act1_CaldeiralLoadsWithoutConsoleErrors" classname="Studio.Tests.SmokeTest.ConcertoSmokeTests" runstate="Runnable" seed="1238703325" result="Passed" start-time="2026-11-24 14:23:42Z" end-time="2026-11-24 14:23:43Z" duration="0.823945" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[SaveSystem] Jogo salvo em C:/Users/Bruno/AppData/LocalLow/StudioAI/NeonDistrictServer\concerto_save.json (cp=cp_oficina_inicio, obj='Fale com Juno', cells=3, anomActive=False, resolved=5)
+]]></output>
+              </test-case>
+              <test-case id="1090" name="Smoke_03_Act2_SetorExternoLoadsWithoutConsoleErrors" fullname="Studio.Tests.SmokeTest.ConcertoSmokeTests.Smoke_03_Act2_SetorExternoLoadsWithoutConsoleErrors" methodname="Smoke_03_Act2_SetorExternoLoadsWithoutConsoleErrors" classname="Studio.Tests.SmokeTest.ConcertoSmokeTests" runstate="Runnable" seed="890705907" result="Passed" start-time="2026-11-24 14:23:43Z" end-time="2026-11-24 14:23:44Z" duration="0.461225" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[SaveSystem] Jogo salvo em C:/Users/Bruno/AppData/LocalLow/StudioAI/NeonDistrictServer\concerto_save.json (cp=cp_setor_externo_entrada, obj='Fale com Juno', cells=3, anomActive=False, resolved=3)
+]]></output>
+              </test-case>
+              <test-case id="1091" name="Smoke_04_DezSpawnsAndRespondsToMovementInput" fullname="Studio.Tests.SmokeTest.ConcertoSmokeTests.Smoke_04_DezSpawnsAndRespondsToMovementInput" methodname="Smoke_04_DezSpawnsAndRespondsToMovementInput" classname="Studio.Tests.SmokeTest.ConcertoSmokeTests" runstate="Runnable" seed="783648183" result="Passed" start-time="2026-11-24 14:23:44Z" end-time="2026-11-24 14:23:45Z" duration="1.533635" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[SaveSystem] Jogo salvo em C:/Users/Bruno/AppData/LocalLow/StudioAI/NeonDistrictServer\concerto_save.json (cp=cp_oficina_inicio, obj='Fale com Juno', cells=3, anomActive=False, resolved=5)
+]]></output>
+              </test-case>
+              <test-case id="1092" name="Smoke_05_JumpCoyoteAndBufferMatchDesignBible" fullname="Studio.Tests.SmokeTest.ConcertoSmokeTests.Smoke_05_JumpCoyoteAndBufferMatchDesignBible" methodname="Smoke_05_JumpCoyoteAndBufferMatchDesignBible" classname="Studio.Tests.SmokeTest.ConcertoSmokeTests" runstate="Runnable" seed="245490689" result="Failed" start-time="2026-11-24 14:23:45Z" end-time="2026-11-24 14:23:46Z" duration="0.589038" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Pulo do Dez deveria elevar verticalmente > 0.35m (ganho=0,349m).
+  Expected: greater than 0.349999994f
+  But was:  0.349006414f
+]]></message>
+                  <stack-trace><![CDATA[at Studio.Tests.SmokeTest.ConcertoSmokeTests+<Smoke_05_JumpCoyoteAndBufferMatchDesignBible>d__10.MoveNext () [0x00343] in C:\Users\Bruno\workspace\game-concerto\unity\Assets\Game\Tests\SmokeTest\ConcertoSmokeTests.cs:182
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1093" name="Smoke_06_VersionedJsonSaveWriteAndReloadIntegrity" fullname="Studio.Tests.SmokeTest.ConcertoSmokeTests.Smoke_06_VersionedJsonSaveWriteAndReloadIntegrity" methodname="Smoke_06_VersionedJsonSaveWriteAndReloadIntegrity" classname="Studio.Tests.SmokeTest.ConcertoSmokeTests" runstate="Runnable" seed="1384063277" result="Passed" start-time="2026-11-24 14:23:46Z" end-time="2026-11-24 14:23:46Z" duration="0.537620" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[SaveSystem] Jogo salvo em C:/Users/Bruno/AppData/Local/Temp/StudioAI/NeonDistrictServer\concerto_smoke_save_69836095127348198090f2a7d546e648.json (cp=cp_smoke_test, obj='Fale com Juno', cells=3, anomActive=False, resolved=5)
+]]></output>
+              </test-case>
+              <test-case id="1094" name="Smoke_07_SceneTransitionsWithoutExceptions" fullname="Studio.Tests.SmokeTest.ConcertoSmokeTests.Smoke_07_SceneTransitionsWithoutExceptions" methodname="Smoke_07_SceneTransitionsWithoutExceptions" classname="Studio.Tests.SmokeTest.ConcertoSmokeTests" runstate="Runnable" seed="1050865393" result="Passed" start-time="2026-11-24 14:23:46Z" end-time="2026-11-24 14:23:50Z" duration="4.046414" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Playcaller] Connection failed: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente.
+
+[SaveSystem] Jogo salvo em C:/Users/Bruno/AppData/LocalLow/StudioAI/NeonDistrictServer\concerto_save.json (cp=cp_setor_externo_entrada, obj='Fale com Juno', cells=3, anomActive=False, resolved=3)
+Saving results to: C:/Users/Bruno/AppData/LocalLow/StudioAI/NeonDistrictServer\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

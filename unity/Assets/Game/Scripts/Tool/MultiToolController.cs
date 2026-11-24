@@ -313,6 +313,7 @@ namespace Studio.Game.Tool
 
         private int _lastHudCells = -1;
         private string _lastHudModeId = string.Empty;
+        private float _lastHudEnergyFill = -1f;
 
         public void RefreshHud()
         {
@@ -326,7 +327,14 @@ namespace Studio.Game.Tool
                     modeAccentBar.color = mod.AccentColor;
             }
             if (energyBarFill != null)
-                energyBarFill.fillAmount = Mathf.Clamp01(_energyBar / Mathf.Max(1f, Cfg.maxEnergyBar));
+            {
+                float fill = Mathf.Clamp01(_energyBar / Mathf.Max(1f, Cfg.maxEnergyBar));
+                if (Mathf.Abs(fill - _lastHudEnergyFill) > 0.002f)
+                {
+                    _lastHudEnergyFill = fill;
+                    energyBarFill.fillAmount = fill;
+                }
+            }
             if (cellsCountText != null && _energyCells != _lastHudCells)
             {
                 _lastHudCells = _energyCells;

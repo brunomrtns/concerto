@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="4" result="Passed" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-24 14:19:36Z" end-time="2026-11-24 14:19:46Z" duration="9,6189568">
+  <test-suite type="TestSuite" id="1102" name="NeonDistrictServer" fullname="NeonDistrictServer" runstate="Runnable" testcasecount="52" result="Passed" start-time="2026-11-24 14:19:36Z" end-time="2026-11-24 14:19:46Z" duration="9.618957" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1006" name="Studio.Tests.Performance.dll" fullname="C:/Users/Bruno/workspace/game-concerto/unity/Library/ScriptAssemblies/Studio.Tests.Performance.dll" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-24 14:19:36Z" end-time="2026-11-24 14:19:46Z" duration="9.608165" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="125016" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <output><![CDATA[There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+]]></output>
+      <test-suite type="TestSuite" id="1007" name="Studio" fullname="Studio" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-24 14:19:36Z" end-time="2026-11-24 14:19:46Z" duration="9.606845" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <output><![CDATA[There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+]]></output>
+        <test-suite type="TestSuite" id="1008" name="Tests" fullname="Studio.Tests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-24 14:19:36Z" end-time="2026-11-24 14:19:46Z" duration="9.606224" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <output><![CDATA[There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+]]></output>
+          <test-suite type="TestSuite" id="1009" name="Performance" fullname="Studio.Tests.Performance" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-24 14:19:36Z" end-time="2026-11-24 14:19:46Z" duration="9.605716" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <output><![CDATA[There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+]]></output>
+            <test-suite type="TestFixture" id="1001" name="ConcertoPerformanceBenchmarks" fullname="Studio.Tests.Performance.ConcertoPerformanceBenchmarks" classname="Studio.Tests.Performance.ConcertoPerformanceBenchmarks" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-24 14:19:36Z" end-time="2026-11-24 14:19:46Z" duration="9.603859" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <output><![CDATA[There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+]]></output>
+              <test-case id="1002" name="Bench_00_MainMenu_Hub" fullname="Studio.Tests.Performance.ConcertoPerformanceBenchmarks.Bench_00_MainMenu_Hub" methodname="Bench_00_MainMenu_Hub" classname="Studio.Tests.Performance.ConcertoPerformanceBenchmarks" runstate="Runnable" seed="54330803" result="Passed" start-time="2026-11-24 14:19:36Z" end-time="2026-11-24 14:19:39Z" duration="3.129145" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Category" value="Performance" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+[PerfBench] Act0_Menu (MainMenu): avg=0,28ms (3512,1fps), p99=1,08ms, max=1,45ms, hitches/min=0,0, gc=418B/frame (max 4530B), draws=0
+FrameTimeMs in Milliseconds
+Min:		0,21 ms
+Median:		0,24 ms
+Max:		1,45 ms
+Avg:		0,28 ms
+StdDev:		0,14 ms
+SampleCount:	180
+Sum:		51,25 ms
+First samples:	▆█▁▁▁▁▁▁▁▁▁▁▁▁▁▂▁▂▁▁▁▁▁▁▃▃▁▂▃▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▂▂▂▁▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▃▅▂▃▃▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▂▁▁▁▁▁▁
+Histogram:	█▃▁▁▁▁▁▁▁▁
+
+GCAllocBytes in Bytes
+Min:		272,00 b
+Median:		370,00 b
+Max:		4530,00 b
+Avg:		417,72 b
+StdDev:		358,07 b
+SampleCount:	180
+Sum:		75190,00 b
+First samples:	▁▂▁▁▁▁▁▁▁▂▁▁▁▁▁▁▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▃▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▅▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+Histogram:	█▂▁▁▁▁▁▁▁▁
+
+
+##performancetestresult2:{"Name":"Studio.Tests.Performance.ConcertoPerformanceBenchmarks.Bench_00_MainMenu_Hub","ClassName":"Studio.Tests.Performance.ConcertoPerformanceBenchmarks","MethodName":"Bench_00_MainMenu_Hub","Version":"1","Categories":["Performance"],"SampleGroups":[{"Name":"FrameTimeMs","Unit":2,"IncreaseIsBetter":false,"Samples":[1.0812996188178659,1.4510983601212502,0.2731009153649211,0.22089711274020375,0.22580072982236744,0.3008007479365915,0.25039681349880996,0.25279904366470876,0.2463010314386338,0.25430129608139398,0.258404208580032,0.2479946124367416,0.26060090749524536,0.24780328385531903,0.23560090630780906,0.30449972837232056,0.24479874991811813,0.307397946016863,0.25430129608139398,0.2368976711295545,0.22480158077087254,0.2371031732764095,0.2239937603008002,0.21850198390893639,0.527402211446315,0.555498874746263,0.24250283604487778,0.3233985335100442,0.5747023969888687,0.3053996479138732,0.26139456895180049,0.23929988674353809,0.23590560886077584,0.226197560550645,0.2467970480211079,0.22589994478039444,0.2310019772266969,0.23579932167194785,0.2241992624476552,0.2160997682949528,0.21879959967918695,0.23450255685020239,0.2204010816058144,0.22149943106342108,0.22089711274020375,0.2170989173464477,0.23360260820481927,0.21680130157619716,0.21999716409482063,0.2173044194933027,0.25639880914241078,0.4257015243638307,0.45299745397642257,0.3365008451510221,0.28329790802672508,0.47570152673870327,0.3383007424417883,0.22490079572889955,0.21969954832457007,0.23010204313322903,0.2398951182840392,0.22390164667740465,0.22879819152876736,0.23740078904666007,0.22280328266788275,0.23779761977493764,0.2511975762899965,0.22689909383188934,0.21950113296043129,0.2194019325543195,0.2170989173464477,0.22499999613501132,0.2312003925908357,0.54460036335513,0.8509991457685828,0.33070435165427627,0.593700387980789,0.5988945486024022,0.27840136317536237,0.23200114083010704,0.23239795700646938,0.23690475791227073,0.22499999613501132,0.23779761977493764,0.22189626179169864,0.2232001133961603,0.22450396500062198,0.24379960086662323,0.24239654885604978,0.28410571394488218,0.22129392891656608,0.2553004596848041,0.26650368818081918,0.34990080166608097,0.27029478223994377,0.27050028438679876,0.2810019941534847,0.27910288190469148,0.27410004986450078,0.2816964406520128,0.36750282743014398,0.2825963601935655,0.27059949934482577,0.29140448896214368,0.2841978566721082,0.2340986393392086,0.23080357641447336,0.2172973327105865,0.23380102356895805,0.21989796368870885,0.2194019325543195,0.21619898325297982,0.21860118431504817,0.22410006204154343,0.2160997682949528,0.2533021615818143,0.3273951297160238,0.3642006777226925,0.3098001761827618,0.28830074006691577,0.28030044632032516,0.26850198628380897,0.272300181677565,0.290001422399655,0.2740008640103042,0.27769984444603326,0.2764951786957681,0.2839002409018576,0.2497023670002818,0.23359552142210306,0.30550596420653167,0.2893990895245224,0.2553004596848041,0.23729450185783208,0.7242063293233514,0.28030044632032516,0.28019415913149717,0.2837018109858036,0.3998015890829265,0.40319585241377356,0.24240362108685077,0.2310019772266969,0.2321995416423306,0.2539966080803424,0.2814980107359588,0.2489016333129257,0.24350198509637267,0.3260983503423631,0.25940334307961168,0.258000276517123,0.23750000400468708,0.26529902243055406,0.25780187570489945,0.24069586652331055,0.22550311405211688,0.2572987577877939,0.2610969531815499,0.44659862760454419,0.29820011695846918,0.2839002409018576,0.2849064767360687,0.23199405404739083,0.2151006192434579,0.22280328266788275,0.22369614453054965,0.22679989342577756,0.2352040755795315,0.21680130157619716,0.21269841818138958,0.22570152941625566,0.22079789778217674,0.21860118431504817,0.22269699547905476,0.21660288621205837,0.2641014871187508,0.23369472182821483,0.22110261488705874,0.2163973986171186,0.21320153609849513,0.21570295211859048],"Min":0.21269841818138958,"Max":1.4510983601212502,"Median":0.24429917539237068,"Average":0.2847327732726828,"StandardDeviation":0.13931882529962204,"Sum":51.251899189082909},{"Name":"GCAllocBytes","Unit":4,"IncreaseIsBetter":false,"Samples":[272.0,610.0,370.0,370.0,370.0,562.0,370.0,370.0,370.0,690.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,946.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,1458.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,2482.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,4530.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0,370.0],"Min":272.0,"Max":4530.0,"Median":370.0,"Average":417.72222222222225,"StandardDeviation":358.0673284850148,"Sum":75190.0}]}
+##performancetestruninfo2:{"TestSuite":"Playmode","Date":1795529967627,"Player":{"Development":true,"ScreenWidth":2560,"ScreenHeight":1440,"ScreenRefreshRate":165,"Fullscreen":false,"Vsync":1,"AntiAliasing":0,"Batchmode":true,"RenderThreadingMode":"SingleThreaded","MtRendering":false,"GraphicsJobs":false,"GpuSkinning":true,"Platform":"WindowsEditor","ColorSpace":"Linear","AnisotropicFiltering":"ForceEnable","BlendWeights":"FourBones","GraphicsApi":"Direct3D12","ScriptingBackend":"Mono2x","AndroidTargetSdkVersion":"AndroidApiLevelAuto","AndroidBuildSystem":"Gradle","BuildTarget":"StandaloneWindows64","StereoRenderingPath":"MultiPass"},"Hardware":{"OperatingSystem":"Windows 11  (10.0.26200)","DeviceModel":"B550M AORUS ELITE (Gigabyte Technology Co., Ltd.)","DeviceName":"BRUNO","ProcessorType":"AMD Ryzen 5 3600 6-Core Processor ","ProcessorCount":12,"GraphicsDeviceName":"NVIDIA GeForce RTX 3060","SystemMemorySizeMB":65456},"Editor":{"Version":"6000.3.26f1","Branch":"6000.3/staging","Changeset":"de8167e7440c","Date":1790706048},"Dependencies":["com.unity.2d.sprite@1.0.0","com.unity.2d.tilemap@1.0.0","com.unity.ai.navigation@2.0.15","com.unity.animation.rigging@1.3.0","com.unity.bindings.openimageio@1.0.2","com.unity.burst@1.8.30","com.unity.cinemachine@3.1.4","com.unity.collab-proxy@2.13.6","com.unity.collections@2.6.8","com.unity.ext.nunit@2.0.5","com.unity.ide.rider@3.0.40","com.unity.ide.visualstudio@2.0.26","com.unity.ide.vscode@1.2.3","com.unity.inputsystem@1.20.0","com.unity.mathematics@1.3.3","com.unity.modules.accessibility@1.0.0","com.unity.modules.adaptiveperformance@1.0.0","com.unity.modules.ai@1.0.0","com.unity.modules.androidjni@1.0.0","com.unity.modules.animation@1.0.0","com.unity.modules.assetbundle@1.0.0","com.unity.modules.audio@1.0.0","com.unity.modules.cloth@1.0.0","com.unity.modules.director@1.0.0","com.unity.modules.hierarchycore@1.0.0","com.unity.modules.imageconversion@1.0.0","com.unity.modules.imgui@1.0.0","com.unity.modules.jsonserialize@1.0.0","com.unity.modules.particlesystem@1.0.0","com.unity.modules.physics@1.0.0","com.unity.modules.physics2d@1.0.0","com.unity.modules.screencapture@1.0.0","com.unity.modules.subsystems@1.0.0","com.unity.modules.terrain@1.0.0","com.unity.modules.terrainphysics@1.0.0","com.unity.modules.tilemap@1.0.0","com.unity.modules.ui@1.0.0","com.unity.modules.uielements@1.0.0","com.unity.modules.umbra@1.0.0","com.unity.modules.unityanalytics@1.0.0","com.unity.modules.unitywebrequest@1.0.0","com.unity.modules.unitywebrequestassetbundle@1.0.0","com.unity.modules.unitywebrequestaudio@1.0.0","com.unity.modules.unitywebrequesttexture@1.0.0","com.unity.modules.unitywebrequestwww@1.0.0","com.unity.modules.vectorgraphics@1.0.0","com.unity.modules.vehicles@1.0.0","com.unity.modules.video@1.0.0","com.unity.modules.vr@1.0.0","com.unity.modules.wind@1.0.0","com.unity.modules.xr@1.0.0","com.unity.multiplayer.center@1.0.1","com.unity.netcode.gameobjects@2.13.3","com.unity.nuget.mono-cecil@1.11.6","com.unity.nuget.newtonsoft-json@3.2.2","com.unity.pipeline@0.8.0-exp.1","com.unity.polybrush@1.2.1","com.unity.postprocessing@3.5.4","com.unity.probuilder@6.1.2","com.unity.recorder@5.1.2","com.unity.render-pipelines.core@17.3.0","com.unity.render-pipelines.universal@17.3.0","com.unity.render-pipelines.universal-config@17.0.3","com.unity.sdk.linux-arm64@1.1.1","com.unity.sdk.linux-x86_64@1.1.1","com.unity.searcher@4.9.5","com.unity.settings-manager@2.1.1","com.unity.shadergraph@17.3.0","com.unity.splines@2.9.1","com.unity.sysroot.base@1.1.1","com.unity.test-framework.performance@3.5.0","com.unity.test-framework@1.6.0","com.unity.timeline@1.8.13","com.unity.toolchain.win-x86_64-linux@1.1.1","com.unity.transport@2.7.4","com.unity.ugui@2.0.0","com.unity.visualscripting@1.9.12","company.takashi.playcaller@0.1.4"],"Results":[]}
+[Playcaller] Connection failed: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente.
+
+]]></output>
+              </test-case>
+              <test-case id="1003" name="Bench_01_Act1_Caldeiral" fullname="Studio.Tests.Performance.ConcertoPerformanceBenchmarks.Bench_01_Act1_Caldeiral" methodname="Bench_01_Act1_Caldeiral" classname="Studio.Tests.Performance.ConcertoPerformanceBenchmarks" runstate="Runnable" seed="1324560624" result="Passed" start-time="2026-11-24 14:19:39Z" end-time="2026-11-24 14:19:41Z" duration="2.045353" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Category" value="Performance" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[ObjectiveSystem] Objetivo ativo: Fale com Juno
+[PerfBench] Act1_Oficina (Caldeiral): avg=1,91ms (522,7fps), p99=3,03ms, max=4,42ms, hitches/min=0,0, gc=659B/frame (max 4766B), draws=0
+FrameTimeMs in Milliseconds
+Min:		1,11 ms
+Median:		1,85 ms
+Max:		4,42 ms
+Avg:		1,91 ms
+StdDev:		0,46 ms
+SampleCount:	180
+Sum:		344,39 ms
+First samples:	▃▄▄▄▂▂▃▃▂▃▃▂▂▂▂▁▂▂▂▁▃▃▂▂▂▃▂▁▂▃▂▃▂▁▃▃▂▄▃▂▂▃▂▂▂▃▂▂▃▂▁▂▂▂▁█▃▃▂▂▂▃▂▁▂▃▂▂▂▂▁▁▂▃▂▂▃▃▂▂▃▄▃▃▂▂▃▂▁▃▃▃▃▃▃▃▄▄▅▅
+Histogram:	█▃▂▂▁▁▁▁▁▁
+
+GCAllocBytes in Bytes
+Min:		606,00 b
+Median:		606,00 b
+Max:		4766,00 b
+Avg:		659,47 b
+StdDev:		359,28 b
+SampleCount:	180
+Sum:		118704,00 b
+First samples:	▁▁▁▁▁▁▁▁▁▂▁▁▁▁▁▁▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▃▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▂▁▁▁▁▁▁▁▁▁▅▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+Histogram:	█▂▂▂▁▁▁▁▁▁
+
+
+##performancetestresult2:{"Name":"Studio.Tests.Performance.ConcertoPerformanceBenchmarks.Bench_01_Act1_Caldeiral","ClassName":"Studio.Tests.Performance.ConcertoPerformanceBenchmarks","MethodName":"Bench_01_Act1_Caldeiral","Version":"1","Categories":["Performance"],"SampleGroups":[{"Name":"FrameTimeMs","Unit":2,"IncreaseIsBetter":false,"Samples":[2.0740008912980558,2.6714003179222347,2.553401282057166,2.309098606929183,1.7677012365311385,1.500396872870624,1.86720525380224,2.1100977901369335,1.8133007688447834,2.132497262209654,2.1248015109449627,1.5316964127123356,1.4467049622908235,1.7628967761993409,1.4553004875779153,1.304003642871976,1.5069940127432347,1.56030326616019,1.571598695591092,1.3061012141406537,1.85009918641299,2.248200122267008,1.8063988536596299,1.595004228875041,1.6794005641713739,1.9118976779282094,1.389299868606031,1.3363024918362499,1.679598935879767,2.0760984625667335,1.7162981675937772,2.292602090165019,1.676601474173367,1.160600921139121,1.8341979011893273,2.0895975176244976,1.7429988365620375,2.385104773566127,2.042800420895219,1.5403982251882554,1.8128968076780439,1.9899022299796343,1.7533021746203304,1.36459746863693,1.7802012152969838,1.9107992993667722,1.5711026499047876,1.5151005936786533,2.081597223877907,1.750297611579299,1.2961026513949037,1.5366000588983298,1.7680980963632465,1.3589994050562382,1.2415036326274276,4.4227964244782929,1.9473993452265859,1.8365008290857077,1.796598662622273,1.640802132897079,1.6386975767090917,2.2519060876220466,1.4205995248630643,1.3076955219730735,1.6741000581532717,2.0945011638104917,1.7348993569612504,1.6178996302187443,1.7108984757214785,1.5578018501400948,1.2589002726599575,1.114803017117083,1.492800423875451,2.1081985905766489,1.4874008484184743,1.6071995487436653,2.0241993479430677,1.8555980641394854,1.4325042720884085,1.7594954697415233,2.026303904131055,2.591298194602132,2.1552012767642738,1.8714002799242736,1.7625992186367512,1.8125992501154543,1.8700964283198119,1.3587018474936486,1.117800478823483,1.9546982366591693,1.9338009878993035,1.9845026545226575,1.8860968993976713,2.154202200472355,1.8787982407957316,2.0039044320583345,2.4724986869841816,2.5901005137711765,2.9337017331272365,2.782497089356184,3.031902015209198,2.1062996238470079,2.2187004797160627,2.274199156090617,2.4964993353933098,2.3187994956970217,1.6176020726561547,1.6461947234347463,2.9578018002212049,2.0625991746783258,2.309403382241726,2.52760061994195,2.3711947724223139,1.9982000812888146,1.3408021768555046,1.281299628317356,2.4239015765488149,1.998696243390441,1.592205255292356,1.4946003211662174,1.7435940681025386,1.6137046040967107,1.2271966552361847,1.210204092785716,1.832596375606954,1.6571003943681718,1.7417020862922073,1.7552012577652932,1.9553005695343018,1.7640943406149746,2.4003046564757826,1.8466978799551726,1.4748015673831106,1.262896810658276,1.7077026423066855,2.02210177667439,2.0041950047016146,2.040001330897212,2.030002884566784,2.2026007063686849,2.188995247706771,2.1162061020731928,1.531094079837203,1.6470025293529034,2.4066963233053686,2.1994048729538919,2.100396901369095,1.7209041398018599,2.0589001942425968,2.130399690940976,2.093898830935359,2.3716979194432499,2.4460034910589458,1.6315971734002233,1.9624007400125266,2.398901619017124,2.341198967769742,1.4510983601212502,1.7000992083922029,1.857801922596991,2.778401365503669,2.253897488117218,1.6632014885544778,1.5976970316842199,1.841602846980095,2.049496863037348,2.097399439662695,2.885905560106039,2.575396792963147,2.0873015746474268,1.5819019172340632,1.4285005163401366,1.358099514618516,1.4863945543766022,2.5946996174752714,2.9434028547257187,2.879102947190404,2.0179988350719215,2.5808957871049644,2.687202300876379],"Min":1.114803017117083,"Max":4.4227964244782929,"Median":1.8483985331840814,"Average":1.9132933411229816,"StandardDeviation":0.4565739737149858,"Sum":344.3928014021367},{"Name":"GCAllocBytes","Unit":4,"IncreaseIsBetter":false,"Samples":[660.0,798.0,766.0,606.0,606.0,798.0,606.0,606.0,606.0,926.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,1182.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,1694.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,1096.0,606.0,606.0,606.0,606.0,606.0,606.0,658.0,606.0,606.0,2718.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,726.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,662.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,4766.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,658.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0],"Min":606.0,"Max":4766.0,"Median":606.0,"Average":659.4666666666667,"StandardDeviation":359.28005789356078,"Sum":118704.0}]}
+]]></output>
+              </test-case>
+              <test-case id="1004" name="Bench_02_Act2_SetorExterno" fullname="Studio.Tests.Performance.ConcertoPerformanceBenchmarks.Bench_02_Act2_SetorExterno" methodname="Bench_02_Act2_SetorExterno" classname="Studio.Tests.Performance.ConcertoPerformanceBenchmarks" runstate="Runnable" seed="608331966" result="Passed" start-time="2026-11-24 14:19:41Z" end-time="2026-11-24 14:19:45Z" duration="3.341738" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Category" value="Performance" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[SaveSystem] Jogo salvo em C:/Users/Bruno/AppData/LocalLow/StudioAI/NeonDistrictServer\concerto_save.json (cp=cp_setor_externo_entrada, obj='Fale com Juno', cells=3, anomActive=False, resolved=3)
+[PerfBench] Act2_SetorExterno (SetorExterno): avg=1,41ms (711,5fps), p99=4,50ms, max=14,90ms, hitches/min=0,0, gc=663B/frame (max 4774B), draws=0
+FrameTimeMs in Milliseconds
+Min:		0,70 ms
+Median:		1,24 ms
+Max:		14,90 ms
+Avg:		1,41 ms
+StdDev:		1,13 ms
+SampleCount:	180
+Sum:		252,99 ms
+First samples:	▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▂▂▁▁▁▁▁▂▂▁▂▂▂▂▂▁▁▁▁▁▂▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▂▁▁▁▁▁▁▂▁▁▁▁▁▁▂▁▁▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▂
+Histogram:	█▃▂▂▁▁▁▁▁▁
+
+GCAllocBytes in Bytes
+Min:		380,00 b
+Median:		614,00 b
+Max:		4774,00 b
+Avg:		662,57 b
+StdDev:		358,42 b
+SampleCount:	180
+Sum:		119262,00 b
+First samples:	▁▂▁▂▁▂▁▁▁▂▁▁▁▁▁▁▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▃▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▅▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+Histogram:	█▂▂▁▁▁▁▁▁▁
+
+
+##performancetestresult2:{"Name":"Studio.Tests.Performance.ConcertoPerformanceBenchmarks.Bench_02_Act2_SetorExterno","ClassName":"Studio.Tests.Performance.ConcertoPerformanceBenchmarks","MethodName":"Bench_02_Act2_SetorExterno","Version":"1","Categories":["Performance"],"SampleGroups":[{"Name":"FrameTimeMs","Unit":2,"IncreaseIsBetter":false,"Samples":[1.0038973996415735,1.0740008438006044,1.3231008779257537,1.2785997241735459,1.0736961849033833,0.8677012519910932,0.9063988109119237,1.0169997112825513,1.5835034428164364,1.3249999610707164,0.8679988677613437,0.8714002324268222,1.344097196124494,1.3223993591964245,1.3513038866221905,1.2443027226254345,0.9470946970395744,1.068105106242001,0.9736961219459772,1.0345025220885873,0.8866000571288168,0.8223993936553598,1.3394983252510429,2.8153981547802688,1.7592048970982433,1.6063988441601396,1.4161990256980062,1.0107001289725304,1.0475977323949338,1.545904204249382,2.1240999922156336,2.2416950669139625,1.5905045438557864,2.3929988965392114,1.9806972704827786,1.8633999861776829,1.797300181351602,1.9171981839463115,1.0975056793540717,1.0665957815945149,1.10320292878896,1.649100100621581,1.3986960984766484,1.9378047436475754,1.6761975130066276,2.133900299668312,1.467899652197957,1.301098382100463,1.6502054641023279,1.3213931815698743,1.0221017291769386,0.89520268375054,0.930498878005892,0.7962018135003746,1.2308956356719137,1.44680414814502,1.0035005398094655,0.7358985021710396,0.8083971333689988,0.7919997442513704,0.8904053247533739,0.8805980905890465,0.8883007103577256,0.7343962788581848,0.7163052796386182,1.3630952453240753,1.7346017993986607,1.6279974952340127,1.1451034806668759,0.7455002632923424,0.8182965102605522,1.133205834776163,1.538095180876553,2.2231009788811209,1.300701522268355,1.4116992242634297,1.350899925455451,1.4123015571385623,1.287996070459485,1.0051020653918386,1.827799016609788,1.4580002753064037,1.2358985841274262,0.7552012684755027,3.1412981916218998,1.2155044823884965,1.4576956164091826,1.1409013532102109,1.1376984184607864,1.0573058389127255,1.0904974769800902,0.9507015347480774,0.9187004179693759,0.9515943820588291,1.0231009218841792,0.934105715714395,0.8298965403810144,1.0012967977672816,1.3589002192020417,1.902501448057592,1.3818027218803764,0.9784013964235783,0.8527990430593491,0.8523951401002705,0.8601048612035811,1.0450963163748384,1.0947987902909518,0.8292021229863167,0.7174035999923945,0.7136975764296949,0.7092970772646368,0.7033021538518369,0.979903619736433,1.365100615657866,1.3657950330525637,0.8471017354167998,0.7474985904991627,0.7442035130225122,1.1728954268619419,1.9262046553194523,1.102699781768024,0.8368976996280253,1.1038973461836577,1.181405852548778,0.9822987485677004,0.8090986520983279,0.7491992437280715,1.1723001953214408,1.3487032847478986,1.6287981998175383,1.951601472683251,1.2197988107800484,1.308801001869142,1.0768991196528078,1.1775013990700246,1.2760983081534505,0.834899372421205,0.8194019319489598,0.7690972415730357,0.943997991271317,1.188803813420236,1.2861961731687189,1.7259991727769375,2.812804654240608,1.8834962975233794,1.5302012907341123,2.247399417683482,1.7463010735809804,1.6866992227733136,14.901700429618359,1.5123016200959683,2.4170989636331798,4.498299211263657,1.9397038267925382,1.5256943879649044,1.6603033291175962,1.8156958976760507,1.803202903829515,2.523901639506221,1.472101779654622,1.1328939581289888,1.8127055373042822,2.329294104129076,1.5802012057974935,1.895698718726635,1.6543013043701649,1.538399956189096,1.5242984518408776,1.5930059598758817,1.3807964278385044,1.7987032188102604,1.5777990920469165,1.6849986277520657,1.2544997734948993,1.141999731771648,0.7606009021401405,0.8075963705778122,0.9145053918473423,1.4580002753064037,1.0901998030021787],"Min":0.7033021538518369,"Max":14.901700429618359,"Median":1.2401006533764303,"Average":1.4054766629770812,"StandardDeviation":1.1340954043231147,"Sum":252.98579933587463},{"Name":"GCAllocBytes","Unit":4,"IncreaseIsBetter":false,"Samples":[380.0,806.0,614.0,774.0,614.0,806.0,614.0,614.0,614.0,934.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,1190.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,1702.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,2726.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,682.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,666.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,4774.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,670.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0,614.0],"Min":380.0,"Max":4774.0,"Median":614.0,"Average":662.5666666666667,"StandardDeviation":358.422796584022,"Sum":119262.0}]}
+[Playcaller] Connection failed: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente.
+
+]]></output>
+              </test-case>
+              <test-case id="1005" name="Bench_03_Act3_Epicentro" fullname="Studio.Tests.Performance.ConcertoPerformanceBenchmarks.Bench_03_Act3_Epicentro" methodname="Bench_03_Act3_Epicentro" classname="Studio.Tests.Performance.ConcertoPerformanceBenchmarks" runstate="Runnable" seed="702452375" result="Passed" start-time="2026-11-24 14:19:45Z" end-time="2026-11-24 14:19:46Z" duration="1.072732" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Category" value="Performance" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[SaveSystem] Jogo salvo em C:/Users/Bruno/AppData/LocalLow/StudioAI/NeonDistrictServer\concerto_save.json (cp=cp_runtime_update, obj='Fale com Juno', cells=3, anomActive=False, resolved=3)
+[Epicenter] Checkpoint da Secao 1 ativado em (0.00, 0.25, 0.00).
+[PerfBench] Act3_Epicentro (Epicentro): avg=1,19ms (839,0fps), p99=2,17ms, max=2,37ms, hitches/min=0,0, gc=647B/frame (max 4766B), draws=0
+FrameTimeMs in Milliseconds
+Min:		0,67 ms
+Median:		1,15 ms
+Max:		2,37 ms
+Avg:		1,19 ms
+StdDev:		0,33 ms
+SampleCount:	180
+Sum:		214,54 ms
+First samples:	▃▅▅▄▂▅▅▄▄▄▅▄▄▂▃▄▃▄▃▅▄▂▂▃▆▆▂▃▃▆▄▃▄▅▅▃▂▄▃▂▄▂▂▆▅▂▃▄▅▄▃▂▃▅▃▁▂▆▄▃▃▄▇▄▃▂▃▄▂▃▃▂▂▃▃▃▂▃▃▄▃▂▂▂▃▄▂▃▄▄▃▁▂▇▅▃▂▃▃▃
+Histogram:	█▃▂▂▁▁▁▁▁▁
+
+GCAllocBytes in Bytes
+Min:		380,00 b
+Median:		606,00 b
+Max:		4766,00 b
+Avg:		646,76 b
+StdDev:		359,56 b
+SampleCount:	180
+Sum:		116416,00 b
+First samples:	▁▂▁▁▁▂▁▁▁▂▁▁▁▁▁▁▁▂▁▁▁▂▁▁▁▁▁▁▁▁▁▁▁▃▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▅▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+Histogram:	█▂▂▂▁▁▁▁▁▁
+
+
+##performancetestresult2:{"Name":"Studio.Tests.Performance.ConcertoPerformanceBenchmarks.Bench_03_Act3_Epicentro","ClassName":"Studio.Tests.Performance.ConcertoPerformanceBenchmarks","MethodName":"Bench_03_Act3_Epicentro","Version":"1","Categories":["Performance"],"SampleGroups":[{"Name":"FrameTimeMs","Unit":2,"IncreaseIsBetter":false,"Samples":[1.0597009677439929,1.5686012338846923,1.5729946317151189,1.3346017803996802,0.986203202046454,1.6749999485909939,1.549100037664175,1.2988945236429573,1.4507015002891422,1.3167021097615362,1.7175028333440424,1.471400260925293,1.4298965688794852,0.9444019524380565,1.167998882010579,1.434700912795961,1.163399894721806,1.3700963463634253,1.2750000460073352,1.5967049403116108,1.4190971851348878,1.028698985464871,0.8834042237140238,1.1132936924695969,1.7766014207154513,1.8394982907921076,0.8182043675333262,1.0424957145005465,1.24109978787601,1.8769061425700784,1.3681972632184625,1.1455003404989839,1.3089001877233387,1.6788974171504379,1.5940051525831223,1.0974985780194402,1.0317956330254675,1.4549036277458072,1.177997444756329,0.9331987239420414,1.3316043186932803,0.8676020661368966,0.9853953961282969,1.8151006661355496,1.6160005470737816,0.9471017401665449,1.1579011334106327,1.4685940695926548,1.5936011914163829,1.414002268575132,1.0730016510933638,0.9104945929720998,1.1773030273616315,1.5857992693781853,1.2151006376370788,0.750198436435312,0.9217049228027463,1.768898800946772,1.3001983752474189,1.1470025638118387,1.0904974769800902,1.358602661639452,2.0460954401642086,1.4732993440702558,1.2343041598796845,0.8320011547766626,1.0904974769800902,1.351296785287559,0.9543013293296099,1.1081986594945193,1.2077026767656208,1.0226969607174397,0.9258007630705833,1.1643990874290467,1.2332057813182474,1.1854945914819837,0.975899922195822,1.0472009889781476,1.1196003761142493,1.3397037982940674,1.1806972324848176,0.8907029405236244,0.8683956693857908,0.8684027707204223,1.2672973098233343,1.287400838918984,0.8943027351051569,1.177799073047936,1.513300696387887,1.51089858263731,1.0737032862380148,0.7486961549147964,0.8269983227364719,2.168402774259448,1.6286990139633418,1.0838010348379613,1.0124008404091,1.0624007554724813,1.089597470127046,1.1508007301017643,1.1935019865632058,0.9455002727918327,0.9345946600660682,1.219805795699358,1.365497475489974,1.2814980000257493,0.8530045161023736,0.7507936679758132,1.10620039049536,1.1480017565190793,1.4050027821213008,0.8012967882677913,0.7943027303554118,0.7633999339304864,1.0437003802508116,1.3893990544602276,1.4628968201577664,1.3390022795647383,0.9553996496833861,1.0130031732842327,1.361295348033309,1.2059027794748545,1.1003968538716436,0.8011054596863687,0.8935941150411964,0.9217049228027463,0.9104945929720998,0.9100056486204267,0.8187995990738273,0.9000992286019027,0.8315971936099231,2.3730017710477115,2.019898034632206,1.2616000603884459,0.7409013342112303,0.7041029166430235,1.0029973927885295,1.1579011334106327,1.2564980424940587,0.9474985999986529,0.7024022052064538,0.6854024832136929,1.0937995975837112,1.4385983813554049,1.620301860384643,1.3463010545819998,1.4390944270417095,1.0345025220885873,1.1291028931736947,0.7955002947710455,0.8312995778396726,0.8303004433400929,0.7871952839195728,1.149900839664042,1.0764030739665032,1.2178996112197638,0.9535005665384233,0.7529974682256579,0.6740008248016238,0.8467970765195787,1.2754038907587529,1.3190972385928035,0.7880030898377299,0.6986961234360933,1.5158021124079824,1.6418013256043196,2.1411990746855737,1.0662982240319253,1.1642007157206536,1.287400838918984,1.5956986462697387,1.0453019058331848,0.7598993834108114,0.6899022264406085,1.1798965279012919,2.091099740937352,1.0831987019628287,1.1498015373945237,1.138803898356855,1.2932964600622655],"Min":0.6740008248016238,"Max":2.3730017710477115,"Median":1.150350784882903,"Average":1.1918955521347623,"StandardDeviation":0.32592667281333606,"Sum":214.5411993842572},{"Name":"GCAllocBytes","Unit":4,"IncreaseIsBetter":false,"Samples":[380.0,718.0,526.0,526.0,526.0,718.0,526.0,526.0,526.0,846.0,526.0,526.0,526.0,526.0,526.0,526.0,526.0,1102.0,526.0,526.0,526.0,966.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,1694.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,2718.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,660.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,658.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,4766.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,662.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0,606.0],"Min":380.0,"Max":4766.0,"Median":606.0,"Average":646.7555555555556,"StandardDeviation":359.5633250087635,"Sum":116416.0}]}
+Saving results to: C:/Users/Bruno/AppData/LocalLow/StudioAI/NeonDistrictServer\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
