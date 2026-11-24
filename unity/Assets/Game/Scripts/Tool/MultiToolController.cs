@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Studio.Game.Combat;
 using Studio.Game.Cutscenes;
 using Studio.Game.Dialogue;
 using Studio.Game.Menu;
@@ -123,6 +124,7 @@ namespace Studio.Game.Tool
             if (_cs03 != null && _cs03.IsPlaying) return false;
             if (DialogueController.Instance != null && DialogueController.Instance.IsDialogueActive) return false;
             if (RepairRitualController.Instance != null && (RepairRitualController.Instance.IsRepairing || RepairRitualController.Instance.IsPlayingFinalBeat)) return false;
+            if (PlayerHealthController.Instance != null && PlayerHealthController.Instance.IsKnockedDown) return false;
             return true;
         }
 

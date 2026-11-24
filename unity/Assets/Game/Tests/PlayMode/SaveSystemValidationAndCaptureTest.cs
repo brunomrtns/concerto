@@ -93,7 +93,7 @@ namespace Studio.Tests.PlayMode
             saveSysType.GetMethod("Save").Invoke(null, new object[] { "cp_ato2_meio", (Vector3?)savedSpot, (float?)120f });
             Assert.IsTrue(File.Exists(testSavePath), "Arquivo JSON de save nao foi gravado em persistentDataPath!");
             string rawJson = File.ReadAllText(testSavePath);
-            Assert.IsTrue(rawJson.Contains("\"schemaVersion\": 1"), "Schema versionado ausente no JSON!");
+            Assert.IsTrue(rawJson.Contains("\"schemaVersion\": 2"), "Schema versionado v2 ausente no JSON!");
 
             if (_capture) CreateBanner("1 / 4 — MEIO DO ATO 2 SALVO EM JSON (2/5 ANOMALIAS • 2 CÉLULAS)");
             yield return StepFrames(_capture ? 45 : 4, "01_act2_midprogress_saved_icon.png", _capture ? 12 : 1);

@@ -10,17 +10,22 @@
   - `SaveSystem.Delete()` — apaga o save (usado em **Novo Jogo**).
   - `SaveSystem.RespawnPlayerAtLastCheckpoint()` — devolve o Dez ao último checkpoint em caso de knockdown de combate, preservando todo o estado do mundo.
 
-## 2. Inventário Completo do Schema (`schemaVersion = 1`)
+## 2. Inventário Completo do Schema (`schemaVersion = 2`)
 
 | Grupo | Campos Salvos |
 |---|---|
-| **Metadados** | `schemaVersion` (`1`), `savedAtUtc` |
+| **Metadados** | `schemaVersion` (`2`), `savedAtUtc` |
 | **Cena & Jogador** | `sceneName`, `playerPosition (x,y,z)`, `playerYaw` |
 | **Checkpoint / Knockdown** | `currentCheckpointId`, `checkpointPosition (x,y,z)`, `checkpointYaw` |
 | **Objetivo & Ato 1** | `currentObjective`, `partsCollectedMask`, `canCollectParts`, `act1Completed` |
-| **Cutscenes** | `cs01Played`, `cs02Played`, `cs03Played` |
+| **Cutscenes** | `cs01Played`, `cs02Played`, `cs03Played`, `cs04Played` |
 | **Ato 2 (Anomalias & Reparo)** | `act2AnomaliesActive`, `resolvedAnomalyIds[]`, `act2Completed` |
-| **Ferramenta & Poderes** | `energyCells`, `energyBar`, `activeToolModeId`, `unlockedPowerIds[]` |
+| **Ferramenta & Poderes** | `energyCells`, `energyBar`, `activeToolModeId`, `powersUnlocked`, `unlockedPowerIds[]` |
+
+### Migração Automática `v1 → v2` (FIX 3 — Progressão Fora de `PlayerPrefs`)
+- A partir da `schemaVersion = 2`, o desbloqueio de poderes (`powersUnlocked`), o estado de CS03 (`cs03Played`) e a posição de checkpoint de combate (`checkpointPosition`) vivem **exclusivamente** no JSON versionado (`SaveSystem`).
+- Ao carregar um save `v1`, `SaveGameData.MigrateIfNeeded()` + `SaveSystem.TryLoad()` migram automaticamente eventuais chaves legadas `CONCERTO_POWERS_UNLOCKED` e `CONCERTO_CS03_PLAYED` de `PlayerPrefs` para o JSON `v2`, apagam essas chaves de `PlayerPrefs` e regravam o arquivo atomicamente.
+- `DezPowersController` nunca mais grava chaves de progressão em `PlayerPrefs`.
 
 ## 3. Como Adicionar um Campo Novo Sem Quebrar Saves Antigos
 1. Adicione o novo campo serializável em `SaveGameData.cs` com um **valor default seguro** (ex: `public int playerMaxHp = 4;`).

@@ -6,7 +6,9 @@ using Studio.Game.Cutscenes;
 using Studio.Game.Dialogue;
 using Studio.Game.Menu;
 using Studio.Game.Powers;
+using Studio.Game.Save;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Studio.Game.Combat
@@ -72,6 +74,7 @@ namespace Studio.Game.Combat
                 return;
             }
             Instance = this;
+            PlayerRegistry.Register(gameObject);
             _loco = GetComponent<DezLocomotionController>();
             _cc = GetComponent<CharacterController>();
 
@@ -84,12 +87,62 @@ namespace Studio.Game.Combat
             RefreshHealthHud();
         }
 
+        private Cutscene03ReturnController _cs03;
+
+        private void Start()
+        {
+            // FIX 2: integra checkpoints canonicos reais via SaveSystem (reuso obrigatorio, zero sistema paralelo)
+            string sceneName = SceneManager.GetActiveScene().name;
+            var saved = SaveSystem.CachedState ?? SaveSystem.Load();
+            if (saved != null && saved.sceneName == sceneName)
+            {
+                respawnPosition = saved.checkpointPosition.ToVector3();
+            }
+            else if (!SaveSystem.IsPendingContinueLoad && sceneName == "Caldeiral")
+            {
+                SetCheckpointWithId("cp_oficina_inicio", transform.position);
+            }
+            else if (!SaveSystem.IsPendingContinueLoad && sceneName == "SetorExterno")
+            {
+                SetCheckpointWithId("cp_setor_externo_entrada", transform.position);
+            }
+
+            _cs03 = FindAnyObjectByType<Cutscene03ReturnController>();
+            if (_cs03 != null) _cs03.OnCutscene03Ended += HandleCs03Checkpoint;
+            SaveSystem.OnGameLoaded += HandleSaveLoaded;
+        }
+
         private void OnDestroy()
         {
             if (Instance == this) Instance = null;
+            PlayerRegistry.Unregister(gameObject);
+            if (_cs03 != null) _cs03.OnCutscene03Ended -= HandleCs03Checkpoint;
+            SaveSystem.OnGameLoaded -= HandleSaveLoaded;
+        }
+
+        private void HandleCs03Checkpoint()
+        {
+            SetCheckpointWithId("cp_oficina_pos_cs03", transform.position);
+        }
+
+        private void HandleSaveLoaded(SaveGameData data)
+        {
+            if (data != null)
+                respawnPosition = data.checkpointPosition.ToVector3();
         }
 
         public void SetCheckpoint(Vector3 worldPos)
+        {
+            SetCheckpointWithId("cp_runtime_update", worldPos);
+        }
+
+        public void SetCheckpointWithId(string checkpointId, Vector3 worldPos)
+        {
+            respawnPosition = worldPos;
+            SaveSystem.Save(checkpointId, worldPos, transform.eulerAngles.y);
+        }
+
+        public void SetCheckpointFromSaveOnly(Vector3 worldPos)
         {
             respawnPosition = worldPos;
         }

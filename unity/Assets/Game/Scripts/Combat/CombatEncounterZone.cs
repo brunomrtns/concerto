@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Studio.Game.Animation;
 using Studio.Game.Repair;
 using UnityEngine;
 
@@ -56,7 +57,7 @@ namespace Studio.Game.Combat
 
         private void Start()
         {
-            var dez = GameObject.Find("Player_Dez_Placeholder");
+            var dez = PlayerRegistry.Resolve();
             if (dez != null) _player = dez.transform;
         }
 

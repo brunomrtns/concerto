@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Studio.Game.Animation;
 using Studio.Game.Audio;
 using Studio.Game.Collision;
 using Studio.Game.Cutscenes;
@@ -67,6 +68,16 @@ namespace Studio.Game.Combat
         protected Color[] OriginalColors;
 
         private float _hitFlashTimer;
+        private CharacterController _enemyCc;
+        private MaterialPropertyBlock _tintMpb;
+        private static Material _cachedDissolveParticleMat;
+        private static Material _cachedCellPickupMat;
+        private static readonly int BaseColorPropId = Shader.PropertyToID("_BaseColor");
+        private static readonly int ColorPropId     = Shader.PropertyToID("_Color");
+
+        /// <summary>Flag QA exclusiva para gravacao ANTES (magenta) vs DEPOIS (ciano URP) do FIX 1.</summary>
+        public static bool SimulateLegacyMagentaParticleBug { get; set; }
+
         private CutsceneManager _cs01;
         private Cutscene02TravelController _cs02;
         private Cutscene03ReturnController _cs03;
@@ -79,6 +90,8 @@ namespace Studio.Game.Combat
             gameObject.layer = CollisionMatrixBootstrap.LayerEnemy;
             SpawnOrigin = transform.position;
             CurrentHp = MaxHp;
+            _enemyCc = GetComponent<CharacterController>();
+            _tintMpb = new MaterialPropertyBlock();
 
             EnemyAudio = GetComponent<AudioSource>();
             if (EnemyAudio == null) EnemyAudio = gameObject.AddComponent<AudioSource>();
@@ -113,7 +126,7 @@ namespace Studio.Game.Combat
 
         protected virtual void Start()
         {
-            var dez = GameObject.Find("Player_Dez_Placeholder");
+            var dez = PlayerRegistry.Resolve();
             if (dez != null) PlayerTarget = dez.transform;
             _cs01 = FindAnyObjectByType<CutsceneManager>();
             _cs02 = FindAnyObjectByType<Cutscene02TravelController>();
@@ -127,10 +140,11 @@ namespace Studio.Game.Combat
             OriginalColors = new Color[VisualRenderers.Length];
             for (int i = 0; i < VisualRenderers.Length; i++)
             {
-                if (VisualRenderers[i] != null && VisualRenderers[i].material != null)
+                // FIX 9: usa sharedMaterial (ZERO instanciacao de material) + MaterialPropertyBlock para tint
+                if (VisualRenderers[i] != null && VisualRenderers[i].sharedMaterial != null)
                 {
-                    var m = VisualRenderers[i].material;
-                    OriginalColors[i] = m.HasProperty("_BaseColor") ? m.GetColor("_BaseColor") : m.color;
+                    var m = VisualRenderers[i].sharedMaterial;
+                    OriginalColors[i] = m.HasProperty(BaseColorPropId) ? m.GetColor(BaseColorPropId) : (m.HasProperty(ColorPropId) ? m.GetColor(ColorPropId) : Color.white);
                 }
             }
         }
@@ -155,11 +169,22 @@ namespace Studio.Game.Combat
             _hitFlashTimer = Cfg.hitFlashDurationSec;
             SetVisualTint(Color.white);
 
-            // Knockback leve
+            // FIX 8: Knockback seguro contra paredes (raycast curto em LayerEnvironment|LayerDefault + _enemyCc.Move se disponivel)
             Vector3 kb = hit.KnockbackDir;
             kb.y = 0f;
             if (kb.sqrMagnitude > 0.001f)
-                transform.position += kb.normalized * (hit.IsHeavy ? 0.55f : 0.25f);
+            {
+                Vector3 dir = kb.normalized;
+                float dist = hit.IsHeavy ? 0.55f : 0.25f;
+                int wallMask = (1 << CollisionMatrixBootstrap.LayerEnvironment) | (1 << CollisionMatrixBootstrap.LayerDefault);
+                Vector3 probeOrigin = transform.position + Vector3.up * 0.75f;
+                if (!Physics.Raycast(probeOrigin, dir, dist + 0.45f, wallMask, QueryTriggerInteraction.Ignore))
+                {
+                    Vector3 push = dir * dist;
+                    if (_enemyCc != null && _enemyCc.enabled) _enemyCc.Move(push);
+                    else transform.position += push;
+                }
+            }
 
             if (CurrentHp <= 0f)
             {
@@ -176,24 +201,25 @@ namespace Studio.Game.Combat
         protected void SetVisualTint(Color c)
         {
             if (VisualRenderers == null) return;
+            if (_tintMpb == null) _tintMpb = new MaterialPropertyBlock();
             for (int i = 0; i < VisualRenderers.Length; i++)
             {
-                if (VisualRenderers[i] == null) continue;
-                var m = VisualRenderers[i].material;
-                if (m.HasProperty("_BaseColor")) m.SetColor("_BaseColor", c);
-                else m.color = c;
+                var r = VisualRenderers[i];
+                if (r == null) continue;
+                r.GetPropertyBlock(_tintMpb);
+                _tintMpb.SetColor(BaseColorPropId, c);
+                _tintMpb.SetColor(ColorPropId, c);
+                r.SetPropertyBlock(_tintMpb);
             }
         }
 
         protected void RestoreVisualTint()
         {
-            if (VisualRenderers == null || OriginalColors == null) return;
+            if (VisualRenderers == null) return;
             for (int i = 0; i < VisualRenderers.Length; i++)
             {
-                if (VisualRenderers[i] == null) continue;
-                var m = VisualRenderers[i].material;
-                if (m.HasProperty("_BaseColor")) m.SetColor("_BaseColor", OriginalColors[i]);
-                else m.color = OriginalColors[i];
+                if (VisualRenderers[i] != null)
+                    VisualRenderers[i].SetPropertyBlock(null);
             }
         }
 
@@ -275,6 +301,30 @@ namespace Studio.Game.Combat
             var shape = ps.shape;
             shape.shapeType = ParticleSystemShapeType.Sphere;
             shape.radius = 0.45f;
+
+            // FIX 1 (P1): Material URP/Particles/Unlit cacheado estaticamente (ZERO magenta!)
+            var psr = pGo.GetComponent<ParticleSystemRenderer>();
+            if (psr != null && !SimulateLegacyMagentaParticleBug)
+            {
+                if (_cachedDissolveParticleMat == null)
+                {
+                    Shader sh = Shader.Find("Universal Render Pipeline/Particles/Unlit")
+                             ?? Shader.Find("Particles/Standard Unlit")
+                             ?? Shader.Find("Universal Render Pipeline/Unlit");
+                    if (sh != null)
+                    {
+                        _cachedDissolveParticleMat = new Material(sh);
+                        _cachedDissolveParticleMat.name = "Mat_GlitchDissolve_URP_Cached";
+                        if (_cachedDissolveParticleMat.HasProperty(BaseColorPropId))
+                            _cachedDissolveParticleMat.SetColor(BaseColorPropId, new Color(0.25f, 0.92f, 1f, 1f));
+                        if (_cachedDissolveParticleMat.HasProperty(ColorPropId))
+                            _cachedDissolveParticleMat.SetColor(ColorPropId, new Color(0.25f, 0.92f, 1f, 1f));
+                    }
+                }
+                if (_cachedDissolveParticleMat != null)
+                    psr.sharedMaterial = _cachedDissolveParticleMat;
+            }
+
             ps.Play();
             Destroy(pGo, 1.2f);
         }
@@ -292,15 +342,25 @@ namespace Studio.Game.Combat
             var rend = cellGo.GetComponent<Renderer>();
             if (rend != null)
             {
-                var sh = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
-                var mat = new Material(sh);
-                if (mat.HasProperty("_BaseColor")) mat.SetColor("_BaseColor", new Color(0.20f, 0.95f, 1f, 1f));
-                if (mat.HasProperty("_EmissionColor"))
+                // FIX 1: material URP/Lit cacheado estaticamente (zero shader quebrado, zero leak)
+                if (_cachedCellPickupMat == null)
                 {
-                    mat.EnableKeyword("_EMISSION");
-                    mat.SetColor("_EmissionColor", new Color(0.25f, 0.95f, 1f) * 2.0f);
+                    var sh = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Universal Render Pipeline/Unlit");
+                    if (sh != null)
+                    {
+                        _cachedCellPickupMat = new Material(sh);
+                        _cachedCellPickupMat.name = "Mat_DroppedEnergyCell_URP_Cached";
+                        if (_cachedCellPickupMat.HasProperty(BaseColorPropId))
+                            _cachedCellPickupMat.SetColor(BaseColorPropId, new Color(0.20f, 0.95f, 1f, 1f));
+                        if (_cachedCellPickupMat.HasProperty("_EmissionColor"))
+                        {
+                            _cachedCellPickupMat.EnableKeyword("_EMISSION");
+                            _cachedCellPickupMat.SetColor("_EmissionColor", new Color(0.25f, 0.95f, 1f) * 2.0f);
+                        }
+                    }
                 }
-                rend.sharedMaterial = mat;
+                if (_cachedCellPickupMat != null)
+                    rend.sharedMaterial = _cachedCellPickupMat;
             }
             var pickup = cellGo.AddComponent<EnergyCellPickup>();
             pickup.cellAmount = 1;

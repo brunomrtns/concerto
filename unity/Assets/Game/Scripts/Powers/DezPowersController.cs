@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using Studio.Game.Animation;
 using Studio.Game.Audio;
+using Studio.Game.Combat;
 using Studio.Game.Cutscenes;
 using Studio.Game.Dialogue;
 using Studio.Game.Menu;
 using Studio.Game.Repair;
+using Studio.Game.Save;
 using Studio.Game.Tool;
 using UnityEngine;
 using UnityEngine.UI;
@@ -131,11 +133,31 @@ namespace Studio.Game.Powers
             if (_cs03 != null)
                 _cs03.OnCutscene03Ended += HandleCutscene03Ended;
 
-            // Desbloqueia automaticamente se a Cutscene 3 ja ocorreu (flag pos-CS03)
-            bool cs03Played = PlayerPrefs.GetInt(Cutscene03ReturnController.PlayedPrefKey, 0) == 1
-                           || PlayerPrefs.GetInt(UnlockedPrefKey, 0) == 1;
-            if (cs03Played)
-                UnlockPowers(showHint: false);
+            // FIX 3: Progressao vive EXCLUSIVAMENTE no SaveSystem JSON versionado (com migracao automatica de PlayerPrefs legados!)
+            var saved = SaveSystem.CachedState ?? SaveSystem.Load();
+            bool unlockedFromSave = saved != null && (saved.powersUnlocked || saved.cs03Played || (saved.unlockedPowerIds != null && saved.unlockedPowerIds.Count > 0));
+            bool legacyPrefs = PlayerPrefs.GetInt(Cutscene03ReturnController.PlayedPrefKey, 0) == 1
+                            || PlayerPrefs.GetInt(UnlockedPrefKey, 0) == 1;
+
+            if (unlockedFromSave)
+            {
+                _isUnlocked = true;
+            }
+            else if (legacyPrefs)
+            {
+                // Migracao unica: importa do PlayerPrefs legado para o SaveSystem JSON v2 e remove do PlayerPrefs
+                _isUnlocked = true;
+                PlayerPrefs.DeleteKey(UnlockedPrefKey);
+                PlayerPrefs.DeleteKey(Cutscene03ReturnController.PlayedPrefKey);
+                PlayerPrefs.Save();
+                if (!SaveSystem.IsPendingContinueLoad)
+                    SaveSystem.Save();
+            }
+        }
+
+        public void RestoreFromSave(bool unlocked)
+        {
+            _isUnlocked = unlocked;
         }
 
         private void OnDestroy()
@@ -156,8 +178,14 @@ namespace Studio.Game.Powers
         {
             bool wasUnlocked = _isUnlocked;
             _isUnlocked = true;
-            PlayerPrefs.SetInt(UnlockedPrefKey, 1);
-            PlayerPrefs.Save();
+
+            // FIX 3: persiste no SaveSystem JSON versionado (NUNCA em PlayerPrefs!)
+            if (PlayerPrefs.HasKey(UnlockedPrefKey))
+            {
+                PlayerPrefs.DeleteKey(UnlockedPrefKey);
+                PlayerPrefs.Save();
+            }
+            SaveSystem.Save();
 
             if (showHint && !wasUnlocked)
             {
@@ -178,6 +206,7 @@ namespace Studio.Game.Powers
             if (_cs04 != null && _cs04.IsPlaying) return false;
             if (DialogueController.Instance != null && DialogueController.Instance.IsDialogueActive) return false;
             if (RepairRitualController.Instance != null && (RepairRitualController.Instance.IsRepairing || RepairRitualController.Instance.IsPlayingFinalBeat)) return false;
+            if (PlayerHealthController.Instance != null && PlayerHealthController.Instance.IsKnockedDown) return false;
             return true;
         }
 

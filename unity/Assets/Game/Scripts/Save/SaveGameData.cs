@@ -25,7 +25,7 @@ namespace Studio.Game.Save
     [Serializable]
     public sealed class SaveGameData
     {
-        public const int CurrentSchemaVersion = 1;
+        public const int CurrentSchemaVersion = 2;
 
         [Header("Metadados")]
         public int schemaVersion = CurrentSchemaVersion;
@@ -65,6 +65,7 @@ namespace Studio.Game.Save
         public int energyCells = 3;
         public float energyBar = 100f;
         public string activeToolModeId = "mode_concertar";
+        public bool powersUnlocked;
         public List<string> unlockedPowerIds = new List<string>();
 
         public bool MigrateIfNeeded()
@@ -77,7 +78,17 @@ namespace Studio.Game.Save
             if (unlockedPowerIds == null) unlockedPowerIds = new List<string>();
             if (string.IsNullOrEmpty(activeToolModeId)) activeToolModeId = "mode_concertar";
 
-            // Futuras migracoes (ex: v1 -> v2) entram aqui sem quebrar saves antigos!
+            // Migracao v1 -> v2 (FIX 3): traz flags legados de PlayerPrefs para o JSON versionado
+            if (schemaVersion < 2)
+            {
+                if (!powersUnlocked && unlockedPowerIds.Count > 0)
+                    powersUnlocked = true;
+                if (!powersUnlocked && PlayerPrefs.GetInt("CONCERTO_POWERS_UNLOCKED", 0) == 1)
+                    powersUnlocked = true;
+                if (!cs03Played && PlayerPrefs.GetInt("CONCERTO_CS03_PLAYED", 0) == 1)
+                    cs03Played = true;
+            }
+
             schemaVersion = CurrentSchemaVersion;
             return true;
         }

@@ -39,8 +39,6 @@ namespace Studio.Tests.PlayMode
         public IEnumerator ValidateManifestacoesCombatLoopKnockdownRespawnAndCapture()
         {
             PlayerPrefs.SetInt("CONCERTO_CS01_PLAYED", 1);
-            PlayerPrefs.SetInt("CONCERTO_CS03_PLAYED", 1);
-            PlayerPrefs.SetInt("CONCERTO_POWERS_UNLOCKED", 1);
             PlayerPrefs.Save();
 
             yield return SceneManager.LoadSceneAsync("Caldeiral", LoadSceneMode.Single);
@@ -51,18 +49,19 @@ namespace Studio.Tests.PlayMode
             var locoT   = GameType("Studio.Game.Animation.DezLocomotionController");
             var powersT = GameType("Studio.Game.Powers.DezPowersController");
             var toolT   = GameType("Studio.Game.Tool.MultiToolController");
-            var hitT    = GameType("Studio.Game.Tool.ToolHitInfo");
+            var combatModT = GameType("Studio.Game.Tool.CombatToolModule");
             var hpT     = GameType("Studio.Game.Combat.PlayerHealthController");
             var zoneT   = GameType("Studio.Game.Combat.CombatEncounterZone");
             var enemyT  = GameType("Studio.Game.Combat.ManifestationEnemyBase");
+            var regT    = GameType("Studio.Game.Animation.PlayerRegistry");
 
             var cs01 = UnityEngine.Object.FindAnyObjectByType(cs01T);
             if (cs01 != null && (bool)cs01T.GetProperty("IsPlaying").GetValue(cs01))
                 cs01T.GetMethod("SkipCutscene").Invoke(cs01, null);
             yield return null;
 
-            var dezGo = GameObject.Find("Player_Dez_Placeholder");
-            Assert.IsNotNull(dezGo, "Player_Dez_Placeholder obrigatorio.");
+            var dezGo = regT.GetProperty("CurrentGameObject").GetValue(null) as GameObject;
+            Assert.IsNotNull(dezGo, "PlayerRegistry.CurrentGameObject obrigatorio (FIX 4).");
             var loco   = dezGo.GetComponent(locoT);
             var powers = dezGo.GetComponent(powersT);
             var hp     = dezGo.GetComponent(hpT);
@@ -71,10 +70,14 @@ namespace Studio.Tests.PlayMode
 
             Assert.IsNotNull(powers, "DezPowersController obrigatorio (#93).");
             Assert.IsNotNull(hp, "PlayerHealthController obrigatorio (#94).");
+            Assert.IsNotNull(tool, "MultiToolController obrigatorio (FIX 5).");
             Assert.IsNotNull(zone, "CombatEncounterZone obrigatoria em Caldeiral (#94).");
 
             powersT.GetMethod("UnlockPowers").Invoke(powers, new object[] { false });
-            if (tool != null) toolT.GetMethod("EquipModuleIndex").Invoke(tool, new object[] { 1, false });
+            toolT.GetMethod("EquipModuleIndex").Invoke(tool, new object[] { 1, false });
+            var combatMod = toolT.GetProperty("ActiveModule").GetValue(tool);
+            Assert.IsNotNull(combatMod, "CombatToolModule deve estar equipado (FIX 5).");
+            Assert.IsTrue(combatModT.IsInstanceOfType(combatMod), "ActiveModule deve ser CombatToolModule (FIX 5).");
 
             // Posiciona Dez proximo a zona de combate
             var zoneComp = zone as Component;
@@ -139,39 +142,64 @@ namespace Studio.Tests.PlayMode
             for (int i = 0; i < 20; i++) { Cap(); yield return null; simT += dtStep; }
 
             var enemies = UnityEngine.Object.FindObjectsByType(enemyT, FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            var mHeavyStrike = combatModT.GetMethod("ExecuteHeavyStrike");
+            var mLightStep   = combatModT.GetMethod("ExecuteLightComboStep");
+            var pIsAlive     = enemyT.GetProperty("IsAlive");
             int kills = 0;
             for (int e = 0; e < enemies.Length; e++)
             {
                 var eComp = enemies[e] as Component;
-                if (eComp == null) continue;
-                // Aproxima do inimigo
+                if (eComp == null || !(bool)pIsAlive.GetValue(eComp)) continue;
+
+                // FIX 5: Posiciona o Dez em alcance melee real encarando o inimigo e dispara o swing REAL da MultiTool (OverlapSphere -> IDamageable.ApplyDamage)
                 Vector3 toE = (eComp.transform.position - dezGo.transform.position);
                 toE.y = 0f;
-                pMoveDir.SetValue(loco, toE.sqrMagnitude > 0.1f ? toE.normalized : Vector3.right);
-                for (int k = 0; k < 20; k++) { Cap(); yield return null; simT += dtStep; }
+                Vector3 approachDir = toE.sqrMagnitude > 0.05f ? toE.normalized : Vector3.right;
+                pMoveDir.SetValue(loco, approachDir);
+                for (int k = 0; k < 10; k++) { Cap(); yield return null; simT += dtStep; }
 
-                // Golpe carregado da ferramenta (45 dmg -> estilhaca Estilhaco e Flutuante!)
-                if (tool != null)
+                if (cc != null) cc.enabled = false;
+                Vector3 ePos = eComp.transform.position;
+                dezGo.transform.position = new Vector3(ePos.x - approachDir.x * 1.15f, dezGo.transform.position.y, ePos.z - approachDir.z * 1.15f);
+                dezGo.transform.rotation = Quaternion.LookRotation(approachDir, Vector3.up);
+                if (cc != null) cc.enabled = true;
+                Physics.SyncTransforms();
+
+                int swingAttempts = 0;
+                while (eComp != null && (bool)pIsAlive.GetValue(eComp) && swingAttempts < 6)
                 {
-                    toolT.GetMethod("PlayToolSwingFeedback").Invoke(tool, new object[] { true, 2 });
-                    toolT.GetMethod("TriggerHitImpactFeedback").Invoke(tool, new object[] { eComp.transform.position, true });
+                    swingAttempts++;
+                    // Aguarda cooldown real do golpe
+                    float cdWait = 0f;
+                    bool swung = false;
+                    while (!swung && cdWait < 1.2f)
+                    {
+                        swung = (bool)(swingAttempts == 1 ? mHeavyStrike.Invoke(combatMod, null) : mLightStep.Invoke(combatMod, null));
+                        if (!swung)
+                        {
+                            Cap();
+                            yield return null;
+                            cdWait += Time.unscaledDeltaTime;
+                            simT += dtStep;
+                        }
+                    }
+                    LogEv(simT, "tool_swing", "SFX/Tool/tool_melee_swing_TEMP.wav");
+                    LogEv(simT + 0.06f, "tool_hit", "SFX/Tool/tool_melee_hit_TEMP.wav");
+                    for (int k = 0; k < 6; k++) { Cap(); yield return null; simT += dtStep; }
                 }
-                LogEv(simT, "tool_swing", "SFX/Tool/tool_melee_swing_TEMP.wav");
-                LogEv(simT + 0.06f, "tool_hit", "SFX/Tool/tool_melee_hit_TEMP.wav");
 
-                var hitInfo = Activator.CreateInstance(hitT);
-                hitT.GetField("Damage").SetValue(hitInfo, 50f);
-                hitT.GetField("IsHeavy").SetValue(hitInfo, true);
-                hitT.GetField("KnockbackDir").SetValue(hitInfo, toE.normalized);
-                enemyT.GetMethod("ApplyDamage").Invoke(eComp, new object[] { hitInfo });
+                Assert.IsFalse(eComp != null && (bool)pIsAlive.GetValue(eComp), $"Inimigo {eComp?.name} deve morrer pelo swing real da ferramenta (FIX 5).");
                 LogEv(simT + 0.14f, "enemy_dissolve", "SFX/Combat/sfx_enemy_dissolve_reverse_TEMP.wav");
                 kills++;
 
-                for (int k = 0; k < 24; k++) { Cap(); yield return null; simT += dtStep; }
+                for (int k = 0; k < 18; k++) { Cap(); yield return null; simT += dtStep; }
             }
 
+            int realHeavyHits = (int)combatModT.GetProperty("TotalHeavyHitsLanded").GetValue(combatMod);
+            int realLightHits = (int)combatModT.GetProperty("TotalLightHitsLanded").GetValue(combatMod);
+            Assert.GreaterOrEqual(realHeavyHits + realLightHits, 3, "FIX 5: Hitbox real da CombatToolModule deve registrar >= 3 acertos reais em inimigos.");
             Assert.IsTrue((bool)zoneT.GetProperty("IsCleared").GetValue(zone), "Zona de combate deve ser concluida apos eliminar todos os inimigos.");
-            Assert.GreaterOrEqual(kills, 3, "Todos os 3 inimigos devem ser eliminados.");
+            Assert.GreaterOrEqual(kills, 3, "Todos os 3 inimigos devem ser eliminados pelo caminho real de swing.");
 
             // Fase 3: Prova de dano no Dez ate HP zerar (0/4), vignette vermelha, KNOCKDOWN e RESPAWN no checkpoint!
             pMoveDir.SetValue(loco, Vector3.zero);

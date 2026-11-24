@@ -110,7 +110,7 @@ namespace Studio.Game.Tool
 
         public bool ExecuteLightComboStep()
         {
-            if (Controller == null || Time.time < _meleeCooldownUntil) return false;
+            if (Controller == null || !Controller.CanUseCombatActionsNow() || Time.time < _meleeCooldownUntil) return false;
             var cfg = Controller.Cfg;
 
             if (Time.time > _comboExpireAt) _comboStep = 0;
@@ -132,7 +132,7 @@ namespace Studio.Game.Tool
 
         public bool ExecuteHeavyStrike()
         {
-            if (Controller == null || Time.time < _meleeCooldownUntil) return false;
+            if (Controller == null || !Controller.CanUseCombatActionsNow() || Time.time < _meleeCooldownUntil) return false;
             var cfg = Controller.Cfg;
             _comboStep = 0;
             _meleeCooldownUntil = Time.time + cfg.meleeCooldownSec * 1.45f;
@@ -146,7 +146,7 @@ namespace Studio.Game.Tool
 
         public bool TryFireEnergyBolt()
         {
-            if (Controller == null || Time.time < _boltCooldownUntil) return false;
+            if (Controller == null || !Controller.CanUseCombatActionsNow() || Time.time < _boltCooldownUntil) return false;
             var cfg = Controller.Cfg;
 
             if (!Controller.TryConsumeBoltCost())

@@ -18,7 +18,11 @@
   - **Bloqueio de regressão:** pausa IA e dano automaticamente em cutscenes (`CS01–CS04`), diálogos (`DialogueController`), pause e ritual de reparo (`RepairRitualController`).
 - **HP do Player & Knockdown (`PlayerHealthController.cs` — TEMP até passada de dificuldade):**
   - 4 segmentos de HP no HUD superior esquerdo, vignette vermelha de dano (`decay 260ms < 300ms`), i-frames pós-dano (`0.75s`) + respeito integral aos i-frames do Eco Temporal.
-  - **Knockdown ao zerar HP (0/4):** banner curto (`1.6s`) e respawn automático no checkpoint da oficina preservando anomalias e progresso, restaurando HP `4/4`.
+  - **Knockdown ao zerar HP (0/4):** banner curto (`1.6s`) e respawn automático no último checkpoint persistido via `SaveSystem` (`cp_oficina_inicio`, `cp_setor_externo_entrada`, `cp_oficina_pos_cs03` e `SetCheckpoint()`), preservando anomalias e progresso e restaurando HP `4/4`. Durante knockdown, Eco Temporal e ataques da ferramenta ficam bloqueados.
+- **Robustez Pós-Review (#93/#94):**
+  - **VFX & Materiais URP (FIX 1):** `GlitchDissolve_VFX` usa material estático `URP/Particles/Unlit` ciano (zero magenta), `EnergyCellPickup` usa `URP/Lit` emissivo ciano e projétil do Flutuante usa `URP/Unlit` cacheado.
+  - **PlayerRegistry (FIX 4):** referência ao Dez via `PlayerRegistry` (registrado em `DezLocomotionController` e `PlayerHealthController`), eliminando `GameObject.Find("Player_Dez_Placeholder")` nos sistemas de combate e save.
+  - **Combate Justo & Performance (FIX 7/8/9):** `FlutuanteEnemy.HasLineOfSightToPlayer()` impede disparos através de paredes (`LayerEnvironment|LayerDefault`); knockback de inimigos faz raycast contra parede antes de deslocar; flash de dano usa `MaterialPropertyBlock` (zero alocação de clone `.material`).
 - **Spawn Config-Driven (`CombatEncounterZone.cs`):**
   - Zona `CombatZone_Act2_Manifestacoes` posicionada na oficina (`Caldeiral.unity`), ativa após o beat final do Ato 2 (`RepairRitualController.Act2Completed`), wave única curta e tensa (`2 Estilhaços + 1 Flutuante`).
 
@@ -56,9 +60,13 @@
 ## 4. Como Testar & Evidências (Gates)
 
 - **Compilação:** `0 warnings CS`, `0 errors CS`.
-- **Teste PlayMode:** `ManifestacoesValidationAndCaptureTest.ValidateManifestacoesCombatLoopKnockdownRespawnAndCapture` — **PASSED (`12.00s`)**:
-  - `spawned=3, kills=3, ecoEvades=1, knockdowns=1, respawns=1, frames=359`.
-- **MP4 de Evidência:** `captures/manifestacoes/manifestacoes_combate_real_1080p.mp4` (`1920x1080 H.264 + AAC 44.1kHz stereo`).
+- **Testes PlayMode (Pós-Review #93/#94):**
+  - `ManifestacoesValidationAndCaptureTest.ValidateManifestacoesCombatLoopKnockdownRespawnAndCapture` — **PASSED (`10.14s`)** (abates reais via `CombatToolModule.ExecuteHeavyStrike()` / `OverlapSphere → IDamageable.ApplyDamage`, zero reflection em `ApplyDamage`).
+  - `DezPowersValidationAndCaptureTest.ValidateEcoTemporalEstasePlaygroundAndCapture` — **PASSED (`7.42s`)**.
+  - `ReviewFix9394ValidationAndCaptureTest.ValidateAllNinePostReviewFixesAndCaptureFix1BeforeAfter` — **PASSED (`6.00s`)** (valida todos os 9 fixes P1/P2 + captura ANTES/DEPOIS).
+- **MP4s de Evidência:**
+  - `captures/manifestacoes/manifestacoes_combate_real_1080p.mp4` (`1920x1080 H.264 + AAC 44.1kHz stereo`).
+  - `captures/review_fix_93_94/fix1_dissolve_antes_depois_1080p.mp4` (`1920x1080 H.264`, comparação ANTES magenta vs DEPOIS ciano URP no mesmo ângulo).
 
 ---
 

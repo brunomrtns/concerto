@@ -143,6 +143,7 @@ namespace Studio.Game.Animation
 
         private void Awake()
         {
+            PlayerRegistry.Register(gameObject);
             _cc = GetComponent<CharacterController>();
             if (_cc == null)
             {

@@ -1,9 +1,12 @@
 using System;
 using System.IO;
+using Studio.Game.Animation;
 using Studio.Game.Anomalies;
+using Studio.Game.Combat;
 using Studio.Game.Cutscenes;
 using Studio.Game.Dialogue;
 using Studio.Game.Parts;
+using Studio.Game.Powers;
 using Studio.Game.Repair;
 using Studio.Game.Tool;
 using UnityEngine;
@@ -67,8 +70,24 @@ namespace Studio.Game.Save
                     throw new FormatException("Arquivo de save vazio.");
 
                 var parsed = JsonUtility.FromJson<SaveGameData>(json);
+                int loadedVersion = parsed != null ? parsed.schemaVersion : -1;
                 if (parsed == null || !parsed.MigrateIfNeeded())
-                    throw new FormatException($"Schema invalido ou incompativel (version={(parsed != null ? parsed.schemaVersion : -1)}).");
+                    throw new FormatException($"Schema invalido ou incompativel (version={loadedVersion}).");
+
+                // FIX 3: se migrou de v1 -> v2 trazendo flags legados do PlayerPrefs, persiste v2 e limpa PlayerPrefs
+                bool hadLegacyPrefs = PlayerPrefs.HasKey("CONCERTO_POWERS_UNLOCKED") || PlayerPrefs.HasKey("CONCERTO_CS03_PLAYED");
+                if (loadedVersion < SaveGameData.CurrentSchemaVersion || hadLegacyPrefs)
+                {
+                    if (PlayerPrefs.GetInt("CONCERTO_POWERS_UNLOCKED", 0) == 1) parsed.powersUnlocked = true;
+                    if (PlayerPrefs.GetInt("CONCERTO_CS03_PLAYED", 0) == 1) parsed.cs03Played = true;
+                    if (hadLegacyPrefs)
+                    {
+                        PlayerPrefs.DeleteKey("CONCERTO_POWERS_UNLOCKED");
+                        PlayerPrefs.DeleteKey("CONCERTO_CS03_PLAYED");
+                        PlayerPrefs.Save();
+                    }
+                    WriteAtomic(path, parsed);
+                }
 
                 data = parsed;
                 _lastLoadedOrSaved = parsed;
@@ -99,20 +118,24 @@ namespace Studio.Game.Save
             else if (string.IsNullOrEmpty(data.sceneName))
                 data.sceneName = DefaultGameScene;
 
-            // 1. Posicao & rotacao do Dez
-            var dez = GameObject.Find("Player_Dez_Placeholder");
+            // 1. Posicao & rotacao do Dez (via PlayerRegistry — FIX 4)
+            var dez = PlayerRegistry.Resolve();
             if (dez != null)
             {
                 data.playerPosition = new SaveVec3(dez.transform.position);
                 data.playerYaw = dez.transform.eulerAngles.y;
             }
 
-            // 2. Checkpoint ativo (para respawn de knockdown!)
+            // 2. Checkpoint ativo (para respawn de knockdown — FIX 2)
             if (!string.IsNullOrEmpty(checkpointId))
             {
                 data.currentCheckpointId = checkpointId;
                 data.checkpointPosition = new SaveVec3(checkpointPos ?? (dez != null ? dez.transform.position : data.checkpointPosition.ToVector3()));
                 data.checkpointYaw = checkpointYaw ?? (dez != null ? dez.transform.eulerAngles.y : data.checkpointYaw);
+            }
+            else if (PlayerHealthController.Instance != null)
+            {
+                data.checkpointPosition = new SaveVec3(PlayerHealthController.Instance.respawnPosition);
             }
 
             // 3. Objetivo atual
@@ -156,13 +179,21 @@ namespace Studio.Game.Save
             if (RepairRitualController.Instance != null)
                 data.act2Completed = RepairRitualController.Instance.Act2Completed;
 
-            // 7. Ferramenta Multi-Uso (celulas, barra de energia, modo ativo)
+            // 7. Ferramenta Multi-Uso & Poderes Temporais (FIX 3: progressao no JSON versionado!)
             var tool = MultiToolController.Instance;
             if (tool != null)
             {
                 data.energyCells      = tool.EnergyCells;
                 data.energyBar        = tool.EnergyBar;
                 data.activeToolModeId = tool.ActiveModeId;
+            }
+            var powers = DezPowersController.Instance;
+            if (powers != null && powers.IsUnlocked)
+            {
+                data.powersUnlocked = true;
+                data.cs03Played = true;
+                if (!data.unlockedPowerIds.Contains("eco_temporal")) data.unlockedPowerIds.Add("eco_temporal");
+                if (!data.unlockedPowerIds.Contains("estase")) data.unlockedPowerIds.Add("estase");
             }
 
             WriteAtomic(SaveFilePath, data);
@@ -233,8 +264,8 @@ namespace Studio.Game.Save
         {
             if (data == null) return false;
 
-            // 1. Posicao & rotacao do Dez
-            var dez = GameObject.Find("Player_Dez_Placeholder");
+            // 1. Posicao & rotacao do Dez + Checkpoint de Respawn (FIX 2 & FIX 4)
+            var dez = PlayerRegistry.Resolve();
             if (dez != null)
             {
                 var cc = dez.GetComponent<CharacterController>();
@@ -244,6 +275,8 @@ namespace Studio.Game.Save
                 dez.transform.rotation = Quaternion.Euler(0f, data.playerYaw, 0f);
                 if (hadCc) cc.enabled = true;
             }
+            if (PlayerHealthController.Instance != null)
+                PlayerHealthController.Instance.SetCheckpointFromSaveOnly(data.checkpointPosition.ToVector3());
 
             // 2. Pecas do Ato 1
             if (PartsLoopManager.Instance != null)
@@ -271,9 +304,11 @@ namespace Studio.Game.Save
             if (RepairRitualController.Instance != null)
                 RepairRitualController.Instance.RefreshTargets();
 
-            // 4. Ferramenta Multi-Uso (celulas, energia, modo)
+            // 4. Ferramenta Multi-Uso & Poderes Temporais (FIX 3)
             if (MultiToolController.Instance != null)
                 MultiToolController.Instance.RestoreStateFromSave(data.energyCells, data.energyBar, data.activeToolModeId);
+            if (DezPowersController.Instance != null)
+                DezPowersController.Instance.RestoreFromSave(data.powersUnlocked || data.cs03Played || (data.unlockedPowerIds != null && data.unlockedPowerIds.Count > 0));
 
             // 5. Objetivo atual + Flags de Porta/CS04/Missao Sinal
             if (data.sectorDoorUnlocked)
@@ -303,7 +338,7 @@ namespace Studio.Game.Save
         public static bool RespawnPlayerAtLastCheckpoint()
         {
             var data = _lastLoadedOrSaved ?? Load();
-            var dez = GameObject.Find("Player_Dez_Placeholder");
+            var dez = PlayerRegistry.Resolve();
             if (dez == null) return false;
 
             Vector3 targetPos = data != null ? data.checkpointPosition.ToVector3() : new Vector3(-28.5f, 0.05f, -18.5f);
