@@ -433,6 +433,27 @@ namespace Studio.Game.Animation
             }
 
             Vector3 totalMove = (_horizVelocity + Vector3.up * _verticalVel) * dt;
+
+            // Anti-tunneling matematico no Dash / alta velocidade: CapsuleCast sweep antes de _cc.Move()
+            // Garante que dash a 13.5m/s nunca atravessa parede fina mesmo em hitch de 50ms (0.675m/frame)!
+            Vector3 horizStep = new Vector3(totalMove.x, 0f, totalMove.z);
+            float horizDist = horizStep.magnitude;
+            if (!SimulateLegacySnagMode && horizDist > _cc.radius * 0.55f)
+            {
+                Vector3 p1 = transform.position + _cc.center - Vector3.up * Mathf.Max(0.05f, (_cc.height * 0.5f) - _cc.radius);
+                Vector3 p2 = transform.position + _cc.center + Vector3.up * Mathf.Max(0.05f, (_cc.height * 0.5f) - _cc.radius);
+                if (Physics.CapsuleCast(p1, p2, _cc.radius * 0.92f, horizStep / horizDist, out RaycastHit sweepHit, horizDist + _cc.skinWidth, Studio.Game.Collision.CollisionMatrixBootstrap.SolidWorldMask, QueryTriggerInteraction.Ignore))
+                {
+                    if (sweepHit.transform.root != transform.root)
+                    {
+                        float allowed = Mathf.Max(0f, sweepHit.distance - _cc.skinWidth);
+                        Vector3 clampedHoriz = (horizStep / horizDist) * allowed;
+                        totalMove.x = clampedHoriz.x;
+                        totalMove.z = clampedHoriz.z;
+                    }
+                }
+            }
+
             _cc.Move(totalMove);
 
             // Recupera landing bob da camera + dispara passos por superficie

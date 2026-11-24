@@ -188,6 +188,7 @@ namespace Studio.Game.Tool
             _speed = speed;
             _damage = damage;
             _lifeLeft = lifetime;
+            gameObject.layer = Studio.Game.Collision.CollisionMatrixBootstrap.LayerProjectile;
         }
 
         private void Update()
@@ -197,10 +198,16 @@ namespace Studio.Game.Tool
             if (_lifeLeft <= 0f) { Destroy(gameObject); return; }
 
             float step = _speed * dt;
-            if (Physics.SphereCast(transform.position, 0.16f, _dir, out RaycastHit hit, step, ~0, QueryTriggerInteraction.Collide))
+            var hits = Physics.SphereCastAll(transform.position, 0.14f, _dir, step + 0.05f, Studio.Game.Collision.CollisionMatrixBootstrap.ProjectileHitMask, QueryTriggerInteraction.Collide);
+            if (hits != null && hits.Length > 0)
             {
-                if (_owner == null || hit.transform.root != _owner.PlayerTransform.root)
+                System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+                for (int i = 0; i < hits.Length; i++)
                 {
+                    var hit = hits[i];
+                    if (hit.collider == null) continue;
+                    if (_owner != null && hit.transform.root == _owner.PlayerTransform.root) continue;
+
                     var dmg = hit.transform.GetComponentInParent<IDamageable>();
                     if (dmg != null && dmg.IsAlive)
                     {
@@ -217,7 +224,8 @@ namespace Studio.Game.Tool
                         Destroy(gameObject);
                         return;
                     }
-                    else if (!hit.collider.isTrigger)
+
+                    if (!hit.collider.isTrigger)
                     {
                         Destroy(gameObject);
                         return;

@@ -2827,6 +2827,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: NPC_Engenheira_Vera
       objectReference: {fileID: 0}
+    - target: {fileID: 3575815334837576804, guid: 178ba980708707440a5b1dd10d892d29,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4239023823964552926, guid: 178ba980708707440a5b1dd10d892d29,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -2894,7 +2899,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 4239023823964552926, guid: 178ba980708707440a5b1dd10d892d29,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 760752957}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 3575815334837576804, guid: 178ba980708707440a5b1dd10d892d29,
         type: 3}
@@ -2904,6 +2913,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 256949451}
+    - targetCorrespondingSourceObject: {fileID: 3575815334837576804, guid: 178ba980708707440a5b1dd10d892d29,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 256949454}
   m_SourcePrefab: {fileID: 100100000, guid: 178ba980708707440a5b1dd10d892d29, type: 3}
 --- !u!1 &256949450 stripped
 GameObject:
@@ -2946,6 +2959,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Studio.Game.Dialogue.NpcDialogueInteractable
   dialogueJson: {fileID: 4900000, guid: 63dc14957ae51e54aa1bb29139ac8d1b, type: 3}
   lookAnchor: {fileID: 0}
+--- !u!4 &256949453 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4239023823964552926, guid: 178ba980708707440a5b1dd10d892d29,
+    type: 3}
+  m_PrefabInstance: {fileID: 256949449}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &256949454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 256949450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6086eedf21b81e240b5c86a1578502e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Studio.Game.Collision.ActorSolidSeparation
+  bodyKind: 1
+  solidRadius: 0.36
+  solidHeight: 1.25
+  createSolidCapsuleIfMissing: 1
 --- !u!1 &259464053
 GameObject:
   m_ObjectHideFlags: 0
@@ -16698,6 +16733,61 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 752830317}
   m_CullTransparentMesh: 1
+--- !u!1 &760752956
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 760752957}
+  - component: {fileID: 760752958}
+  m_Layer: 6
+  m_Name: SolidBody_Capsule
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &760752957
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 760752956}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 256949453}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &760752958
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 760752956}
+  m_Material: {fileID: 13400000, guid: d0110963853c6de4baadb3f4bb5eeed4, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.36
+  m_Height: 1.25
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.625, z: 0}
 --- !u!1 &763015951
 GameObject:
   m_ObjectHideFlags: 0
@@ -40552,7 +40642,8 @@ GameObject:
   - component: {fileID: 1943931548}
   - component: {fileID: 1943931547}
   - component: {fileID: 1943931546}
-  m_Layer: 0
+  - component: {fileID: 1943931549}
+  m_Layer: 9
   m_Name: Player_Dez_Placeholder
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -40636,6 +40727,22 @@ MonoBehaviour:
   interactMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &1943931549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1943931544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6086eedf21b81e240b5c86a1578502e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Studio.Game.Collision.ActorSolidSeparation
+  bodyKind: 0
+  solidRadius: 0.28
+  solidHeight: 1.25
+  createSolidCapsuleIfMissing: 0
 --- !u!1 &1947193111
 GameObject:
   m_ObjectHideFlags: 0

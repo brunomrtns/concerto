@@ -12,14 +12,14 @@ TagManager:
   - Weapon
   - Water
   - UI
-  - 
-  - 
+  - NPC
+  - Projectile
   - Skybox
   - Player
   - PostProcessing
   - SetDressing
-  - 
-  - 
+  - CutsceneActor
+  - CameraBlocker
   - Vehicles
   - Navmesh
   - Environment
