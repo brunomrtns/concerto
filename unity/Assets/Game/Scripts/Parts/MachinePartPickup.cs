@@ -71,5 +71,11 @@ namespace Studio.Game.Parts
             transform.position = _basePos;
             gameObject.SetActive(true);
         }
+
+        public void MarkCollectedSilent()
+        {
+            _collected = true;
+            gameObject.SetActive(false);
+        }
     }
 }

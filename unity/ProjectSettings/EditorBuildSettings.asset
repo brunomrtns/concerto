@@ -6,7 +6,10 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Game/Scenes/NeonDistrict.unity
-    guid: 93d6faa2ccf39cf4e87526c167448f1f
+    path: Assets/Game/Scenes/MainMenu.unity
+    guid: 92142540ac82043479767c629a87979b
+  - enabled: 1
+    path: Assets/Game/Scenes/Caldeiral.unity
+    guid: 7abeb070d111c4e4193a1096dbe94702
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

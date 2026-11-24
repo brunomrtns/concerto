@@ -169,5 +169,40 @@ namespace Studio.Game.Parts
             ObjectiveSystem.Set(string.Format(fmt, _collectedCount, _requiredCount));
             if (flash) ObjectiveSystem.Flash();
         }
+
+        public int GetCollectedMask()
+        {
+            int mask = 0;
+            for (int i = 0; i < sceneParts.Count && i < 31; i++)
+            {
+                if (sceneParts[i] != null && sceneParts[i].IsCollected)
+                    mask |= (1 << i);
+            }
+            return mask;
+        }
+
+        public void RestoreFromSave(int collectedMask, bool canCollect, bool act1Done)
+        {
+            _collectedCount = 0;
+            _canCollectParts = canCollect;
+            _act1Completed = act1Done;
+
+            for (int i = 0; i < _requiredCount && i < sceneParts.Count; i++)
+            {
+                var p = sceneParts[i];
+                if (p == null) continue;
+                if ((collectedMask & (1 << i)) != 0)
+                {
+                    p.MarkCollectedSilent();
+                    _collectedCount++;
+                    if (diegeticBoard != null)
+                        diegeticBoard.MarkSlotCollected(p.slotIndex, _collectedCount, _requiredCount);
+                }
+            }
+
+            _allCollected = _collectedCount >= _requiredCount;
+            if (_allCollected && junoNpc != null && junoDeliverDialogueJson != null)
+                junoNpc.dialogueJson = junoDeliverDialogueJson;
+        }
     }
 }
