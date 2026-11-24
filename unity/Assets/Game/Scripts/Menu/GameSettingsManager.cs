@@ -15,12 +15,14 @@ namespace Studio.Game.Menu
         public const string KeySfxVol     = "CONCERTO_OPT_SFX_VOL";
         public const string KeyFullscreen = "CONCERTO_OPT_FULLSCREEN";
         public const string KeyQuality    = "CONCERTO_OPT_QUALITY";
+        public const string KeyCameraSens = "CONCERTO_OPT_CAM_SENS";
 
-        public static float MasterVolume { get; private set; } = 0.85f;
-        public static float MusicVolume  { get; private set; } = 0.75f;
-        public static float SfxVolume    { get; private set; } = 0.85f;
-        public static bool  IsFullscreen { get; private set; } = true;
-        public static int   QualityIndex { get; private set; } = 2;
+        public static float MasterVolume      { get; private set; } = 0.85f;
+        public static float MusicVolume       { get; private set; } = 0.75f;
+        public static float SfxVolume         { get; private set; } = 0.85f;
+        public static bool  IsFullscreen      { get; private set; } = true;
+        public static int   QualityIndex      { get; private set; } = 2;
+        public static float CameraSensitivity { get; private set; } = 1.0f;
 
         public static event Action OnSettingsChanged;
 
@@ -35,7 +37,16 @@ namespace Studio.Game.Menu
             int maxQ = Mathf.Max(0, QualitySettings.names.Length - 1);
             int defQ = Mathf.Clamp(QualitySettings.GetQualityLevel(), 0, maxQ);
             QualityIndex = Mathf.Clamp(PlayerPrefs.GetInt(KeyQuality, defQ), 0, maxQ);
+            CameraSensitivity = Mathf.Clamp(PlayerPrefs.GetFloat(KeyCameraSens, 1.0f), 0.3f, 2.5f);
 
+            ApplyRuntime();
+        }
+
+        public static void SetCameraSensitivity(float v)
+        {
+            CameraSensitivity = Mathf.Clamp(v, 0.3f, 2.5f);
+            PlayerPrefs.SetFloat(KeyCameraSens, CameraSensitivity);
+            PlayerPrefs.Save();
             ApplyRuntime();
         }
 
