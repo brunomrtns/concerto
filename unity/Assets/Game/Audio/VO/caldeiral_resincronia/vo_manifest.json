@@ -1,0 +1,23 @@
+{
+  "schema": "vo-manifest-v1",
+  "scene": "caldeiral_resincronia",
+  "model": "edge-tts-neural-pt-BR",
+  "device": "cloud-neural",
+  "total_lines": 1,
+  "total_duration_sec": 8.088,
+  "lines": [
+    {
+      "id": "cal_resync_01",
+      "character": "dez",
+      "display_name": "Dez",
+      "language": "pt",
+      "text": "Olha isso, Porca... a fumaça tá caindo como neve. O turno... acabou. O turno acabou!",
+      "wav_file": "cal_resync_01.wav",
+      "duration_sec": 8.088,
+      "sample_rate": 44100,
+      "peak_dbfs": -1.0,
+      "voice_profile": "pt-BR-AntonioNeural"
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,23 @@
+{
+  "schema": "vo-manifest-v1",
+  "scene": "caldeiral_patio_sirenes",
+  "model": "edge-tts-neural-pt-BR",
+  "device": "cloud-neural",
+  "total_lines": 1,
+  "total_duration_sec": 6.168,
+  "lines": [
+    {
+      "id": "cal_vo_patro_02",
+      "character": "vo_segunda",
+      "display_name": "Vo Segunda",
+      "language": "pt",
+      "text": "Aqui o tempo anda de lado, menino. Anda correndo pelo cano, que é mais rápido.",
+      "wav_file": "cal_vo_patro_02.wav",
+      "duration_sec": 6.168,
+      "sample_rate": 44100,
+      "peak_dbfs": -1.0,
+      "voice_profile": "pt-BR-FranciscaNeural"
+    }
+  ],
+  "errors": []
+}

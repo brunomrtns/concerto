@@ -1,0 +1,83 @@
+{
+  "schema": "vo-manifest-v1",
+  "scene": "cs01_abertura",
+  "model": "edge-tts-neural-pt-BR",
+  "device": "cloud-neural",
+  "total_lines": 6,
+  "total_duration_sec": 41.256,
+  "lines": [
+    {
+      "id": "cs01_narr_01",
+      "character": "narrador",
+      "display_name": "Narrador",
+      "language": "pt",
+      "text": "Ora não media o tempo. Ora o sustentava. E toda máquina sustentada por mãos pode quebrar por uma mola.",
+      "wav_file": "cs01_narr_01.wav",
+      "duration_sec": 9.48,
+      "sample_rate": 44100,
+      "peak_dbfs": -1.0,
+      "voice_profile": "pt-BR-AntonioNeural"
+    },
+    {
+      "id": "cs01_juno_01",
+      "character": "juno",
+      "display_name": "Juno",
+      "language": "pt",
+      "text": "Mão-de-obra: essa aqui é a única mola que não se troca sem revisão. Prometa.",
+      "wav_file": "cs01_juno_01.wav",
+      "duration_sec": 5.448,
+      "sample_rate": 44100,
+      "peak_dbfs": -1.0,
+      "voice_profile": "pt-BR-ThalitaMultilingualNeural"
+    },
+    {
+      "id": "cs01_juno_02",
+      "character": "juno",
+      "display_name": "Juno",
+      "language": "pt",
+      "text": "Peça nova, mundo novo. Vai ser um bom amanhã, Dez.",
+      "wav_file": "cs01_juno_02.wav",
+      "duration_sec": 4.536,
+      "sample_rate": 44100,
+      "peak_dbfs": -1.0,
+      "voice_profile": "pt-BR-ThalitaMultilingualNeural"
+    },
+    {
+      "id": "cs01_narr_02",
+      "character": "narrador",
+      "display_name": "Narrador",
+      "language": "pt",
+      "text": "A mola cedeu. O mundo rachou em seis momentos. E uma irmã ficou perdida no meio do tempo.",
+      "wav_file": "cs01_narr_02.wav",
+      "duration_sec": 8.784,
+      "sample_rate": 44100,
+      "peak_dbfs": -1.0,
+      "voice_profile": "pt-BR-AntonioNeural"
+    },
+    {
+      "id": "cs01_dez_01",
+      "character": "dez",
+      "display_name": "Dez",
+      "language": "pt",
+      "text": "Juno? ...Juno, me responde. O relógio... onde fica o relógio, Juno?",
+      "wav_file": "cs01_dez_01.wav",
+      "duration_sec": 7.152,
+      "sample_rate": 44100,
+      "peak_dbfs": -1.0,
+      "voice_profile": "pt-BR-AntonioNeural"
+    },
+    {
+      "id": "cs01_dez_02",
+      "character": "dez",
+      "display_name": "Dez",
+      "language": "pt",
+      "text": "Eu conserto isso. Eu conserto o que eu quebrei. Eu juro.",
+      "wav_file": "cs01_dez_02.wav",
+      "duration_sec": 5.856,
+      "sample_rate": 44100,
+      "peak_dbfs": -1.0,
+      "voice_profile": "pt-BR-AntonioNeural"
+    }
+  ],
+  "errors": []
+}

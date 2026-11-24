@@ -1,0 +1,35 @@
+{
+  "schema": "vo-manifest-v1",
+  "scene": "caldeiral_tutorial",
+  "model": "edge-tts-neural-pt-BR",
+  "device": "cloud-neural",
+  "total_lines": 2,
+  "total_duration_sec": 12.096,
+  "lines": [
+    {
+      "id": "cal_tuto_parry_01",
+      "character": "dez",
+      "display_name": "Dez",
+      "language": "pt",
+      "text": "Parry no contratempo, Porca. Não no meio — no contratempo.",
+      "wav_file": "cal_tuto_parry_01.wav",
+      "duration_sec": 5.472,
+      "sample_rate": 44100,
+      "peak_dbfs": -1.0,
+      "voice_profile": "pt-BR-AntonioNeural"
+    },
+    {
+      "id": "cal_porca_manual_01",
+      "character": "porca",
+      "display_name": "Porca",
+      "language": "pt",
+      "text": "Manual de Boas Práticas de Fraturas Temporais, terceira edição: nunca provoque a sirene durante o turno.",
+      "wav_file": "cal_porca_manual_01.wav",
+      "duration_sec": 6.624,
+      "sample_rate": 44100,
+      "peak_dbfs": -1.0,
+      "voice_profile": "pt-BR-FranciscaNeural"
+    }
+  ],
+  "errors": []
+}

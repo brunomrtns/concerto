@@ -1,0 +1,59 @@
+{
+  "schema": "vo-manifest-v1",
+  "scene": "barks",
+  "model": "edge-tts-neural-pt-BR",
+  "device": "cloud-neural",
+  "total_lines": 4,
+  "total_duration_sec": 11.136,
+  "lines": [
+    {
+      "id": "bark_dez_dash_01",
+      "character": "dez",
+      "display_name": "Dez",
+      "language": "pt",
+      "text": "Sopro!",
+      "wav_file": "bark_dez_dash_01.wav",
+      "duration_sec": 1.536,
+      "sample_rate": 44100,
+      "peak_dbfs": -1.0,
+      "voice_profile": "pt-BR-AntonioNeural"
+    },
+    {
+      "id": "bark_dez_parry_01",
+      "character": "dez",
+      "display_name": "Dez",
+      "language": "pt",
+      "text": "No ritmo!",
+      "wav_file": "bark_dez_parry_01.wav",
+      "duration_sec": 1.872,
+      "sample_rate": 44100,
+      "peak_dbfs": -1.0,
+      "voice_profile": "pt-BR-AntonioNeural"
+    },
+    {
+      "id": "bark_dez_resync_01",
+      "character": "dez",
+      "display_name": "Dez",
+      "language": "pt",
+      "text": "Gira, catraca!",
+      "wav_file": "bark_dez_resync_01.wav",
+      "duration_sec": 2.232,
+      "sample_rate": 44100,
+      "peak_dbfs": -1.0,
+      "voice_profile": "pt-BR-AntonioNeural"
+    },
+    {
+      "id": "bark_porca_eco_01",
+      "character": "porca",
+      "display_name": "Porca",
+      "language": "pt",
+      "text": "O Bis disse 'tíque-tíque'. Tradução: perigo. Ou fome. Uma das duas.",
+      "wav_file": "bark_porca_eco_01.wav",
+      "duration_sec": 5.496,
+      "sample_rate": 44100,
+      "peak_dbfs": -1.0,
+      "voice_profile": "pt-BR-FranciscaNeural"
+    }
+  ],
+  "errors": []
+}
