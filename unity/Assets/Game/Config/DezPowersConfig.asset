@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbda43327c6832641af5d64e2cbcd0b8, type: 3}
+  m_Name: DezPowersConfig
+  m_EditorClassIdentifier: Assembly-CSharp::Studio.Game.Powers.DezPowersConfig
+  ecoPrimaryKey: 308
+  ecoAltKey: 99
+  ecoDurationSec: 0.24
+  ecoIFramesSec: 0.3
+  ecoDashSpeed: 12
+  ecoCooldownSec: 3
+  ecoAfterimageCount: 4
+  ecoAfterimageLifetimeSec: 0.36
+  ecoAfterimageColor: {r: 0.22, g: 0.92, b: 1, a: 0.68}
+  stasisKey: 114
+  stasisDurationSec: 3
+  stasisWorldTimeScale: 0.5
+  stasisCooldownSec: 10
+  stasisRadius: 15
+  stasisPulseColor: {r: 0.28, g: 0.85, b: 1, a: 0.42}
+  firstUnlockHintText: O tempo vazou pelos seus dedos...  [ALT/C] Eco Temporal  | 
+    [R] Estase
+  firstUnlockHintDurationSec: 4.8

@@ -30805,13 +30805,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: debf8739454608f45979d3003751353d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Studio.Game.Animation.DezProceduralAnimator
-  armAbductionIdleDeg: 10
-  armAbductionWalkDeg: 18
-  armAbductionRunDeg: 14
-  armSwingWalkDeg: 28
-  armSwingRunDeg: 52
-  forearmBendWalkDeg: 16
-  forearmBendRunDeg: 54
+  minArmClearanceIdleDeg: 9
+  minArmClearanceWalkDeg: 12
+  minArmClearanceRunDeg: 11
+  walkArmSwingTargetDeg: 20
+  runArmSwingTargetDeg: 36
+  walkForearmBendDeg: 10
   rightArmToolSwingFactor: 0.35
   runForwardLeanDeg: 8.5
   walkForwardLeanDeg: 2.5
@@ -41752,6 +41751,7 @@ GameObject:
   - component: {fileID: 1943931547}
   - component: {fileID: 1943931546}
   - component: {fileID: 1943931549}
+  - component: {fileID: 1943931550}
   m_Layer: 9
   m_Name: Player_Dez_Placeholder
   m_TagString: Player
@@ -41865,6 +41865,22 @@ MonoBehaviour:
   solidRadius: 0.28
   solidHeight: 1.25
   createSolidCapsuleIfMissing: 0
+--- !u!114 &1943931550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1943931544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfa234a1a3aa58f4e8225c95a57361e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Studio.Game.Powers.DezPowersController
+  config: {fileID: 11400000, guid: 288eabc5a3cf07141a52a037a326d9f8, type: 2}
+  sfxSource: {fileID: 0}
+  ecoReverseClip: {fileID: 8300000, guid: 82bc1a0fd7bedb641910e1416b7c9fe9, type: 3}
+  stasisPulseClip: {fileID: 8300000, guid: 67bf79a6b8fcb6343b8bb4986971fa98, type: 3}
 --- !u!1 &1947193111
 GameObject:
   m_ObjectHideFlags: 0
