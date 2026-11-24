@@ -72,6 +72,13 @@ namespace Studio.Game.Save
                 RepairRitualController.Instance.OnRepairProgressChanged += OnAnomalyRepaired;
                 RepairRitualController.Instance.OnAct2FinalBeatCompleted += OnAct2Done;
             }
+
+            // Se o jogador clicou "Continuar" no MainMenu para uma cena sem CutsceneManager (ex: SetorExterno),
+            // restaura automaticamente o estado salvo (posicao, yaw, objetivo, porta, celulas)!
+            if (SaveSystem.IsPendingContinueLoad && UnityEngine.SceneManagement.SceneManager.GetActiveScene().name != "Caldeiral")
+            {
+                SaveSystem.TryApplyPendingLoadToWorkshop();
+            }
         }
 
         private void OnDestroy()

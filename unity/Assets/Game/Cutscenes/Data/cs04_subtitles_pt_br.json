@@ -1,0 +1,17 @@
+{
+  "cutsceneId": "cs04_o_ceu_rachou",
+  "title": "O Céu Rachou",
+  "totalDurationSec": 36.0,
+  "skipHintDelaySec": 2.0,
+  "skipHintText": "Segure [Espaço] ou [Esc] para pular",
+  "postObjectiveText": "Fale com Vera",
+  "lines": [
+    {
+      "startSec": 3.4,
+      "endSec": 8.4,
+      "speaker": "Juno",
+      "style": "dialogue",
+      "text": "Dez. Tá acontecendo lá fora."
+    }
+  ]
+}

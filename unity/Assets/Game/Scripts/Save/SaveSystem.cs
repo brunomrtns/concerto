@@ -128,9 +128,12 @@ namespace Studio.Game.Save
                 data.act1Completed      = parts.Act1Completed;
             }
 
-            // 5. Cutscenes assistidas
+            // 5. Cutscenes assistidas & porta do Setor Externo
             data.cs01Played = true;
             if (data.act1Completed) data.cs02Played = true;
+            if (PlayerPrefs.GetInt("CONCERTO_CS04_PLAYED", 0) == 1) data.cs04Played = true;
+            if (PlayerPrefs.GetInt("CONCERTO_SECTOR_EXTERNO_UNLOCKED", 0) == 1 || activeScene == "SetorExterno")
+                data.sectorDoorUnlocked = true;
 
             // 6. Anomalias & Reparo do Ato 2
             var anomMgr = WorkshopAnomalyManager.Instance;
@@ -268,7 +271,14 @@ namespace Studio.Game.Save
             if (MultiToolController.Instance != null)
                 MultiToolController.Instance.RestoreStateFromSave(data.energyCells, data.energyBar, data.activeToolModeId);
 
-            // 5. Objetivo atual
+            // 5. Objetivo atual + Flags de Porta/CS04
+            if (data.sectorDoorUnlocked)
+                PlayerPrefs.SetInt("CONCERTO_SECTOR_EXTERNO_UNLOCKED", 1);
+            if (data.cs04Played)
+                PlayerPrefs.SetInt("CONCERTO_CS04_PLAYED", 1);
+            if (data.sectorDoorUnlocked || data.cs04Played)
+                PlayerPrefs.Save();
+
             if (!string.IsNullOrEmpty(data.currentObjective))
                 ObjectiveSystem.Set(data.currentObjective);
 

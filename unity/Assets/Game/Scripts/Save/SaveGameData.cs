@@ -47,10 +47,12 @@ namespace Studio.Game.Save
         public bool canCollectParts;
         public bool act1Completed;
 
-        [Header("Flags de Cutscenes Assistidas")]
+        [Header("Flags de Cutscenes Assistidas & Portas")]
         public bool cs01Played;
         public bool cs02Played;
         public bool cs03Played;
+        public bool cs04Played;
+        public bool sectorDoorUnlocked;
 
         [Header("Ato 2 — Anomalias & Reparo")]
         public bool act2AnomaliesActive;

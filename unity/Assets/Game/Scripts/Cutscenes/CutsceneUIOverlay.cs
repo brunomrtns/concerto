@@ -40,6 +40,30 @@ namespace Studio.Game.Cutscenes
         private Coroutine _objectiveRoutine;
         private float _letterboxCurrent;
         private float _letterboxTarget;
+        private Image _fadeOverlayImage;
+
+        public void SetFadeAlpha(float alpha, Color? color = null)
+        {
+            if (_fadeOverlayImage == null && alpha > 0.001f)
+            {
+                var go = new GameObject("CS_SeamlessFadeOverlay");
+                go.transform.SetParent(transform, false);
+                go.transform.SetAsLastSibling();
+                var rt = go.AddComponent<RectTransform>();
+                rt.anchorMin = Vector2.zero;
+                rt.anchorMax = Vector2.one;
+                rt.offsetMin = rt.offsetMax = Vector2.zero;
+                _fadeOverlayImage = go.AddComponent<Image>();
+                _fadeOverlayImage.raycastTarget = false;
+            }
+            if (_fadeOverlayImage != null)
+            {
+                Color c = color ?? new Color(0.03f, 0.06f, 0.11f, 1f);
+                c.a = Mathf.Clamp01(alpha);
+                _fadeOverlayImage.color = c;
+                _fadeOverlayImage.gameObject.SetActive(c.a > 0.001f);
+            }
+        }
 
         private void Awake()
         {
