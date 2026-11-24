@@ -209,6 +209,25 @@ namespace Studio.Game.Tool
             return _energyCells > prev;
         }
 
+        public void RestoreStateFromSave(int cells, float energy, string modeId)
+        {
+            _energyCells = Mathf.Clamp(cells, 0, Cfg.maxCells);
+            _energyBar = Mathf.Clamp(energy, 0f, Cfg.maxEnergyBar);
+            if (!string.IsNullOrEmpty(modeId))
+            {
+                for (int i = 0; i < modules.Count; i++)
+                {
+                    if (modules[i] != null && modules[i].ModuleId == modeId)
+                    {
+                        EquipModuleIndex(i, playSfx: false);
+                        break;
+                    }
+                }
+            }
+            RefreshHud();
+            OnEnergyChanged?.Invoke(_energyCells, _energyBar);
+        }
+
         public Vector3 GetMuzzleWorldPosition()
         {
             return PlayerTransform.position + Vector3.up * 0.92f + PlayerTransform.forward * 0.65f + PlayerTransform.right * 0.25f;

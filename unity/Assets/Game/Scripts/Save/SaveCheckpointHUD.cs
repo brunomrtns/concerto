@@ -1,0 +1,121 @@
+using System.Collections;
+using Studio.Game.Cutscenes;
+using Studio.Game.Parts;
+using Studio.Game.Repair;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace Studio.Game.Save
+{
+    /// <summary>
+    /// Trigger discreto de Checkpoint por entrada de area na oficina (auto-save silencioso).
+    /// </summary>
+    [RequireComponent(typeof(Collider))]
+    public sealed class CheckpointTrigger : MonoBehaviour
+    {
+        public string checkpointId = "cp_oficina_area";
+        public bool oneShotPerSession = false;
+
+        private bool _triggered;
+
+        private void Reset()
+        {
+            var c = GetComponent<Collider>();
+            if (c != null) c.isTrigger = true;
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other == null) return;
+            if (!other.CompareTag("Player") && !other.name.Contains("Player_Dez")) return;
+            if (oneShotPerSession && _triggered) return;
+
+            _triggered = true;
+            Vector3 groundPos = new Vector3(transform.position.x, other.transform.position.y, transform.position.z);
+            SaveSystem.Save(checkpointId, groundPos, other.transform.eulerAngles.y);
+        }
+    }
+
+    /// <summary>
+    /// Orquestrador de Auto-Save em eventos-chave (pos-cutscene, pos-beat de ato, pos-reparo)
+    /// + icone sutil de 1s no canto inferior esquerdo (sem tela de loading parada!).
+    /// </summary>
+    public sealed class SaveCheckpointHUD : MonoBehaviour
+    {
+        public CanvasGroup saveIndicatorGroup;
+        public Text saveIndicatorText;
+        public float indicatorDurationSec = 1.0f;
+
+        private Coroutine _flashRoutine;
+        private CutsceneManager _cs01;
+        private Cutscene02TravelController _cs02;
+        private Cutscene03ReturnController _cs03;
+
+        private void Awake()
+        {
+            if (saveIndicatorGroup != null) saveIndicatorGroup.alpha = 0f;
+            SaveSystem.OnGameSaved += HandleGameSaved;
+        }
+
+        private void Start()
+        {
+            _cs01 = FindAnyObjectByType<CutsceneManager>();
+            _cs02 = FindAnyObjectByType<Cutscene02TravelController>();
+            _cs03 = FindAnyObjectByType<Cutscene03ReturnController>();
+
+            if (_cs01 != null) _cs01.OnCutsceneEnded += OnCS01Ended;
+            if (_cs02 != null) _cs02.OnCutscene02Ended += OnCS02Ended;
+            if (_cs03 != null) _cs03.OnCutscene03Ended += OnCS03Ended;
+            if (PartsLoopManager.Instance != null) PartsLoopManager.Instance.OnAct1Completed += OnAct1Done;
+            if (RepairRitualController.Instance != null)
+            {
+                RepairRitualController.Instance.OnRepairProgressChanged += OnAnomalyRepaired;
+                RepairRitualController.Instance.OnAct2FinalBeatCompleted += OnAct2Done;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            SaveSystem.OnGameSaved -= HandleGameSaved;
+            if (_cs01 != null) _cs01.OnCutsceneEnded -= OnCS01Ended;
+            if (_cs02 != null) _cs02.OnCutscene02Ended -= OnCS02Ended;
+            if (_cs03 != null) _cs03.OnCutscene03Ended -= OnCS03Ended;
+            if (PartsLoopManager.Instance != null) PartsLoopManager.Instance.OnAct1Completed -= OnAct1Done;
+            if (RepairRitualController.Instance != null)
+            {
+                RepairRitualController.Instance.OnRepairProgressChanged -= OnAnomalyRepaired;
+                RepairRitualController.Instance.OnAct2FinalBeatCompleted -= OnAct2Done;
+            }
+        }
+
+        private void OnCS01Ended() => SaveSystem.Save("cp_pos_cs01_oficina");
+        private void OnAct1Done()  => SaveSystem.Save("cp_ato1_pecas_entregues");
+        private void OnCS02Ended() => SaveSystem.Save("cp_pos_cs02_viagem");
+        private void OnCS03Ended() => SaveSystem.Save("cp_pos_cs03_retorno");
+        private void OnAnomalyRepaired(int repaired, int total) => SaveSystem.Save($"cp_ato2_reparo_{repaired}_{total}");
+        private void OnAct2Done()  => SaveSystem.Save("cp_fim_ato2");
+
+        private void HandleGameSaved(SaveGameData data)
+        {
+            if (saveIndicatorGroup == null || !isActiveAndEnabled) return;
+            if (_flashRoutine != null) StopCoroutine(_flashRoutine);
+            _flashRoutine = StartCoroutine(ShowSubtleIndicator());
+        }
+
+        private IEnumerator ShowSubtleIndicator()
+        {
+            if (saveIndicatorText != null) saveIndicatorText.text = "● SALVO";
+            saveIndicatorGroup.alpha = 1f;
+            yield return new WaitForSecondsRealtime(Mathf.Max(0.4f, indicatorDurationSec));
+            float t = 0f;
+            while (t < 0.25f)
+            {
+                t += Time.unscaledDeltaTime;
+                saveIndicatorGroup.alpha = 1f - (t / 0.25f);
+                yield return null;
+            }
+            saveIndicatorGroup.alpha = 0f;
+            _flashRoutine = null;
+        }
+    }
+}
