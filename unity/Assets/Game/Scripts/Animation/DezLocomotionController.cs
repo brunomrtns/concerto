@@ -462,13 +462,25 @@ namespace Studio.Game.Animation
 
             if (_anim != null)
             {
-                _anim.SetFloat("Speed", _currentSpeed, 0.05f, dt);
+                _anim.SetFloat("Speed", _currentSpeed, 0.06f, dt);
                 _anim.SetBool("IsGrounded", _cc.isGrounded);
                 _anim.SetFloat("VerticalVel", _verticalVel);
+
+                // Casa velocidade de playback do ciclo de passada com velocidade REAL do controller (ZERO foot slide!)
+                float speedMult = 1.0f;
+                if (_currentSpeed > 0.15f)
+                {
+                    float runBlend = Mathf.Clamp01((_currentSpeed - cfg.walkSpeed) / Mathf.Max(0.1f, cfg.runSpeed - cfg.walkSpeed));
+                    float clipNominalSpeed = Mathf.Lerp(2.15f, 4.35f, runBlend);
+                    speedMult = Mathf.Clamp(_currentSpeed / Mathf.Max(0.5f, clipNominalSpeed), 0.72f, 1.38f);
+                }
+                _anim.SetFloat("LocomotionSpeedMult", speedMult);
             }
             if (_proc != null)
             {
                 _proc.SetLocomotionState(_cc.isGrounded, _currentSpeed, turnRate);
+                _proc.IsRightHandHoldingTool = Studio.Game.Tool.MultiToolController.Instance != null
+                    && !Studio.Game.Tool.MultiToolController.Instance.IsRepairModeActive;
             }
             _wasGrounded = _cc.isGrounded;
 
