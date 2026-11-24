@@ -22332,6 +22332,8 @@ MonoBehaviour:
     type: 3}
   flutuantePrefab: {fileID: 2907476949305981287, guid: 091ad86f36ab38c468cdb86a64b15cab,
     type: 3}
+  egidePrefab: {fileID: 651011584163200205, guid: ec2503bcf89ec2b439a5a19e139859b4,
+    type: 3}
   balanceConfig: {fileID: 11400000, guid: dc85fc77eefe5d7469a59ff575a29f63, type: 2}
   telegraphClip: {fileID: 8300000, guid: 6b55d478b1f1be94080bd8bb8c47a623, type: 3}
   dissolveReverseClip: {fileID: 8300000, guid: 0f5eca424a669ed4b9def86ddb5b12d4, type: 3}
@@ -22425,6 +22427,8 @@ MonoBehaviour:
   estilhacoPrefab: {fileID: 3614244055492274227, guid: 338d53993d0ed1f47b4994a2cc53e700,
     type: 3}
   flutuantePrefab: {fileID: 2907476949305981287, guid: 091ad86f36ab38c468cdb86a64b15cab,
+    type: 3}
+  egidePrefab: {fileID: 651011584163200205, guid: ec2503bcf89ec2b439a5a19e139859b4,
     type: 3}
   balanceConfig: {fileID: 11400000, guid: dc85fc77eefe5d7469a59ff575a29f63, type: 2}
   telegraphClip: {fileID: 8300000, guid: 6b55d478b1f1be94080bd8bb8c47a623, type: 3}
@@ -23748,6 +23752,7 @@ GameObject:
   - component: {fileID: 1943931549}
   - component: {fileID: 1943931550}
   - component: {fileID: 1943931551}
+  - component: {fileID: 1943931552}
   m_Layer: 9
   m_Name: Player_Dez_Placeholder
   m_TagString: Player
@@ -23894,6 +23899,27 @@ MonoBehaviour:
   hurtClip: {fileID: 8300000, guid: 112ef9efbc160db42ae7c9e7549a013f, type: 3}
   respawnPosition: {x: -30, y: 0.08, z: -18}
   useStartPositionAsDefaultCheckpoint: 1
+--- !u!114 &1943931552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1943931544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c6a581a38e6e354bafdeed86d7a7c59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Studio.Game.Combat.ParryAndLockOnController
+  parryKey: 102
+  parryWindowSec: 0.18
+  parryCooldownSec: 3
+  parryFreezeSec: 0.15
+  parryStaggerDurationSec: 2.4
+  switchTargetKey: 118
+  lockOnMaxRange: 18
+  parryClangClip: {fileID: 8300000, guid: c7bf49069f14a554c8cf038f0f65db3a, type: 3}
+  parryReverseClip: {fileID: 8300000, guid: 82bc1a0fd7bedb641910e1416b7c9fe9, type: 3}
 --- !u!1 &1947193111
 GameObject:
   m_ObjectHideFlags: 0

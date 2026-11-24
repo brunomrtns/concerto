@@ -93,11 +93,22 @@ namespace Studio.Game.Combat
         protected virtual void OnEnable()
         {
             StasisFieldSystem.Register(this);
+            CombatGroupCoordinator.Register(this);
         }
 
         protected virtual void OnDisable()
         {
             StasisFieldSystem.Unregister(this);
+            CombatGroupCoordinator.Unregister(this);
+        }
+
+        public virtual void ApplyParryStagger(float durationSec)
+        {
+            if (!IsAlive) return;
+            CombatGroupCoordinator.ReleaseAttackToken(this);
+            State = EnemyFsmState.Stagger;
+            StateTimer = Mathf.Max(0.8f, durationSec);
+            SetVisualTint(new Color(0.32f, 1.0f, 0.88f, 1f));
         }
 
         protected virtual void Start()

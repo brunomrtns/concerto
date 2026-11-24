@@ -19,13 +19,16 @@ namespace Studio.Game.Tool
         public float boltEnergyCost = 25f;
         public float energyPassiveRegenPerSec = 10f;
 
-        [Header("Modo COMBATE — Corpo-a-Corpo (Custo 0)")]
+        [Header("Modo COMBATE — Corpo-a-Corpo (Combo de 3 Golpes, Custo 0 — Combate v2 #109)")]
         public float lightHit1Damage = 15f;
         public float lightHit2Damage = 22f;
+        public float lightHit3Damage = 36f;
         public float heavyChargedDamage = 45f;
         public float chargeHoldThresholdSec = 0.45f;
-        public float comboWindowSec = 0.65f;
-        public float meleeCooldownSec = 0.28f;
+        public float comboWindowSec = 0.72f;
+        public float meleeCooldownSec = 0.26f;
+        public float attackInputBufferSec = 0.16f;
+        public float ecoCancelWindowSec = 0.25f;
         public float meleeRange = 1.65f;
         public float meleeRadius = 0.72f;
         public float heavyRadius = 1.05f;

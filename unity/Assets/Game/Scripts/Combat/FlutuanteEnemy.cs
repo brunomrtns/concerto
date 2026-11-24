@@ -43,13 +43,15 @@ namespace Studio.Game.Combat
                         State = EnemyFsmState.IdlePatrol;
                         break;
                     }
-                    // Mantem distancia preferida (recua se Dez colar demais, aproxima se ficar longe)
-                    if (dist < Cfg.flutuantePreferredDistance - 1.5f)
-                        transform.position -= toPlayer.normalized * (Cfg.flutuanteMoveSpeed * dt);
-                    else if (dist > Cfg.flutuantePreferredDistance + 1.5f)
-                        transform.position += toPlayer.normalized * (Cfg.flutuanteMoveSpeed * dt);
+                    // Mantem distancia preferida + steering anti-aglomeracao + strafe lateral apos atirar
+                    Vector3 sep = CombatGroupCoordinator.ComputeSeparationSteering(this, 2.4f);
+                    Vector3 radial = Vector3.zero;
+                    if (dist < Cfg.flutuantePreferredDistance - 1.5f) radial = -toPlayer.normalized;
+                    else if (dist > Cfg.flutuantePreferredDistance + 1.5f) radial = toPlayer.normalized;
+                    Vector3 strafe = Vector3.Cross(Vector3.up, toPlayer.normalized) * (Mathf.Sin(_hoverPhase * 0.45f) * 0.65f);
+                    transform.position += (radial + strafe + sep * 0.8f) * (Cfg.flutuanteMoveSpeed * dt);
 
-                    if (AttackCooldownTimer <= 0f && dist <= Cfg.flutuanteAggroRange)
+                    if (AttackCooldownTimer <= 0f && dist <= Cfg.flutuanteAggroRange && CombatGroupCoordinator.TryAcquireAttackToken(this))
                     {
                         State = EnemyFsmState.Telegraph;
                         StateTimer = Cfg.flutuanteTelegraphSec;
@@ -67,6 +69,7 @@ namespace Studio.Game.Combat
                         RestoreVisualTint();
                         State = EnemyFsmState.Attack;
                         FireSlowProjectile();
+                        CombatGroupCoordinator.ReleaseAttackToken(this);
                         AttackCooldownTimer = Cfg.flutuanteAttackCooldownSec;
                         State = EnemyFsmState.Chase;
                     }

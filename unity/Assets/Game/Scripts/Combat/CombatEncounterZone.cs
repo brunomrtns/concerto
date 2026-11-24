@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Studio.Game.Repair;
 using UnityEngine;
@@ -8,7 +9,8 @@ namespace Studio.Game.Combat
     public enum ManifestationType
     {
         Estilhaco,
-        Flutuante
+        Flutuante,
+        Egide
     }
 
     [Serializable]
@@ -32,6 +34,7 @@ namespace Studio.Game.Combat
         public float triggerRadius = 9.0f;
         public GameObject estilhacoPrefab;
         public GameObject flutuantePrefab;
+        public GameObject egidePrefab;
         public CombatBalanceConfig balanceConfig;
         public AudioClip telegraphClip;
         public AudioClip dissolveReverseClip;
@@ -79,7 +82,9 @@ namespace Studio.Game.Combat
             {
                 var slot = waveSlots[i];
                 Vector3 pos = transform.position + slot.localOffset;
-                GameObject prefab = slot.enemyType == ManifestationType.Estilhaco ? estilhacoPrefab : flutuantePrefab;
+                GameObject prefab = slot.enemyType == ManifestationType.Estilhaco
+                    ? estilhacoPrefab
+                    : (slot.enemyType == ManifestationType.Egide ? egidePrefab : flutuantePrefab);
                 if (prefab == null)
                 {
                     Debug.LogError($"[CombatEncounterZone] Prefab TripoSG ausente para {slot.enemyType}!");
@@ -109,9 +114,18 @@ namespace Studio.Game.Combat
             if (_aliveEnemies.Count == 0 && !IsCleared)
             {
                 IsCleared = true;
-                Debug.Log($"[CombatEncounterZone] '{encounterId}' CONCLUIDA!");
+                StartCoroutine(RunEncounterFinisherSlowmo());
+                Debug.Log($"[CombatEncounterZone] '{encounterId}' CONCLUIDA (micro-slowmo de finalizacao <= 180ms)!");
                 OnEncounterCleared?.Invoke(this);
             }
+        }
+
+        private IEnumerator RunEncounterFinisherSlowmo()
+        {
+            float prev = Time.timeScale;
+            Time.timeScale = 0.25f;
+            yield return new WaitForSecondsRealtime(0.16f); // <= 200ms (DESIGN_BIBLE)
+            Time.timeScale = prev > 0.05f ? prev : 1f;
         }
     }
 }

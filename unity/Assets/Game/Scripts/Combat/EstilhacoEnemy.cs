@@ -40,7 +40,7 @@ namespace Studio.Game.Combat
                         State = EnemyFsmState.IdlePatrol;
                         break;
                     }
-                    if (dist <= Cfg.estilhacoAttackRange && AttackCooldownTimer <= 0f)
+                    if (dist <= Cfg.estilhacoAttackRange && AttackCooldownTimer <= 0f && CombatGroupCoordinator.TryAcquireAttackToken(this))
                     {
                         State = EnemyFsmState.Telegraph;
                         StateTimer = Cfg.estilhacoTelegraphSec;
@@ -50,7 +50,12 @@ namespace Studio.Game.Combat
                         PlayEnemySfx(telegraphClip, 0.78f, 1.12f);
                         break;
                     }
-                    MoveHorizToward(PlayerTarget.position, Cfg.estilhacoMoveSpeed, dt);
+                    // Flanqueio leve (aproximacao angular +/- 28 deg + steering anti-aglomeracao)
+                    Vector3 sep = CombatGroupCoordinator.ComputeSeparationSteering(this, 2.0f);
+                    float flankSign = (GetInstanceID() % 2 == 0) ? 1f : -1f;
+                    Vector3 flankDir = Quaternion.Euler(0f, flankSign * (dist > 3.2f ? 28f : 10f), 0f) * (dist > 0.05f ? toPlayer.normalized : transform.forward);
+                    Vector3 desired = (flankDir + sep * 0.85f).normalized;
+                    MoveHorizToward(transform.position + desired * 2.0f, Cfg.estilhacoMoveSpeed, dt);
                     break;
 
                 case EnemyFsmState.Telegraph:
@@ -70,13 +75,20 @@ namespace Studio.Game.Combat
                 case EnemyFsmState.Attack:
                     StateTimer -= dt;
                     transform.position += _lungeDir * (Cfg.estilhacoLungeSpeed * dt);
-                    if (!_lungeDealtDamage && dist <= 1.45f && PlayerHealthController.Instance != null)
+                    if (!_lungeDealtDamage && dist <= 1.55f)
                     {
                         _lungeDealtDamage = true;
-                        PlayerHealthController.Instance.TryTakeDamage(Cfg.estilhacoDamageSegments, transform.position);
+                        if (ParryAndLockOnController.Instance != null && ParryAndLockOnController.Instance.TryInterceptMeleeAttack(this))
+                        {
+                            CombatGroupCoordinator.ReleaseAttackToken(this);
+                            return;
+                        }
+                        if (PlayerHealthController.Instance != null)
+                            PlayerHealthController.Instance.TryTakeDamage(Cfg.estilhacoDamageSegments, transform.position);
                     }
                     if (StateTimer <= 0f)
                     {
+                        CombatGroupCoordinator.ReleaseAttackToken(this);
                         AttackCooldownTimer = Cfg.estilhacoAttackCooldownSec;
                         State = EnemyFsmState.Chase;
                     }

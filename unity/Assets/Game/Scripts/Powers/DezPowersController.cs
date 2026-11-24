@@ -7,6 +7,7 @@ using Studio.Game.Cutscenes;
 using Studio.Game.Dialogue;
 using Studio.Game.Menu;
 using Studio.Game.Repair;
+using Studio.Game.Tool;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -209,6 +210,10 @@ namespace Studio.Game.Powers
 
         internal bool ExecuteEcoInternal()
         {
+            // Combate v2 (#109): cancela recovery de ataque se Eco for ativado na janela de cancelamento
+            if (MultiToolController.Instance != null && MultiToolController.Instance.ActiveModule is CombatToolModule combatMod)
+                combatMod.TryCancelRecoveryWithEco();
+
             var cfg = Cfg;
             Vector3 dir = Vector3.zero;
             if (_loco != null && _loco.UseScriptedInput && _loco.ScriptedMoveDir.sqrMagnitude > 0.01f)

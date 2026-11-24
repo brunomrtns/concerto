@@ -20,6 +20,8 @@ namespace Studio.Game.Tool
         private float _meleeCooldownUntil;
         private float _boltCooldownUntil;
         private float _comboExpireAt;
+        private float _attackBufferTimer;
+        private float _ecoCancelUntil;
         private int _comboStep;
         private bool _isChargingHeavy;
         private float _chargeTimer;
@@ -28,7 +30,20 @@ namespace Studio.Game.Tool
         public int TotalLightHitsLanded { get; private set; }
         public int TotalHeavyHitsLanded { get; private set; }
         public int TotalBoltsFired { get; private set; }
+        public int CancelIntoEcoCount { get; private set; }
+        public bool IsInEcoCancelWindow => Time.time <= _ecoCancelUntil;
         public bool IsChargingHeavy => _isChargingHeavy;
+
+        public bool TryCancelRecoveryWithEco()
+        {
+            if (!IsInEcoCancelWindow) return false;
+            _meleeCooldownUntil = Time.time;
+            _isChargingHeavy = false;
+            _chargeTimer = 0f;
+            _ecoCancelUntil = 0f;
+            CancelIntoEcoCount++;
+            return true;
+        }
         public float ChargeProgress => Controller != null && Controller.Cfg != null
             ? Mathf.Clamp01(_chargeTimer / Mathf.Max(0.1f, Controller.Cfg.chargeHoldThresholdSec))
             : 0f;
@@ -50,10 +65,27 @@ namespace Studio.Game.Tool
             bool attackUp   = Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.J);
             bool boltDown   = Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.K);
 
-            if (attackDown && Time.time >= _meleeCooldownUntil)
+            if (_attackBufferTimer > 0f)
             {
-                _isChargingHeavy = true;
-                _chargeTimer = 0f;
+                _attackBufferTimer = Mathf.Max(0f, _attackBufferTimer - dt);
+                if (Time.time >= _meleeCooldownUntil)
+                {
+                    _attackBufferTimer = 0f;
+                    ExecuteLightComboStep();
+                }
+            }
+
+            if (attackDown)
+            {
+                if (Time.time >= _meleeCooldownUntil)
+                {
+                    _isChargingHeavy = true;
+                    _chargeTimer = 0f;
+                }
+                else
+                {
+                    _attackBufferTimer = cfg.attackInputBufferSec;
+                }
             }
 
             if (_isChargingHeavy && attackHeld)
@@ -82,15 +114,18 @@ namespace Studio.Game.Tool
             var cfg = Controller.Cfg;
 
             if (Time.time > _comboExpireAt) _comboStep = 0;
-            _comboStep = (_comboStep == 1) ? 2 : 1;
+            _comboStep = (_comboStep % 3) + 1; // Combo de 3 golpes (1-2 rapidos, 3o punicao com hitstop maior e knockback!)
             LastComboStep = _comboStep;
 
-            _meleeCooldownUntil = Time.time + cfg.meleeCooldownSec;
+            bool isFinisher = (_comboStep == 3);
+            _meleeCooldownUntil = Time.time + (isFinisher ? cfg.meleeCooldownSec * 1.25f : cfg.meleeCooldownSec);
             _comboExpireAt = Time.time + cfg.comboWindowSec;
+            _ecoCancelUntil = Time.time + cfg.ecoCancelWindowSec;
 
-            float dmg = (_comboStep == 1) ? cfg.lightHit1Damage : cfg.lightHit2Damage;
-            Controller.PlayToolSwingFeedback(isHeavy: false, comboStep: _comboStep);
-            int hits = PerformMeleeHitbox(dmg, cfg.meleeRange, cfg.meleeRadius, isHeavy: false);
+            float dmg = _comboStep == 1 ? cfg.lightHit1Damage : (_comboStep == 2 ? cfg.lightHit2Damage : cfg.lightHit3Damage);
+            float radius = isFinisher ? cfg.heavyRadius : cfg.meleeRadius;
+            Controller.PlayToolSwingFeedback(isHeavy: isFinisher, comboStep: _comboStep);
+            int hits = PerformMeleeHitbox(dmg, isFinisher ? cfg.meleeRange * 1.12f : cfg.meleeRange, radius, isHeavy: isFinisher);
             TotalLightHitsLanded += hits;
             return true;
         }
@@ -101,6 +136,7 @@ namespace Studio.Game.Tool
             var cfg = Controller.Cfg;
             _comboStep = 0;
             _meleeCooldownUntil = Time.time + cfg.meleeCooldownSec * 1.45f;
+            _ecoCancelUntil = Time.time + cfg.ecoCancelWindowSec;
 
             Controller.PlayToolSwingFeedback(isHeavy: true, comboStep: 0);
             int hits = PerformMeleeHitbox(cfg.heavyChargedDamage, cfg.meleeRange * 1.15f, cfg.heavyRadius, isHeavy: true);

@@ -107,6 +107,7 @@ Nenhuma mecânica combina com outra ANTES de passar pelas três etapas:
 | Dash | Área aberta sem perigo | Vãos do setor | Travessia do Epicentro (vazio) |
 | Eco | Demonstração com alvo parado | Desviar de onda de choque | Plataforma/boss (evasiva principal) |
 | Estase | Demonstração em objeto | Plataforma rápida (Epicentro) | Spray do boss; janela do reparo final |
+| Absorver (Parry) | Estação de treino segura na oficina (`ParryTeachStation`, dano 0) | Refletir projétil do Flutuante / atordoar Estilhaço | Quebrar guarda frontal do Égide sob pressão de grupo |
 
 - Regra: se uma mecânica ainda não teve **teach**, ela não pode ser exigida em
   teste — nem em arena, nem em puzzle.
@@ -197,6 +198,11 @@ Toda ação tem resposta em ≤1 frame. Mínimo: som + visual.
 | Interação em alcance | Highlight + prompt de input (≤1 frame) |
 | Checkpoint | Som suave + texto curto (sem cutscene) |
 | Morte | Fade rápido → respawn ≤3s |
+| Combo 3º golpe (Combate v2) | Hitstop até 98ms + knockback real + arco amplo + som pesado |
+| Cancelamento com Eco (Combate v2) | Corte imediato do recovery + afterimage ciano + som reverso |
+| Absorver / Parry (Combate v2) | Freeze ~150ms + flash ciano + som clang/reverso + reflexão/stagger |
+| Ricochete no Égide (Combate v2) | Flash azul-aço + som metálico agudo + dano 0 (leitura clara de escudo) |
+| Finalização de encounter (Combate v2) | Dissolve ciano + micro-slowmo ≤180ms no último inimigo |
 
 Ação nova sem linha nesta tabela = feature incompleta.
 
