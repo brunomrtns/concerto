@@ -1,0 +1,23 @@
+{
+  "dialogueId": "dlg_vera_setor_externo",
+  "promptKey": "prompt_talk",
+  "postObjectiveKey": "obj_act3_stabilize_sector",
+  "lines": [
+    {
+      "speakerKey": "speaker_vera",
+      "textKey": "dlg_vera_01"
+    },
+    {
+      "speakerKey": "speaker_dez",
+      "textKey": "dlg_vera_02"
+    },
+    {
+      "speakerKey": "speaker_vera",
+      "textKey": "dlg_vera_03"
+    },
+    {
+      "speakerKey": "speaker_vera",
+      "textKey": "dlg_vera_04"
+    }
+  ]
+}

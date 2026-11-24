@@ -30,6 +30,13 @@
     { "key": "juno_deliver_03", "value": "Fechado, chefe. Segura firme — o Projeto Echo finalmente vai sair do papel." },
 
     { "key": "juno_test_01", "value": "[PROVA DE SISTEMA] Esta segunda conversa foi carregada trocando apenas o arquivo JSON de dados." },
-    { "key": "juno_test_02", "value": "[PROVA DE SISTEMA] Nenhuma linha de código C# foi alterada para exibir este diálogo." }
+    { "key": "juno_test_02", "value": "[PROVA DE SISTEMA] Nenhuma linha de código C# foi alterada para exibir este diálogo." },
+
+    { "key": "speaker_vera", "value": "Vera (Chefe de Setor)" },
+    { "key": "obj_act3_stabilize_sector", "value": "Estabilize as anomalias do Setor Externo (0/3)" },
+    { "key": "dlg_vera_01", "value": "Dez... não encosta na grade. Eu estava sozinha aqui fora quando o céu rasgou." },
+    { "key": "dlg_vera_02", "value": "Vera, respira. O que aconteceu com o gerador e a antena?" },
+    { "key": "dlg_vera_03", "value": "Primeiro o vento parou. Depois a aurora subiu ao contrário e tudo no pátio começou a sair do compasso." },
+    { "key": "dlg_vera_04", "value": "Se você ainda tem sua ferramenta, estabiliza os três pontos do pátio antes que essa rachadura desça até a instalação." }
   ]
 }

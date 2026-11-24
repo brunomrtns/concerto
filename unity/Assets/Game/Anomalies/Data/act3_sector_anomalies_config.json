@@ -1,0 +1,25 @@
+{
+  "anomalies": [
+    {
+      "id": "sector_anom_01_gerador",
+      "displayName": "Gerador em Sobrecarga Temporal",
+      "kind": "LightFlicker",
+      "position": { "x": -11.5, "y": 2.2, "z": 12.0 },
+      "description": "O gerador principal do pátio pisca em arco azulado com poeira subindo contra o vento."
+    },
+    {
+      "id": "sector_anom_02_antena",
+      "displayName": "Antena em Rotação Reversa",
+      "kind": "ReverseSpin",
+      "position": { "x": 12.5, "y": 1.6, "z": 15.5 },
+      "description": "O rotor da torre de comunicação gira lentamente ao contrário sob a rachadura no céu."
+    },
+    {
+      "id": "sector_anom_03_carga",
+      "displayName": "Módulo de Carga Sem Gravidade",
+      "kind": "FloatingTool",
+      "position": { "x": 1.5, "y": 1.35, "z": 24.0 },
+      "description": "Equipamentos junto ao contêiner de carga flutuam imóveis acima do concreto frio."
+    }
+  ]
+}
