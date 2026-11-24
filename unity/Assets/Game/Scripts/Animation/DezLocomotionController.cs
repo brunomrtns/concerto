@@ -155,6 +155,17 @@ namespace Studio.Game.Animation
 
             _anim = GetComponentInChildren<Animator>(true);
             _proc = GetComponentInChildren<DezProceduralAnimator>(true);
+
+            // Garante que o filho placeholder antigo "Model" (capsula azul) nunca seja exibido se houver HeroVisual
+            Transform legacyModel = transform.Find("Model");
+            if (legacyModel != null)
+            {
+                var mr = legacyModel.GetComponent<MeshRenderer>();
+                if (mr != null) mr.enabled = false;
+                if (transform.Find("Player_Dez_Placeholder_HeroVisual") != null)
+                    legacyModel.gameObject.SetActive(false);
+            }
+
             var allRenderers = GetComponentsInChildren<Renderer>(true);
             var visibleList = new System.Collections.Generic.List<Renderer>(allRenderers.Length);
             for (int i = 0; i < allRenderers.Length; i++)

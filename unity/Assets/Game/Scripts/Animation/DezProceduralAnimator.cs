@@ -12,29 +12,29 @@ namespace Studio.Game.Animation
     [RequireComponent(typeof(Animator))]
     public sealed class DezProceduralAnimator : MonoBehaviour
     {
-        [Header("Locomocao — Bracos Afastados & Balanco Acoplado a Passada (DESIGN_BIBLE Secao 2)")]
-        [Tooltip("Abertura lateral dos bracos afastando do torso em Idle/Walk/Run (graus).")]
-        public float armAbductionIdleDeg = 10f;
-        public float armAbductionWalkDeg = 18f;
-        public float armAbductionRunDeg = 14f;
-        [Tooltip("Amplitude de balanco frente-tras dos bracos na caminhada e corrida (graus).")]
-        public float armSwingWalkDeg = 28f;
-        public float armSwingRunDeg = 52f;
-        [Tooltip("Dobra natural do antebraco durante caminhada e corrida (graus).")]
-        public float forearmBendWalkDeg = 16f;
-        public float forearmBendRunDeg = 54f;
+        [Header("Locomocao — Bracos Naturais (Afastamento & Balanco Acoplado aos Pes)")]
+        [Tooltip("Angulo minimo de abertura lateral do braco em relacao ao torso (graus, sempre para FORA).")]
+        [Range(4f, 22f)] public float minArmClearanceIdleDeg = 9f;
+        [Range(4f, 22f)] public float minArmClearanceWalkDeg = 12f;
+        [Range(4f, 22f)] public float minArmClearanceRunDeg  = 11f;
+        [Tooltip("Alvo natural de balanco frente-tras na caminhada (graus, medido contra o balanco ja presente no clipe).")]
+        [Range(0f, 32f)] public float walkArmSwingTargetDeg = 20f;
+        [Tooltip("Alvo natural de balanco frente-tras na corrida (graus — respeita o clipe MoMask sem empilhar excesso).")]
+        [Range(0f, 45f)] public float runArmSwingTargetDeg = 36f;
+        [Tooltip("Dobra leve e natural do cotovelo na caminhada quando o braco vai pra frente (graus).")]
+        [Range(0f, 25f)] public float walkForearmBendDeg = 10f;
         [Tooltip("Multiplicador do balanco do braco direito quando segura a ferramenta (regra canonica).")]
         [Range(0.1f, 1.0f)] public float rightArmToolSwingFactor = 0.35f;
 
         [Header("Corrida com Vida — Inclinacao de Tronco, Ombros & Bob Sutil")]
         [Tooltip("Inclinacao frontal do tronco na corrida (spec: 5-10 graus).")]
-        [Range(0f, 14f)] public float runForwardLeanDeg = 8.5f;
-        public float walkForwardLeanDeg = 2.5f;
+        [Range(0f, 12f)] public float runForwardLeanDeg = 7.0f;
+        public float walkForwardLeanDeg = 1.8f;
         [Tooltip("Contra-rotacao dos ombros/peito em fase com a passada (graus).")]
-        public float shoulderTwistWalkDeg = 4.5f;
-        public float shoulderTwistRunDeg = 9.0f;
+        public float shoulderTwistWalkDeg = 3.5f;
+        public float shoulderTwistRunDeg = 6.5f;
         [Tooltip("Bob vertical sutil no Hips durante a corrida (m).")]
-        public float runVerticalBobMeters = 0.028f;
+        public float runVerticalBobMeters = 0.022f;
 
         [Header("Landing Dip (Absorcao de Impacto no Pouso)")]
         public float landingDipStrength = 0.022f;
@@ -176,34 +176,27 @@ namespace Studio.Game.Animation
                 if (chest != null)
                     chest.rotation = Quaternion.AngleAxis(breath * breathChestDeg, transform.right) * chest.rotation;
 
-                // Em Idle, mantem bracos levemente afastados do torso (sem colar nas costelas)
+                // Em Idle, mantem bracos levemente afastados do torso (sempre para FORA, sem colar nas costelas)
                 if (!SimulateLegacyAnimMode)
                 {
-                    Transform lArm = _anim.GetBoneTransform(HumanBodyBones.LeftUpperArm);
-                    Transform rArm = _anim.GetBoneTransform(HumanBodyBones.RightUpperArm);
-                    if (lArm != null) lArm.rotation = Quaternion.AngleAxis(armAbductionIdleDeg, transform.forward) * lArm.rotation;
-                    if (rArm != null) rArm.rotation = Quaternion.AngleAxis(-armAbductionIdleDeg, transform.forward) * rArm.rotation;
+                    Transform lArm  = _anim.GetBoneTransform(HumanBodyBones.LeftUpperArm);
+                    Transform rArm  = _anim.GetBoneTransform(HumanBodyBones.RightUpperArm);
+                    Transform lFore = _anim.GetBoneTransform(HumanBodyBones.LeftLowerArm);
+                    Transform rFore = _anim.GetBoneTransform(HumanBodyBones.RightLowerArm);
+                    EnsureArmOutwardClearance(lArm, lFore, -transform.right, minArmClearanceIdleDeg);
+                    EnsureArmOutwardClearance(rArm, rFore,  transform.right, minArmClearanceIdleDeg);
                 }
                 LastAppliedArmSwingDeg = 0f;
                 LastAppliedTrunkLeanDeg = 0f;
             }
-            // 2B. Camada aditiva de locomocao (Walk/Run): bracos afastados do torso + balanco acoplado a passada + inclinacao de corrida!
+            // 2B. Camada biomecanica de locomocao (Walk/Run):
+            //     - Bracos sempre afastados PARA FORA do torso (auto-calibrado pelo vetor real ombro->cotovelo)
+            //     - Balanco em contra-fase REAL com a posicao dos pes (pe direito frente -> braco esquerdo frente)
+            //     - Mede o balanco ja presente no clipe e so complementa suavemente (nunca empilha 52° extras!)
             else if (_isGrounded && !SimulateLegacyAnimMode && _currentSpeed >= 0.08f)
             {
                 float walkWeight = Mathf.Clamp01(_currentSpeed / 2.2f);
                 float runWeight  = Mathf.Clamp01((_currentSpeed - 2.2f) / 3.2f);
-
-                // Fase acoplada ao ciclo real do Animator (zero dessincronia com as pernas!)
-                var st = _anim.GetCurrentAnimatorStateInfo(0);
-                float stridePhase = (st.normalizedTime % 1f) * Mathf.PI * 2f;
-                float swingSin = Mathf.Sin(stridePhase);
-                float bobWave  = Mathf.Abs(Mathf.Sin(stridePhase));
-
-                float abdDeg   = Mathf.Lerp(armAbductionWalkDeg, armAbductionRunDeg, runWeight) * walkWeight;
-                float swingAmp = Mathf.Lerp(armSwingWalkDeg, armSwingRunDeg, runWeight) * walkWeight;
-                float bendDeg  = Mathf.Lerp(forearmBendWalkDeg, forearmBendRunDeg, runWeight) * walkWeight;
-                float leanDeg  = Mathf.Lerp(walkForwardLeanDeg, runForwardLeanDeg, runWeight) * walkWeight;
-                float twistDeg = Mathf.Lerp(shoulderTwistWalkDeg, shoulderTwistRunDeg, runWeight) * walkWeight * swingSin;
 
                 Transform spine = _anim.GetBoneTransform(HumanBodyBones.Spine);
                 Transform chest = _anim.GetBoneTransform(HumanBodyBones.Chest);
@@ -212,39 +205,53 @@ namespace Studio.Game.Animation
                 Transform lFore = _anim.GetBoneTransform(HumanBodyBones.LeftLowerArm);
                 Transform rFore = _anim.GetBoneTransform(HumanBodyBones.RightLowerArm);
                 Transform hips  = _anim.GetBoneTransform(HumanBodyBones.Hips);
+                Transform lFoot = _anim.GetBoneTransform(HumanBodyBones.LeftFoot);
+                Transform rFoot = _anim.GetBoneTransform(HumanBodyBones.RightFoot);
 
-                // Inclinacao de tronco (5-10 deg na corrida) + contra-rotacao de ombros
+                // Fase REAL das pernas: +1 = pe direito a frente (braco esquerdo vai pra frente), -1 = pe esquerdo a frente
+                float strideBalance = 0f;
+                if (hips != null && lFoot != null && rFoot != null)
+                {
+                    float rFootFwd = Vector3.Dot(rFoot.position - hips.position, transform.forward);
+                    float lFootFwd = Vector3.Dot(lFoot.position - hips.position, transform.forward);
+                    strideBalance = Mathf.Clamp((rFootFwd - lFootFwd) / 0.42f, -1f, 1f);
+                }
+                else
+                {
+                    var st = _anim.GetCurrentAnimatorStateInfo(0);
+                    strideBalance = Mathf.Sin((st.normalizedTime % 1f) * Mathf.PI * 2f);
+                }
+
+                float minClearDeg = Mathf.Lerp(minArmClearanceWalkDeg, minArmClearanceRunDeg, runWeight);
+                float targetSwing = Mathf.Lerp(walkArmSwingTargetDeg, runArmSwingTargetDeg, runWeight) * walkWeight;
+                float leanDeg     = Mathf.Lerp(walkForwardLeanDeg, runForwardLeanDeg, runWeight) * walkWeight;
+                float twistDeg    = Mathf.Lerp(shoulderTwistWalkDeg, shoulderTwistRunDeg, runWeight) * walkWeight * strideBalance;
+
+                // Inclinacao sutil de tronco na corrida + contra-rotacao natural de ombros
                 if (spine != null) spine.rotation = Quaternion.AngleAxis(leanDeg * 0.55f, transform.right) * spine.rotation;
                 if (chest != null)
                 {
                     chest.rotation = Quaternion.AngleAxis(leanDeg * 0.45f, transform.right) * chest.rotation;
-                    chest.rotation = Quaternion.AngleAxis(twistDeg, transform.up) * chest.rotation;
+                    chest.rotation = Quaternion.AngleAxis(-twistDeg, transform.up) * chest.rotation;
                 }
 
-                // Braco ESQUERDO: 100% livre, afastado do torso + balanco completo
-                if (lArm != null)
-                {
-                    lArm.rotation = Quaternion.AngleAxis(abdDeg, transform.forward) * lArm.rotation;
-                    lArm.rotation = Quaternion.AngleAxis(swingSin * swingAmp, transform.right) * lArm.rotation;
-                }
-                if (lFore != null)
-                    lFore.rotation = Quaternion.AngleAxis(-bendDeg, transform.right) * lFore.rotation;
+                // Braco ESQUERDO: sempre afastado pra FORA + balanco em contra-fase com o pe direito
+                EnsureArmOutwardClearance(lArm, lFore, -transform.right, minClearDeg);
+                ApplyNaturalArmSwing(lArm, lFore, strideBalance * targetSwing, walkWeight * (1f - runWeight * 0.7f));
 
-                // Braco DIREITO: afastado do torso; se segura ferramenta (COMBATE), balanco reduzido mantendo postura firme
+                // Braco DIREITO: sempre afastado pra FORA + balanco em contra-fase com o pe esquerdo (reduzido se segurando ferramenta)
                 float rightFactor = IsRightHandHoldingTool ? rightArmToolSwingFactor : 1.0f;
-                if (rArm != null)
-                {
-                    rArm.rotation = Quaternion.AngleAxis(-abdDeg, transform.forward) * rArm.rotation;
-                    rArm.rotation = Quaternion.AngleAxis(-swingSin * swingAmp * rightFactor, transform.right) * rArm.rotation;
-                }
-                if (rFore != null)
-                    rFore.rotation = Quaternion.AngleAxis(-bendDeg * (IsRightHandHoldingTool ? 1.15f : 1f), transform.right) * rFore.rotation;
+                EnsureArmOutwardClearance(rArm, rFore, transform.right, minClearDeg);
+                ApplyNaturalArmSwing(rArm, rFore, -strideBalance * targetSwing * rightFactor, walkWeight * (1f - runWeight * 0.7f));
 
                 // Bob vertical sutil na corrida
                 if (hips != null && runWeight > 0.05f)
+                {
+                    float bobWave = 1f - Mathf.Abs(strideBalance);
                     hips.position += new Vector3(0f, bobWave * runVerticalBobMeters * runWeight, 0f);
+                }
 
-                LastAppliedArmSwingDeg = swingAmp;
+                LastAppliedArmSwingDeg = targetSwing;
                 LastAppliedTrunkLeanDeg = leanDeg;
             }
 
@@ -288,6 +295,60 @@ namespace Studio.Game.Animation
                     if (_shadowMat != null && _shadowMat.HasProperty("_BaseColor"))
                         _shadowMat.SetColor("_BaseColor", new Color(1f, 1f, 1f, alphaFactor));
                 }
+            }
+        }
+
+        /// <summary>
+        /// Garante afastamento lateral minimo do braco em relacao ao torso usando o vetor real ombro->cotovelo.
+        /// Vector3.Cross(coronal, outwardDir) garante matematicamente que a rotacao vai SEMPRE para fora do corpo.
+        /// </summary>
+        private void EnsureArmOutwardClearance(Transform upperArm, Transform lowerArm, Vector3 outwardDir, float minClearanceDeg)
+        {
+            if (upperArm == null || lowerArm == null) return;
+            Vector3 armVec = lowerArm.position - upperArm.position;
+            if (armVec.sqrMagnitude < 0.0001f) return;
+
+            Vector3 coronal = Vector3.ProjectOnPlane(armVec, transform.forward);
+            if (coronal.sqrMagnitude < 0.0001f) return;
+            coronal.Normalize();
+
+            float curOutDeg = Mathf.Asin(Mathf.Clamp(Vector3.Dot(coronal, outwardDir), -1f, 1f)) * Mathf.Rad2Deg;
+            if (curOutDeg < minClearanceDeg)
+            {
+                float addDeg = Mathf.Clamp(minClearanceDeg - curOutDeg, 0f, 22f);
+                Vector3 axis = Vector3.Cross(coronal, outwardDir);
+                if (axis.sqrMagnitude > 0.0001f)
+                    upperArm.rotation = Quaternion.AngleAxis(addDeg, axis.normalized) * upperArm.rotation;
+            }
+        }
+
+        /// <summary>
+        /// Complementa suavemente o balanco frente-tras do braco em contra-fase com os pes,
+        /// medindo o angulo ja presente no clipe para NUNCA empilhar rotacao excessiva nem torcer o cotovelo.
+        /// </summary>
+        private void ApplyNaturalArmSwing(Transform upperArm, Transform lowerArm, float targetFwdDeg, float walkBendWeight)
+        {
+            if (upperArm == null || lowerArm == null) return;
+            Vector3 armVec = lowerArm.position - upperArm.position;
+            if (armVec.sqrMagnitude < 0.0001f) return;
+
+            Vector3 sagittal = Vector3.ProjectOnPlane(armVec, transform.right);
+            if (sagittal.sqrMagnitude < 0.0001f) return;
+            sagittal.Normalize();
+
+            float curFwdDeg = Mathf.Asin(Mathf.Clamp(Vector3.Dot(sagittal, transform.forward), -1f, 1f)) * Mathf.Rad2Deg;
+            float delta = Mathf.Clamp(targetFwdDeg - curFwdDeg, -18f, 18f);
+
+            // Em Unity left-handed, AngleAxis(+delta, -transform.right) gira (0,-1,0) para +transform.forward (frente)
+            if (Mathf.Abs(delta) > 0.25f)
+                upperArm.rotation = Quaternion.AngleAxis(delta, -transform.right) * upperArm.rotation;
+
+            // Dobra leve e natural do cotovelo somente na caminhada quando o braco avanca (nunca empilha na corrida)
+            if (walkBendWeight > 0.05f && walkForearmBendDeg > 0.1f)
+            {
+                float forwardFactor = Mathf.Clamp01(0.35f + 0.65f * (targetFwdDeg / Mathf.Max(1f, walkArmSwingTargetDeg)));
+                float bend = walkForearmBendDeg * walkBendWeight * forwardFactor;
+                lowerArm.rotation = Quaternion.AngleAxis(bend, -transform.right) * lowerArm.rotation;
             }
         }
     }
