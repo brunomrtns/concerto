@@ -1,0 +1,40 @@
+{
+  "requiredCount": 5,
+  "parts": [
+    {
+      "id": "part_01",
+      "displayName": "Núcleo de Ressonância",
+      "prefabSlug": "part_nucleo_ressonancia",
+      "locationHint": "Sobre o caixote noroeste",
+      "position": { "x": -34.6, "y": 1.28, "z": -13.2 }
+    },
+    {
+      "id": "part_02",
+      "displayName": "Bobina de Fase Beta",
+      "prefabSlug": "part_bobina_fase",
+      "locationHint": "Ao lado da estante de cristais",
+      "position": { "x": -31.3, "y": 0.42, "z": -13.1 }
+    },
+    {
+      "id": "part_03",
+      "displayName": "Regulador Crono",
+      "prefabSlug": "part_regulador_crono",
+      "locationHint": "Sob a bancada central",
+      "position": { "x": -29.0, "y": 0.36, "z": -16.45 }
+    },
+    {
+      "id": "part_04",
+      "displayName": "Condensador de Fluxo",
+      "prefabSlug": "part_bobina_fase",
+      "locationHint": "Sobre o caixote sudeste",
+      "position": { "x": -24.0, "y": 1.24, "z": -22.6 }
+    },
+    {
+      "id": "part_05",
+      "displayName": "Estabilizador Orbital",
+      "prefabSlug": "part_nucleo_ressonancia",
+      "locationHint": "Sobre o caixote sudoeste",
+      "position": { "x": -34.5, "y": 1.24, "z": -22.8 }
+    }
+  ]
+}

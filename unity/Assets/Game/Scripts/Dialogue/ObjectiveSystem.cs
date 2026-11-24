@@ -21,10 +21,29 @@ namespace Studio.Game.Dialogue
         public Text prefixLabel;
         public Text objectiveLabel;
 
+        private float _flashTimer;
+        private Color _baseTextColor = Color.white;
+
         private void Awake()
         {
             Instance = this;
+            if (objectiveLabel != null) _baseTextColor = objectiveLabel.color;
             RefreshView();
+        }
+
+        private void Update()
+        {
+            if (_flashTimer > 0f && objectiveLabel != null)
+            {
+                _flashTimer = Mathf.Max(0f, _flashTimer - Time.unscaledDeltaTime * 2.2f);
+                objectiveLabel.color = Color.Lerp(_baseTextColor, new Color(0.30f, 0.98f, 1.0f, 1f), _flashTimer);
+                objectiveLabel.transform.localScale = Vector3.one * (1f + 0.08f * _flashTimer);
+            }
+        }
+
+        public static void Flash()
+        {
+            if (Instance != null) Instance._flashTimer = 1f;
         }
 
         private void OnDestroy()

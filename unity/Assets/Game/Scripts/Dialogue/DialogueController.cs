@@ -312,12 +312,13 @@ namespace Studio.Game.Dialogue
                 float dist = toTarget.magnitude;
                 if (dist > interactRadius + 0.35f) continue;
 
-                float dot = dist > 0.05f ? Vector3.Dot(aimFwd, toTarget / dist) : 1f;
-                if (dot < minAimDot && dist > 1.2f) continue;
+                float camDot = dist > 0.05f ? Vector3.Dot(aimFwd, toTarget / dist) : 1f;
+                float playerDot = dist > 0.05f ? Vector3.Dot(_player.forward, toTarget / dist) : 1f;
+                float dot = Mathf.Max(camDot, playerDot);
+                if (dot < minAimDot && dist > 1.65f) continue;
 
-                float score = dot * 2.0f - dist * 0.45f;
+                float score = dot * 1.6f - dist * 0.95f;
                 var npcCand = (cand as MonoBehaviour)?.GetComponent<NpcDialogueInteractable>();
-                if (npcCand != null) score += 1.0f;
 
                 if (score > bestScore)
                 {

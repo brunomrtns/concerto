@@ -1,0 +1,11 @@
+{
+  "dialogueId": "dlg_juno_entrega_pecas",
+  "promptKey": "prompt_talk",
+  "postObjectiveKey": "obj_act1_done",
+  "partsTotal": 5,
+  "lines": [
+    { "speakerKey": "speaker_juno", "textKey": "juno_deliver_01" },
+    { "speakerKey": "speaker_dez",  "textKey": "dez_deliver_02"  },
+    { "speakerKey": "speaker_juno", "textKey": "juno_deliver_03" }
+  ]
+}
