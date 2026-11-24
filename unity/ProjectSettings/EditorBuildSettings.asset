@@ -14,5 +14,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Game/Scenes/SetorExterno.unity
     guid: 56711a1fa143a1c4499a98441cef69f6
+  - enabled: 1
+    path: Assets/Game/Scenes/Epicentro.unity
+    guid: efadca81ab1c36d46af0a1aba31cb8ca
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

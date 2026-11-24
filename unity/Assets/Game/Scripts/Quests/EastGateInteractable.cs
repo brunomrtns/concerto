@@ -1,6 +1,7 @@
 using Studio.Game.Dialogue;
 using Studio.Gameplay;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Studio.Game.Quests
 {
@@ -113,7 +114,9 @@ namespace Studio.Game.Quests
                 Debug.Log("[EastGate] Portao Leste trancado! Conclua a missao 'Sinal' com a Vera.");
                 return;
             }
-            Debug.Log("[EastGate] Portao Leste aberto — caminho para o Epicentro liberado!");
+            Debug.Log("[EastGate] Portao Leste aberto — carregando fase 'Epicentro'!");
+            if (Application.CanStreamedLevelBeLoaded("Epicentro"))
+                SceneManager.LoadScene("Epicentro", LoadSceneMode.Single);
         }
     }
 }
