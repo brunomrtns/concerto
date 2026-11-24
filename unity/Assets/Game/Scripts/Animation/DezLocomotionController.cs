@@ -165,8 +165,6 @@ namespace Studio.Game.Animation
 
             _anim = GetComponentInChildren<Animator>(true);
             _proc = GetComponentInChildren<DezProceduralAnimator>(true);
-            if (_anim != null && _anim.GetComponent<DezAnimationRiggingController>() == null)
-                _anim.gameObject.AddComponent<DezAnimationRiggingController>();
 
             // Garante que o filho placeholder antigo "Model" (capsula azul) nunca seja exibido se houver HeroVisual
             Transform legacyModel = transform.Find("Model");
@@ -531,28 +529,19 @@ namespace Studio.Game.Animation
 
             if (_anim != null)
             {
-                // GATE 1 & GATE 3: Parametros canonicos do Starter Assets ThirdPersonController (Blend Tree + Jump/FreeFall/Grounded)
-                bool isGroundedNow = _cc.isGrounded;
-                bool isJumpingNow  = !isGroundedNow && _verticalVel > 0.35f;
-                bool isFreeFallNow = !isGroundedNow && _verticalVel <= 0.35f;
-
                 _anim.SetFloat("Speed", _currentSpeed, 0.06f, dt);
-                _anim.SetBool("Grounded", isGroundedNow);
-                _anim.SetBool("Jump", isJumpingNow);
-                _anim.SetBool("FreeFall", isFreeFallNow);
-                _anim.SetBool("IsGrounded", isGroundedNow);
+                _anim.SetBool("IsGrounded", _cc.isGrounded);
                 _anim.SetFloat("VerticalVel", _verticalVel);
-                _anim.SetFloat("SpeedRatio", Mathf.Clamp01(_currentSpeed / Mathf.Max(0.1f, cfg.runSpeed)));
 
-                // Casa velocidade de playback com velocidade real do controller (sem foot slide em terreno plano)
-                float motionSpeed = 1.0f;
+                // Casa velocidade de playback do ciclo de passada com velocidade REAL do controller (ZERO foot slide!)
+                float speedMult = 1.0f;
                 if (_currentSpeed > 0.15f)
                 {
                     float runBlend = Mathf.Clamp01((_currentSpeed - cfg.walkSpeed) / Mathf.Max(0.1f, cfg.runSpeed - cfg.walkSpeed));
-                    float clipNominalSpeed = Mathf.Lerp(2.20f, 5.40f, runBlend);
-                    motionSpeed = Mathf.Clamp(_currentSpeed / Mathf.Max(0.5f, clipNominalSpeed), 0.78f, 1.30f);
+                    float clipNominalSpeed = Mathf.Lerp(2.15f, 4.35f, runBlend);
+                    speedMult = Mathf.Clamp(_currentSpeed / Mathf.Max(0.5f, clipNominalSpeed), 0.72f, 1.38f);
                 }
-                _anim.SetFloat("MotionSpeed", motionSpeed);
+                _anim.SetFloat("LocomotionSpeedMult", speedMult);
             }
             if (_proc != null)
             {
