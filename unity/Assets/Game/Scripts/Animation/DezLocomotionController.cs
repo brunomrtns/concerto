@@ -155,7 +155,16 @@ namespace Studio.Game.Animation
 
             _anim = GetComponentInChildren<Animator>(true);
             _proc = GetComponentInChildren<DezProceduralAnimator>(true);
-            _playerRenderers = GetComponentsInChildren<Renderer>(true);
+            var allRenderers = GetComponentsInChildren<Renderer>(true);
+            var visibleList = new System.Collections.Generic.List<Renderer>(allRenderers.Length);
+            for (int i = 0; i < allRenderers.Length; i++)
+            {
+                var r = allRenderers[i];
+                // Nunca incluir renderers originalmente desligados (ex.: placeholder azul "Model" com enabled=false)
+                if (r != null && r.enabled && r.gameObject.activeInHierarchy)
+                    visibleList.Add(r);
+            }
+            _playerRenderers = visibleList.ToArray();
             _camYaw = transform.eulerAngles.y;
             _currentCamDist = Cfg.cameraDistance;
 
