@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0483231b5e5a2e44aa02d2480f4b554, type: 3}
+  m_Name: ConcertoAudioBank
+  m_EditorClassIdentifier: Assembly-CSharp::Studio.Game.Audio.ConcertoAudioBank
+  masterMixer: {fileID: 24100000, guid: 9055e2f16d6a2314e86cc428e2a1063b, type: 2}
+  masterGroup: {fileID: 24300002, guid: 9055e2f16d6a2314e86cc428e2a1063b, type: 2}
+  musicGroup: {fileID: -1836789248578795875, guid: 9055e2f16d6a2314e86cc428e2a1063b,
+    type: 2}
+  sfxGroup: {fileID: 6719837268242158978, guid: 9055e2f16d6a2314e86cc428e2a1063b,
+    type: 2}
+  ambienceGroup: {fileID: 9026750854180298031, guid: 9055e2f16d6a2314e86cc428e2a1063b,
+    type: 2}
+  uiGroup: {fileID: 8405850003277403196, guid: 9055e2f16d6a2314e86cc428e2a1063b, type: 2}
+  uiOpenClip: {fileID: 8300000, guid: e0d2985d047e86b4da542bcc7d8e9564, type: 3}
+  uiCloseClip: {fileID: 8300000, guid: 9a5bfa0555a4a574ab9acdc978b79d19, type: 3}
+  uiConfirmClip: {fileID: 8300000, guid: 26c8176299eb86c4ea198729a0ae93b3, type: 3}
+  uiDenyClip: {fileID: 8300000, guid: 41f76f02eba574c48ae2232708ae1b5d, type: 3}
+  footstepFloorClips:
+  - {fileID: 8300000, guid: 4bc4e78c7073d7345a4bd991c03e6a6d, type: 3}
+  - {fileID: 8300000, guid: 3a57b5b8081f45f43a557546f6a7f57e, type: 3}
+  - {fileID: 8300000, guid: d180a3c3d06a87f42883e04edca59bde, type: 3}
+  footstepMetalClips:
+  - {fileID: 8300000, guid: 92482a6c9a3ae0e4681c57c7189456bc, type: 3}
+  - {fileID: 8300000, guid: 5a81a85766e59fc47b581df936624f57, type: 3}
+  - {fileID: 8300000, guid: bf535b3325c88414788a7728345d2cfa, type: 3}
+  footstepPuddleClips:
+  - {fileID: 8300000, guid: 0c414693d7331a64cabe7d677632477d, type: 3}
+  - {fileID: 8300000, guid: f56c49968c5cbe647a512dd0db22d3a2, type: 3}
+  - {fileID: 8300000, guid: 751946625daf21b4387eced9934dc5ad, type: 3}
+  jumpTakeoffClip: {fileID: 8300000, guid: 626de652d1efe2e4683c856d0c0a3b23, type: 3}
+  landingThudClip: {fileID: 8300000, guid: aedc25aa84c969542b8b9122148830e8, type: 3}
+  workshopAmbienceClip: {fileID: 8300000, guid: ccd88455c1d87a54ebd8ab956d667642,
+    type: 3}
+  sectorAmbienceClip: {fileID: 8300000, guid: 6fa5b1ccf455536449a3a90631daefb3, type: 3}
+  caldeiralMusicClip: {fileID: 8300000, guid: cbf080654233af043a7ccd913827a6ee, type: 3}
+  sectorMusicClip: {fileID: 8300000, guid: 6cf2fbc962d0eb0499e81a2316bcf3a7, type: 3}
