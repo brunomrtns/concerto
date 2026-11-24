@@ -381,6 +381,15 @@
       },
       "url": "https://packages.unity.com"
     },
+    "company.takashi.playcaller": {
+      "version": "https://github.com/takashicompany/playcaller.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "3.2.1"
+      },
+      "hash": "924b6be11b0ecf5369b3930b28f93e81b240be32"
+    },
     "com.unity.modules.accessibility": {
       "version": "1.0.0",
       "depth": 0,
