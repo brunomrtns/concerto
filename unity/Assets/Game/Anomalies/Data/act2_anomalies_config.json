@@ -1,0 +1,39 @@
+{
+  "anomalies": [
+    {
+      "id": "anom_01_luz_flickando",
+      "displayName": "Lâmpada Instável",
+      "kind": "LightFlicker",
+      "position": { "x": -28.6, "y": 3.45, "z": -17.2 },
+      "description": "Lâmpada sobre a bancada pisca em ritmo irregular com poeira subindo ao contrário."
+    },
+    {
+      "id": "anom_02_objeto_reverso",
+      "displayName": "Engrenagem em Rotação Reversa",
+      "kind": "ReverseSpin",
+      "position": { "x": -26.2, "y": 1.15, "z": -18.8 },
+      "description": "Objeto metálico próximo à máquina gira devagar ao contrário com leve oscilação."
+    },
+    {
+      "id": "anom_03_ferramenta_flutuando",
+      "displayName": "Ferramenta Sem Gravidade",
+      "kind": "FloatingTool",
+      "position": { "x": -29.8, "y": 1.08, "z": -16.8 },
+      "description": "Ferramenta ao lado da bancada flutua centímetros acima do apoio com partículas ciano."
+    },
+    {
+      "id": "anom_04_som_errado_canto",
+      "displayName": "Eco Distorcido no Canto",
+      "kind": "WrongCornerSound",
+      "position": { "x": -31.8, "y": 1.35, "z": -14.2 },
+      "description": "Som da caixinha de música com pitch e velocidade errados emanando do canto da estante."
+    },
+    {
+      "id": "anom_05_sombra_trocada",
+      "displayName": "Sombra Desalinhada",
+      "kind": "MismatchedShadow",
+      "position": { "x": -26.9, "y": 0.04, "z": -20.8 },
+      "description": "Sombra projetada no chão gira em ângulo impossível, sem corresponder ao objeto acima."
+    }
+  ]
+}

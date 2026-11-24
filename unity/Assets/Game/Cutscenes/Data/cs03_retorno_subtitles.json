@@ -1,0 +1,40 @@
+{
+  "cutsceneId": "cs03_o_retorno",
+  "totalDurationSec": 32.0,
+  "skipHintDelaySec": 2.5,
+  "skipHintText": "Segure [Espaço] ou [Esc] para pular",
+  "titleCardText": "",
+  "titleCardStartSec": 99.0,
+  "titleCardEndSec": 99.0,
+  "postObjectiveText": "Investigue a oficina",
+  "lines": [
+    {
+      "startSec": 4.2,
+      "endSec": 7.6,
+      "speaker": "Dez",
+      "style": "dialogue",
+      "text": "Funcionou... eu voltei. Tudo no lugar."
+    },
+    {
+      "startSec": 10.5,
+      "endSec": 15.8,
+      "speaker": "Dez",
+      "style": "dialogue",
+      "text": "Só mais um segundo perto dela... já valeu cada parafuso."
+    },
+    {
+      "startSec": 19.2,
+      "endSec": 23.8,
+      "speaker": "Dez",
+      "style": "dialogue",
+      "text": "Espera... a gente acabou de consertar isso. Por que está quebrada de novo?"
+    },
+    {
+      "startSec": 24.4,
+      "endSec": 27.6,
+      "speaker": "Dez",
+      "style": "dialogue",
+      "text": "E a máquina... eu desliguei a máquina..."
+    }
+  ]
+}

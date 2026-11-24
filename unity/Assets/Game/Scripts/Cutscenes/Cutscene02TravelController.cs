@@ -68,6 +68,7 @@ namespace Studio.Game.Cutscenes
         public bool IsPlaying => _isPlaying;
         public bool IsMemoryVolumeActive => pastMemoryVolume != null && pastMemoryVolume.gameObject.activeInHierarchy && pastMemoryVolume.weight > 0.01f;
         public event Action OnCutscene02Ended;
+        public event Action OnCutscene02CompletedNaturally;
 
         private void Awake()
         {
@@ -254,6 +255,7 @@ namespace Studio.Game.Cutscenes
             ObjectiveSystem.Set(_config != null ? _config.postObjectiveText : "Fim do Ato 1");
             Debug.Log($"[Cutscene02] Cutscene 2 ('A Viagem') encerrada (skipped={skipped}). Oficina restaurada sem vazamento de memoria.");
             OnCutscene02Ended?.Invoke();
+            if (!skipped) OnCutscene02CompletedNaturally?.Invoke();
         }
 
         private void RestorePresentStateImmediate(bool afterActivation)
