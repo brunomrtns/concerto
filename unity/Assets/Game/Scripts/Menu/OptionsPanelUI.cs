@@ -1,4 +1,5 @@
 using System;
+using Studio.Game.Audio;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,10 +7,10 @@ namespace Studio.Game.Menu
 {
     /// <summary>
     /// Painel compartilhado de Opcoes (usado tanto no Menu Principal quanto no Pause):
-    ///   - Volume Master, Volume Musica, Volume SFX
+    ///   - Volume Master, Volume Musica, Volume SFX, Volume Ambiencia, Volume UI
     ///   - Tela Cheia (Toggle)
     ///   - Qualidade Grafica (anterior / proximo)
-    /// Persiste automaticamente via GameSettingsManager (PlayerPrefs).
+    /// Persiste automaticamente via GameSettingsManager (PlayerPrefs — exclusivo para opcoes).
     /// </summary>
     public sealed class OptionsPanelUI : MonoBehaviour
     {
@@ -20,6 +21,10 @@ namespace Studio.Game.Menu
         public Text musicValueText;
         public Slider sfxSlider;
         public Text sfxValueText;
+        public Slider ambienceSlider;
+        public Text ambienceValueText;
+        public Slider uiSlider;
+        public Text uiValueText;
 
         [Header("Video")]
         public Toggle fullscreenToggle;
@@ -39,6 +44,8 @@ namespace Studio.Game.Menu
             if (masterSlider != null) masterSlider.onValueChanged.AddListener(OnMasterChanged);
             if (musicSlider != null)  musicSlider.onValueChanged.AddListener(OnMusicChanged);
             if (sfxSlider != null)    sfxSlider.onValueChanged.AddListener(OnSfxChanged);
+            if (ambienceSlider != null) ambienceSlider.onValueChanged.AddListener(OnAmbienceChanged);
+            if (uiSlider != null)       uiSlider.onValueChanged.AddListener(OnUiChanged);
             if (fullscreenToggle != null) fullscreenToggle.onValueChanged.AddListener(OnFullscreenChanged);
             if (qualityPrevButton != null) qualityPrevButton.onClick.AddListener(() => StepQuality(-1));
             if (qualityNextButton != null) qualityNextButton.onClick.AddListener(() => StepQuality(+1));
@@ -49,10 +56,12 @@ namespace Studio.Game.Menu
         {
             RefreshFromSettings();
             gameObject.SetActive(true);
+            if (AudioMixController.Instance != null) AudioMixController.Instance.PlayUiOpen();
         }
 
         public void Close()
         {
+            if (AudioMixController.Instance != null) AudioMixController.Instance.PlayUiClose();
             gameObject.SetActive(false);
             OnClosed?.Invoke();
         }
@@ -60,9 +69,11 @@ namespace Studio.Game.Menu
         public void RefreshFromSettings()
         {
             _suppressCallbacks = true;
-            if (masterSlider != null) masterSlider.value = GameSettingsManager.MasterVolume;
-            if (musicSlider != null)  musicSlider.value  = GameSettingsManager.MusicVolume;
-            if (sfxSlider != null)    sfxSlider.value    = GameSettingsManager.SfxVolume;
+            if (masterSlider != null)   masterSlider.value   = GameSettingsManager.MasterVolume;
+            if (musicSlider != null)    musicSlider.value    = GameSettingsManager.MusicVolume;
+            if (sfxSlider != null)      sfxSlider.value      = GameSettingsManager.SfxVolume;
+            if (ambienceSlider != null) ambienceSlider.value = GameSettingsManager.AmbienceVolume;
+            if (uiSlider != null)       uiSlider.value       = GameSettingsManager.UiVolume;
             if (fullscreenToggle != null) fullscreenToggle.isOn = GameSettingsManager.IsFullscreen;
             UpdateValueLabels();
             _suppressCallbacks = false;
@@ -89,10 +100,25 @@ namespace Studio.Game.Menu
             UpdateValueLabels();
         }
 
+        private void OnAmbienceChanged(float v)
+        {
+            if (_suppressCallbacks) return;
+            GameSettingsManager.SetAmbienceVolume(v);
+            UpdateValueLabels();
+        }
+
+        private void OnUiChanged(float v)
+        {
+            if (_suppressCallbacks) return;
+            GameSettingsManager.SetUiVolume(v);
+            UpdateValueLabels();
+        }
+
         private void OnFullscreenChanged(bool val)
         {
             if (_suppressCallbacks) return;
             GameSettingsManager.SetFullscreen(val);
+            if (AudioMixController.Instance != null) AudioMixController.Instance.PlayUiConfirm();
         }
 
         private void StepQuality(int delta)
@@ -102,13 +128,16 @@ namespace Studio.Game.Menu
             int next = (GameSettingsManager.QualityIndex + delta + names.Length) % names.Length;
             GameSettingsManager.SetQualityIndex(next);
             UpdateValueLabels();
+            if (AudioMixController.Instance != null) AudioMixController.Instance.PlayUiConfirm();
         }
 
         private void UpdateValueLabels()
         {
-            if (masterValueText != null) masterValueText.text = $"{Mathf.RoundToInt(GameSettingsManager.MasterVolume * 100f)}%";
-            if (musicValueText != null)  musicValueText.text  = $"{Mathf.RoundToInt(GameSettingsManager.MusicVolume * 100f)}%";
-            if (sfxValueText != null)    sfxValueText.text    = $"{Mathf.RoundToInt(GameSettingsManager.SfxVolume * 100f)}%";
+            if (masterValueText != null)   masterValueText.text   = $"{Mathf.RoundToInt(GameSettingsManager.MasterVolume * 100f)}%";
+            if (musicValueText != null)    musicValueText.text    = $"{Mathf.RoundToInt(GameSettingsManager.MusicVolume * 100f)}%";
+            if (sfxValueText != null)      sfxValueText.text      = $"{Mathf.RoundToInt(GameSettingsManager.SfxVolume * 100f)}%";
+            if (ambienceValueText != null) ambienceValueText.text = $"{Mathf.RoundToInt(GameSettingsManager.AmbienceVolume * 100f)}%";
+            if (uiValueText != null)       uiValueText.text       = $"{Mathf.RoundToInt(GameSettingsManager.UiVolume * 100f)}%";
             if (qualityValueText != null)
             {
                 string[] names = QualitySettings.names;

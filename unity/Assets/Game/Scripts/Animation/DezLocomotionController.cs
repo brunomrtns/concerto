@@ -1,3 +1,5 @@
+using Studio.Game.Audio;
+using Studio.Game.Collision;
 using Studio.Game.Cutscenes;
 using Studio.Game.Dialogue;
 using Studio.Game.Menu;
@@ -31,11 +33,15 @@ namespace Studio.Game.Animation
         public AudioSource thrusterAudio;
         public AudioClip dashSfxClip;
 
-        [Header("Feedback de Passos por Superficie & Pouso")]
+        [Header("Feedback de Passos por Superficie & Pulo/Pouso (min. 3 variacoes/superficie)")]
         public AudioSource footstepAudio;
         public AudioClip footstepFloorClip;
         public AudioClip footstepMetalClip;
         public AudioClip footstepPuddleClip;
+        public AudioClip[] footstepFloorClips;
+        public AudioClip[] footstepMetalClips;
+        public AudioClip[] footstepPuddleClips;
+        public AudioClip jumpTakeoffClip;
         public AudioClip landingThudClip;
 
         private CharacterController _cc;
@@ -60,12 +66,16 @@ namespace Studio.Game.Animation
         private float _baseFov = 55f;
         private float _dashFovKickTimer;
         private string _lastSurfaceType = "floor";
+        private int _lastFootstepVarIdx = -1;
         private Vector3 _lastWallNormal;
         private float _lastWallHitTime = -10f;
 
         // Flag de comparacao QA (reproduz skinWidth=0.01 e sem wallSlide para video ANTES vs DEPOIS)
         public bool SimulateLegacySnagMode { get; set; }
         public string LastSurfaceType => _lastSurfaceType;
+        public int LastFootstepVariationIndex => _lastFootstepVarIdx;
+        public int FootstepTriggerCount { get; private set; }
+        public int JumpSfxTriggerCount { get; private set; }
         public int WallSlideCount { get; private set; }
         public float CurrentFovKickDeg { get; private set; }
 
@@ -180,7 +190,29 @@ namespace Studio.Game.Animation
             _cs01 = FindAnyObjectByType<CutsceneManager>();
             _cs02 = FindAnyObjectByType<Cutscene02TravelController>();
             _cs03 = FindAnyObjectByType<Cutscene03ReturnController>();
+            EnsureAudioBankClipsBound();
             SyncCinemachineGameplayCamera();
+        }
+
+        private void EnsureAudioBankClipsBound()
+        {
+            var mix = AudioMixController.Instance;
+            var bank = mix != null ? mix.bank : Resources.Load<ConcertoAudioBank>("Audio/ConcertoAudioBank");
+            if (bank != null)
+            {
+                if ((footstepFloorClips == null || footstepFloorClips.Length < 3) && bank.footstepFloorClips != null && bank.footstepFloorClips.Length > 0)
+                    footstepFloorClips = bank.footstepFloorClips;
+                if ((footstepMetalClips == null || footstepMetalClips.Length < 3) && bank.footstepMetalClips != null && bank.footstepMetalClips.Length > 0)
+                    footstepMetalClips = bank.footstepMetalClips;
+                if ((footstepPuddleClips == null || footstepPuddleClips.Length < 3) && bank.footstepPuddleClips != null && bank.footstepPuddleClips.Length > 0)
+                    footstepPuddleClips = bank.footstepPuddleClips;
+                if (jumpTakeoffClip == null) jumpTakeoffClip = bank.jumpTakeoffClip;
+                if (landingThudClip == null) landingThudClip = bank.landingThudClip;
+                if (footstepAudio != null && footstepAudio.outputAudioMixerGroup == null && bank.sfxGroup != null)
+                    footstepAudio.outputAudioMixerGroup = bank.sfxGroup;
+                if (thrusterAudio != null && thrusterAudio.outputAudioMixerGroup == null && bank.sfxGroup != null)
+                    thrusterAudio.outputAudioMixerGroup = bank.sfxGroup;
+            }
         }
 
         private void OnEnable()
@@ -404,6 +436,11 @@ namespace Studio.Game.Animation
                 _jumpCutApplied = false;
                 grounded = false;
                 if (_anim != null) _anim.SetTrigger("Jump");
+                if (jumpTakeoffClip != null)
+                {
+                    PlaySurfaceSfx(jumpTakeoffClip, 0.58f, 0.96f, 1.06f);
+                    JumpSfxTriggerCount++;
+                }
             }
             else if (grounded)
             {
@@ -621,24 +658,50 @@ namespace Studio.Game.Animation
             var cfg = Cfg;
             _stepTimer = running ? cfg.runStepIntervalSec : cfg.walkStepIntervalSec;
 
-            // Detecta superficie sob os pes (metal / poca / piso) sem alocar string
+            // Detecta superficie sob os pes usando as layers canonicas de colisao (Default / Environment / Props)
             _lastSurfaceType = "floor";
-            if (Physics.Raycast(transform.position + Vector3.up * 0.25f, Vector3.down, out RaycastHit hit, 0.75f, ~0, QueryTriggerInteraction.Collide))
+            int surfaceMask = (1 << CollisionMatrixBootstrap.LayerDefault)
+                            | (1 << CollisionMatrixBootstrap.LayerEnvironment)
+                            | (1 << CollisionMatrixBootstrap.LayerProps);
+            if (Physics.Raycast(transform.position + Vector3.up * 0.25f, Vector3.down, out RaycastHit hit, 0.75f, surfaceMask, QueryTriggerInteraction.Collide))
             {
+                int hitLayer = hit.collider != null ? hit.collider.gameObject.layer : 0;
                 string n = hit.collider != null ? hit.collider.name : string.Empty;
                 if (ContainsIgnoreCase(n, "puddle") || ContainsIgnoreCase(n, "poca") || ContainsIgnoreCase(n, "water") || ContainsIgnoreCase(n, "oil"))
                     _lastSurfaceType = "puddle";
-                else if (ContainsIgnoreCase(n, "metal") || ContainsIgnoreCase(n, "grate") || ContainsIgnoreCase(n, "pipe") || ContainsIgnoreCase(n, "catwalk") || ContainsIgnoreCase(n, "door") || ContainsIgnoreCase(n, "ramp"))
+                else if (ContainsIgnoreCase(n, "metal") || ContainsIgnoreCase(n, "grate") || ContainsIgnoreCase(n, "pipe") || ContainsIgnoreCase(n, "catwalk") || ContainsIgnoreCase(n, "door") || ContainsIgnoreCase(n, "ramp") || hitLayer == CollisionMatrixBootstrap.LayerProps)
                     _lastSurfaceType = "metal";
             }
 
-            AudioClip clip = _lastSurfaceType switch
+            AudioClip clip = PickSurfaceFootstepClip(_lastSurfaceType);
+            PlaySurfaceSfx(clip, running ? 0.54f : 0.36f, 0.94f, 1.06f);
+            if (clip != null) FootstepTriggerCount++;
+        }
+
+        private AudioClip PickSurfaceFootstepClip(string surface)
+        {
+            AudioClip[] pool = surface switch
+            {
+                "metal"  => footstepMetalClips,
+                "puddle" => footstepPuddleClips,
+                _        => footstepFloorClips,
+            };
+
+            if (pool != null && pool.Length > 0)
+            {
+                int idx = Random.Range(0, pool.Length);
+                if (pool.Length > 1 && idx == _lastFootstepVarIdx)
+                    idx = (idx + 1) % pool.Length;
+                _lastFootstepVarIdx = idx;
+                if (pool[idx] != null) return pool[idx];
+            }
+
+            return surface switch
             {
                 "metal"  => footstepMetalClip != null ? footstepMetalClip : footstepFloorClip,
                 "puddle" => footstepPuddleClip != null ? footstepPuddleClip : footstepFloorClip,
                 _        => footstepFloorClip,
             };
-            PlaySurfaceSfx(clip, running ? 0.55f : 0.36f, 0.92f, 1.08f);
         }
 
         private void PlaySurfaceSfx(AudioClip clip, float vol, float minPitch, float maxPitch)
@@ -647,7 +710,8 @@ namespace Studio.Game.Animation
             var src = footstepAudio != null ? footstepAudio : thrusterAudio;
             if (src == null) return;
             src.pitch = Random.Range(minPitch, maxPitch);
-            src.PlayOneShot(clip, vol * GameSettingsManager.SfxVolume);
+            float scale = src.outputAudioMixerGroup != null ? 1f : GameSettingsManager.SfxVolume;
+            src.PlayOneShot(clip, vol * scale);
         }
 
         private void UpdateDashFovKick(DezMovementConfig cfg)

@@ -10,17 +10,21 @@ namespace Studio.Game.Menu
     /// </summary>
     public static class GameSettingsManager
     {
-        public const string KeyMasterVol  = "CONCERTO_OPT_MASTER_VOL";
-        public const string KeyMusicVol   = "CONCERTO_OPT_MUSIC_VOL";
-        public const string KeySfxVol     = "CONCERTO_OPT_SFX_VOL";
-        public const string KeyFullscreen = "CONCERTO_OPT_FULLSCREEN";
+        public const string KeyMasterVol   = "CONCERTO_OPT_MASTER_VOL";
+        public const string KeyMusicVol    = "CONCERTO_OPT_MUSIC_VOL";
+        public const string KeySfxVol      = "CONCERTO_OPT_SFX_VOL";
+        public const string KeyAmbienceVol = "CONCERTO_OPT_AMBIENCE_VOL";
+        public const string KeyUiVol       = "CONCERTO_OPT_UI_VOL";
+        public const string KeyFullscreen  = "CONCERTO_OPT_FULLSCREEN";
         public const string KeyQuality     = "CONCERTO_OPT_QUALITY";
         public const string KeyCameraSens  = "CONCERTO_OPT_CAM_SENS";
         public const string KeyReduceShake = "CONCERTO_OPT_REDUCE_SHAKE";
 
         public static float MasterVolume      { get; private set; } = 0.85f;
-        public static float MusicVolume       { get; private set; } = 0.75f;
+        public static float MusicVolume       { get; private set; } = 0.70f;
         public static float SfxVolume         { get; private set; } = 0.85f;
+        public static float AmbienceVolume    { get; private set; } = 0.70f;
+        public static float UiVolume          { get; private set; } = 0.80f;
         public static bool  IsFullscreen      { get; private set; } = true;
         public static int   QualityIndex      { get; private set; } = 2;
         public static float CameraSensitivity { get; private set; } = 1.0f;
@@ -32,10 +36,12 @@ namespace Studio.Game.Menu
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void LoadAndApply()
         {
-            MasterVolume = Mathf.Clamp01(PlayerPrefs.GetFloat(KeyMasterVol, 0.85f));
-            MusicVolume  = Mathf.Clamp01(PlayerPrefs.GetFloat(KeyMusicVol,  0.75f));
-            SfxVolume    = Mathf.Clamp01(PlayerPrefs.GetFloat(KeySfxVol,    0.85f));
-            IsFullscreen = PlayerPrefs.GetInt(KeyFullscreen, Screen.fullScreen ? 1 : 0) == 1;
+            MasterVolume   = Mathf.Clamp01(PlayerPrefs.GetFloat(KeyMasterVol,   0.85f));
+            MusicVolume    = Mathf.Clamp01(PlayerPrefs.GetFloat(KeyMusicVol,    0.70f));
+            SfxVolume      = Mathf.Clamp01(PlayerPrefs.GetFloat(KeySfxVol,      0.85f));
+            AmbienceVolume = Mathf.Clamp01(PlayerPrefs.GetFloat(KeyAmbienceVol, 0.70f));
+            UiVolume       = Mathf.Clamp01(PlayerPrefs.GetFloat(KeyUiVol,       0.80f));
+            IsFullscreen   = PlayerPrefs.GetInt(KeyFullscreen, Screen.fullScreen ? 1 : 0) == 1;
 
             int maxQ = Mathf.Max(0, QualitySettings.names.Length - 1);
             int defQ = Mathf.Clamp(QualitySettings.GetQualityLevel(), 0, maxQ);
@@ -82,6 +88,22 @@ namespace Studio.Game.Menu
         {
             SfxVolume = Mathf.Clamp01(v);
             PlayerPrefs.SetFloat(KeySfxVol, SfxVolume);
+            PlayerPrefs.Save();
+            ApplyRuntime();
+        }
+
+        public static void SetAmbienceVolume(float v)
+        {
+            AmbienceVolume = Mathf.Clamp01(v);
+            PlayerPrefs.SetFloat(KeyAmbienceVol, AmbienceVolume);
+            PlayerPrefs.Save();
+            ApplyRuntime();
+        }
+
+        public static void SetUiVolume(float v)
+        {
+            UiVolume = Mathf.Clamp01(v);
+            PlayerPrefs.SetFloat(KeyUiVol, UiVolume);
             PlayerPrefs.Save();
             ApplyRuntime();
         }

@@ -1,4 +1,5 @@
 using Studio.Game.Animation;
+using Studio.Game.Audio;
 using Studio.Game.Cutscenes;
 using Studio.Game.Dialogue;
 using Studio.Game.Parts;
@@ -115,6 +116,8 @@ namespace Studio.Game.Menu
 
             if (CanOpenPauseNow())
                 PauseGame();
+            else if (AudioMixController.Instance != null)
+                AudioMixController.Instance.PlayUiDeny();
         }
 
         /// <summary>
@@ -159,11 +162,13 @@ namespace Studio.Game.Menu
             if (pauseButtonsGroup != null) pauseButtonsGroup.interactable = true;
             if (confirmMenuModal != null) confirmMenuModal.SetActive(false);
             if (optionsPanel != null) optionsPanel.gameObject.SetActive(false);
+            if (AudioMixController.Instance != null) AudioMixController.Instance.PlayUiOpen();
         }
 
         public void ResumeGame()
         {
             if (!IsPaused) return;
+            if (AudioMixController.Instance != null) AudioMixController.Instance.PlayUiClose();
             IsPaused = false;
 
             if (optionsPanel != null) optionsPanel.gameObject.SetActive(false);
@@ -197,6 +202,7 @@ namespace Studio.Game.Menu
             {
                 if (pauseButtonsGroup != null) pauseButtonsGroup.interactable = false;
                 confirmMenuModal.SetActive(true);
+                if (AudioMixController.Instance != null) AudioMixController.Instance.PlayUiOpen();
             }
             else
             {
@@ -206,12 +212,14 @@ namespace Studio.Game.Menu
 
         public void CancelReturnToMenu()
         {
+            if (AudioMixController.Instance != null) AudioMixController.Instance.PlayUiClose();
             if (confirmMenuModal != null) confirmMenuModal.SetActive(false);
             if (pauseButtonsGroup != null) pauseButtonsGroup.interactable = true;
         }
 
         public void ConfirmReturnToMenu()
         {
+            if (AudioMixController.Instance != null) AudioMixController.Instance.PlayUiConfirm();
             GameSaveState.SaveCurrentWorkshopState();
             IsPaused = false;
             Time.timeScale = 1f;

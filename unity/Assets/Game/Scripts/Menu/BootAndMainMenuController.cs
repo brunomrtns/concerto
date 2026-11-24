@@ -1,4 +1,5 @@
 using System.Collections;
+using Studio.Game.Audio;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -162,6 +163,7 @@ namespace Studio.Game.Menu
 
         public void OnNewGameClicked()
         {
+            if (AudioMixController.Instance != null) AudioMixController.Instance.PlayUiConfirm();
             Time.timeScale = 1f;
             AudioListener.pause = false;
             GameSaveState.PrepareNewGame();
@@ -170,7 +172,12 @@ namespace Studio.Game.Menu
 
         public void OnContinueClicked()
         {
-            if (!GameSaveState.HasSave) return;
+            if (!GameSaveState.HasSave)
+            {
+                if (AudioMixController.Instance != null) AudioMixController.Instance.PlayUiDeny();
+                return;
+            }
+            if (AudioMixController.Instance != null) AudioMixController.Instance.PlayUiConfirm();
             Time.timeScale = 1f;
             AudioListener.pause = false;
             GameSaveState.PrepareContinue();
@@ -191,6 +198,7 @@ namespace Studio.Game.Menu
 
         public void OnQuitClicked()
         {
+            if (AudioMixController.Instance != null) AudioMixController.Instance.PlayUiConfirm();
             Debug.Log("[MainMenu] Sair solicitado.");
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
@@ -201,8 +209,17 @@ namespace Studio.Game.Menu
 
         private void ApplyMenuMusicVolume()
         {
-            if (menuMusicSource != null)
+            if (menuMusicSource == null) return;
+            var mix = AudioMixController.Instance;
+            if (mix != null && mix.MusicGroup != null)
+            {
+                menuMusicSource.outputAudioMixerGroup = mix.MusicGroup;
+                menuMusicSource.volume = baseMusicVolume;
+            }
+            else
+            {
                 menuMusicSource.volume = baseMusicVolume * GameSettingsManager.MusicVolume;
+            }
         }
     }
 }
