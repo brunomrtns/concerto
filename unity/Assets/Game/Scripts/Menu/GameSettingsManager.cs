@@ -14,8 +14,9 @@ namespace Studio.Game.Menu
         public const string KeyMusicVol   = "CONCERTO_OPT_MUSIC_VOL";
         public const string KeySfxVol     = "CONCERTO_OPT_SFX_VOL";
         public const string KeyFullscreen = "CONCERTO_OPT_FULLSCREEN";
-        public const string KeyQuality    = "CONCERTO_OPT_QUALITY";
-        public const string KeyCameraSens = "CONCERTO_OPT_CAM_SENS";
+        public const string KeyQuality     = "CONCERTO_OPT_QUALITY";
+        public const string KeyCameraSens  = "CONCERTO_OPT_CAM_SENS";
+        public const string KeyReduceShake = "CONCERTO_OPT_REDUCE_SHAKE";
 
         public static float MasterVolume      { get; private set; } = 0.85f;
         public static float MusicVolume       { get; private set; } = 0.75f;
@@ -23,6 +24,8 @@ namespace Studio.Game.Menu
         public static bool  IsFullscreen      { get; private set; } = true;
         public static int   QualityIndex      { get; private set; } = 2;
         public static float CameraSensitivity { get; private set; } = 1.0f;
+        public static bool  ReduceCameraShake { get; private set; } = false;
+        public static float CameraShakeScale  => ReduceCameraShake ? 0.25f : 1.0f;
 
         public static event Action OnSettingsChanged;
 
@@ -38,7 +41,16 @@ namespace Studio.Game.Menu
             int defQ = Mathf.Clamp(QualitySettings.GetQualityLevel(), 0, maxQ);
             QualityIndex = Mathf.Clamp(PlayerPrefs.GetInt(KeyQuality, defQ), 0, maxQ);
             CameraSensitivity = Mathf.Clamp(PlayerPrefs.GetFloat(KeyCameraSens, 1.0f), 0.3f, 2.5f);
+            ReduceCameraShake = PlayerPrefs.GetInt(KeyReduceShake, 0) == 1;
 
+            ApplyRuntime();
+        }
+
+        public static void SetReduceCameraShake(bool reduce)
+        {
+            ReduceCameraShake = reduce;
+            PlayerPrefs.SetInt(KeyReduceShake, reduce ? 1 : 0);
+            PlayerPrefs.Save();
             ApplyRuntime();
         }
 

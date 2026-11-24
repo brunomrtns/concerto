@@ -23,11 +23,13 @@ MonoBehaviour:
   fallGravityMultiplier: 1.35
   jumpHeight: 1.35
   jumpCutMultiplier: 0.45
-  coyoteTimeSec: 0.14
-  jumpBufferSec: 0.14
+  coyoteTimeSec: 0.1
+  jumpBufferSec: 0.15
   dashSpeed: 13.5
   dashDurationSec: 0.18
   dashCooldownSec: 2
+  dashFovKickDeg: 3.5
+  dashFovKickDurationSec: 0.18
   dashPrimaryKey: 306
   dashAltKey: 102
   enableLedgeMantle: 1

@@ -36,11 +36,14 @@ namespace Studio.Game.Tool
         public float boltLifetimeSec = 2.2f;
         public float boltCooldownSec = 0.45f;
 
-        [Header("Game Feel Obrigatorio (Acerto)")]
-        [Tooltip("Hitstop em segundos no acerto (spec: 50-80ms).")]
-        [Range(0.05f, 0.08f)] public float hitstopDurationSec = 0.065f;
-        [Tooltip("Amplitude sutil do camera shake no acerto.")]
+        [Header("Game Feel Obrigatorio (Acerto — DESIGN_BIBLE Secoes 3 & 9)")]
+        [Tooltip("Hitstop em segundos no acerto leve (DESIGN_BIBLE: 50-100ms).")]
+        [Range(0.05f, 0.10f)] public float hitstopDurationSec = 0.065f;
+        [Tooltip("Hitstop em segundos no golpe carregado (DESIGN_BIBLE: ~100ms).")]
+        [Range(0.05f, 0.10f)] public float heavyHitstopDurationSec = 0.095f;
+        [Tooltip("Amplitude sutil do camera shake no acerto (escalada por GameSettingsManager.CameraShakeScale).")]
         public float cameraShakeAmplitude = 0.065f;
-        public float cameraShakeDurationSec = 0.12f;
+        [Tooltip("Decay do camera shake em segundos (DESIGN_BIBLE: <300ms).")]
+        [Range(0.05f, 0.28f)] public float cameraShakeDurationSec = 0.14f;
     }
 }

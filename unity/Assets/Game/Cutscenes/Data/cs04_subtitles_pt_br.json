@@ -2,7 +2,7 @@
   "cutsceneId": "cs04_o_ceu_rachou",
   "title": "O Céu Rachou",
   "totalDurationSec": 36.0,
-  "skipHintDelaySec": 2.0,
+  "skipHintDelaySec": 3.0,
   "skipHintText": "Segure [Espaço] ou [Esc] para pular",
   "postObjectiveText": "Fale com Vera",
   "lines": [

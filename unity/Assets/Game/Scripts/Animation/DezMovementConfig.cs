@@ -34,10 +34,10 @@ namespace Studio.Game.Animation
         public float jumpHeight = 1.35f;
         [Tooltip("Multiplicador da velocidade vertical ao soltar Espaco cedo (pulo curto).")]
         [Range(0.2f, 0.9f)] public float jumpCutMultiplier = 0.45f;
-        [Tooltip("Janela de tolerancia apos sair de uma borda para ainda permitir o pulo (s).")]
-        public float coyoteTimeSec = 0.14f;
-        [Tooltip("Janela de buffer se o jogador apertar Espaco logo antes de tocar o chao (s).")]
-        public float jumpBufferSec = 0.14f;
+        [Tooltip("Janela de tolerancia apos sair de uma borda para ainda permitir o pulo (DESIGN_BIBLE: ~100ms).")]
+        public float coyoteTimeSec = 0.10f;
+        [Tooltip("Janela de buffer se o jogador apertar Espaco logo antes de tocar o chao (DESIGN_BIBLE: ~150ms).")]
+        public float jumpBufferSec = 0.15f;
 
         [Header("Impulso Mecanico (Dash dos Propulsores — SEM i-frames)")]
         [Tooltip("Velocidade da rajada de impulso (m/s).")]
@@ -46,6 +46,9 @@ namespace Studio.Game.Animation
         public float dashDurationSec = 0.18f;
         [Tooltip("Cooldown entre impulsos (s).")]
         public float dashCooldownSec = 2.0f;
+        [Tooltip("Kick de FOV durante o dash (DESIGN_BIBLE: <=4 graus e <=200ms).")]
+        [Range(0f, 4f)] public float dashFovKickDeg = 3.5f;
+        [Range(0.05f, 0.20f)] public float dashFovKickDurationSec = 0.18f;
         [Tooltip("Tecla principal do impulso mecanico (Ctrl esquerdo / F).")]
         public KeyCode dashPrimaryKey = KeyCode.LeftControl;
         public KeyCode dashAltKey = KeyCode.F;

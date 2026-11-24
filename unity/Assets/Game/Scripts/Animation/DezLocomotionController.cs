@@ -57,6 +57,8 @@ namespace Studio.Game.Animation
         private float _lastAirVy;
         private float _stepTimer;
         private float _landingBobOffset;
+        private float _baseFov = 55f;
+        private float _dashFovKickTimer;
         private string _lastSurfaceType = "floor";
         private Vector3 _lastWallNormal;
         private float _lastWallHitTime = -10f;
@@ -65,6 +67,7 @@ namespace Studio.Game.Animation
         public bool SimulateLegacySnagMode { get; set; }
         public string LastSurfaceType => _lastSurfaceType;
         public int WallSlideCount { get; private set; }
+        public float CurrentFovKickDeg { get; private set; }
 
         // Coyote Time + Jump Buffer
         private float _coyoteTimer;
@@ -219,6 +222,7 @@ namespace Studio.Game.Animation
             _dashDir = preferredDir.sqrMagnitude > 0.01f ? preferredDir.normalized : transform.forward;
             _isDashing = true;
             _dashTimer = Cfg.dashDurationSec;
+            _dashFovKickTimer = Mathf.Min(0.20f, Cfg.dashFovKickDurationSec);
             _dashCooldownUntil = Time.time + Cfg.dashCooldownSec;
 
             transform.rotation = Quaternion.LookRotation(_dashDir, Vector3.up);
@@ -470,6 +474,7 @@ namespace Studio.Game.Animation
 
             var cfg = Cfg;
             UpdateCameraProximityPlayerFade(cfg);
+            UpdateDashFovKick(cfg);
             if (cameraFollowTarget != null && gameplayVcam != null)
             {
                 // Atualiza pivot da CinemachineCamera 3.1.4 com landing bob sutil
@@ -610,6 +615,37 @@ namespace Studio.Game.Animation
             if (src == null) return;
             src.pitch = Random.Range(minPitch, maxPitch);
             src.PlayOneShot(clip, vol * GameSettingsManager.SfxVolume);
+        }
+
+        private void UpdateDashFovKick(DezMovementConfig cfg)
+        {
+            if (gameplayVcam != null && _dashFovKickTimer <= 0f && CurrentFovKickDeg <= 0.001f)
+                _baseFov = gameplayVcam.Lens.FieldOfView;
+            else if (gameplayVcam == null && Camera.main != null && _dashFovKickTimer <= 0f && CurrentFovKickDeg <= 0.001f)
+                _baseFov = Camera.main.fieldOfView;
+
+            if (_dashFovKickTimer > 0f)
+            {
+                _dashFovKickTimer = Mathf.Max(0f, _dashFovKickTimer - Time.unscaledDeltaTime);
+                float dur = Mathf.Max(0.05f, Mathf.Min(0.20f, cfg.dashFovKickDurationSec));
+                float u = 1f - (_dashFovKickTimer / dur);
+                CurrentFovKickDeg = Mathf.Sin(u * Mathf.PI) * Mathf.Clamp(cfg.dashFovKickDeg, 0f, 4.0f);
+            }
+            else
+            {
+                CurrentFovKickDeg = 0f;
+            }
+
+            if (gameplayVcam != null)
+            {
+                var lens = gameplayVcam.Lens;
+                lens.FieldOfView = _baseFov + CurrentFovKickDeg;
+                gameplayVcam.Lens = lens;
+            }
+            else if (Camera.main != null)
+            {
+                Camera.main.fieldOfView = _baseFov + CurrentFovKickDeg;
+            }
         }
 
         private void UpdateCameraProximityPlayerFade(DezMovementConfig cfg)

@@ -33,5 +33,6 @@ MonoBehaviour:
   boltLifetimeSec: 2.2
   boltCooldownSec: 0.45
   hitstopDurationSec: 0.065
+  heavyHitstopDurationSec: 0.095
   cameraShakeAmplitude: 0.065
-  cameraShakeDurationSec: 0.12
+  cameraShakeDurationSec: 0.14

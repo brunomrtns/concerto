@@ -281,8 +281,9 @@ namespace Studio.Game.Tool
             {
                 _inHitstop = true;
                 float prevScale = Time.timeScale;
+                float hitstopDur = isHeavy ? Cfg.heavyHitstopDurationSec : Cfg.hitstopDurationSec;
                 Time.timeScale = 0.02f;
-                yield return new WaitForSecondsRealtime(Cfg.hitstopDurationSec);
+                yield return new WaitForSecondsRealtime(Mathf.Clamp(hitstopDur, 0.05f, 0.10f));
                 Time.timeScale = prevScale > 0.05f ? prevScale : 1f;
                 _inHitstop = false;
             }
@@ -290,8 +291,8 @@ namespace Studio.Game.Tool
             if (cameraShakePivot != null)
             {
                 Vector3 orig = cameraShakePivot.localPosition;
-                float dur = Cfg.cameraShakeDurationSec;
-                float amp = Cfg.cameraShakeAmplitude * (isHeavy ? 1.35f : 1.0f);
+                float dur = Mathf.Min(0.28f, Cfg.cameraShakeDurationSec);
+                float amp = Cfg.cameraShakeAmplitude * (isHeavy ? 1.35f : 1.0f) * GameSettingsManager.CameraShakeScale;
                 float t = 0f;
                 while (t < dur)
                 {
