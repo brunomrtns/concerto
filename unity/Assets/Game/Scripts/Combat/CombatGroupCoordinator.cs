@@ -47,6 +47,12 @@ namespace Studio.Game.Combat
             if (enemy != null) ActiveTokens.Remove(enemy);
         }
 
+        public static void ResetAll()
+        {
+            Registered.Clear();
+            ActiveTokens.Clear();
+        }
+
         public static Vector3 ComputeSeparationSteering(ManifestationEnemyBase self, float desiredSpacing = 2.1f)
         {
             if (self == null) return Vector3.zero;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Studio.Game.Audio;
+using Studio.Game.Combat;
 using Studio.Game.Menu;
 using UnityEngine;
 using UnityEngine.UI;
@@ -49,6 +50,7 @@ namespace Studio.Game.Epicenter
         private void Update()
         {
             if (IsTriggered || _player == null) return;
+            if (PlayerHealthController.Instance != null && PlayerHealthController.Instance.IsKnockedDown) return;
             float r = config != null ? config.arenaTriggerRadius : 5.5f;
             Vector3 d = _player.position - transform.position;
             d.y = 0f;

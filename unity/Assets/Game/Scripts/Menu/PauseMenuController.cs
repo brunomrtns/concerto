@@ -1,5 +1,6 @@
 using Studio.Game.Animation;
 using Studio.Game.Audio;
+using Studio.Game.Combat;
 using Studio.Game.Cutscenes;
 using Studio.Game.Dialogue;
 using Studio.Game.Parts;
@@ -36,6 +37,8 @@ namespace Studio.Game.Menu
 
         private CutsceneManager _cs01;
         private Cutscene02TravelController _cs02;
+        private Cutscene03ReturnController _cs03;
+        private Cutscene04SkyCrackedController _cs04;
         private DezLocomotionController _playerLoco;
         private bool _locoWasEnabledBeforePause;
 
@@ -79,6 +82,8 @@ namespace Studio.Game.Menu
         {
             _cs01 = FindAnyObjectByType<CutsceneManager>();
             _cs02 = FindAnyObjectByType<Cutscene02TravelController>();
+            _cs03 = FindAnyObjectByType<Cutscene03ReturnController>();
+            _cs04 = FindAnyObjectByType<Cutscene04SkyCrackedController>();
             var dez = GameObject.Find("Player_Dez_Placeholder");
             if (dez != null) _playerLoco = dez.GetComponent<DezLocomotionController>();
 
@@ -127,7 +132,10 @@ namespace Studio.Game.Menu
         {
             if (_cs01 != null && _cs01.IsPlaying) return false;
             if (_cs02 != null && _cs02.IsPlaying) return false;
+            if (_cs03 != null && _cs03.IsPlaying) return false;
+            if (_cs04 != null && _cs04.IsPlaying) return false;
             if (DialogueController.Instance != null && DialogueController.Instance.IsDialogueActive) return false;
+            if (PlayerHealthController.Instance != null && PlayerHealthController.Instance.IsKnockedDown) return false;
             return true;
         }
 

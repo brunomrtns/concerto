@@ -144,6 +144,7 @@ namespace Studio.Game.Boss
         public void StartBossFight()
         {
             if (State != BossFsmState.Dormant) return;
+            if (PlayerHealthController.Instance != null && PlayerHealthController.Instance.IsKnockedDown) return;
             // Define checkpoint da ARENA para retry limpo (sem repetir o Epicentro inteiro!)
             if (PlayerHealthController.Instance != null)
                 PlayerHealthController.Instance.SetCheckpoint(arenaRetryCheckpoint);

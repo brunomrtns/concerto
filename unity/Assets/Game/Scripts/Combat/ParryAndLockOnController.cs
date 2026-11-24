@@ -59,6 +59,7 @@ namespace Studio.Game.Combat
         private void OnDestroy()
         {
             if (Instance == this) Instance = null;
+            if (Time.timeScale > 0.001f && Time.timeScale < 0.99f) Time.timeScale = 1f;
         }
 
         public bool TryTriggerParry()
