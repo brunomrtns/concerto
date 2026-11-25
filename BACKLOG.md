@@ -12,18 +12,9 @@
 
 ## Itens Abertos / Em Andamento (Prioridade: Crítico → Médio → Baixo)
 
-### `BL-001` — Bug crítico: missão/objetivo reseta ou troca indevidamente ao falar com NPC
-- **Severidade:** `CRÍTICO`
-- **Status:** `EM_ANDAMENTO`
-- **Descrição:** `DialogueController.EndConversation()` aplica `ObjectiveSystem.Set(_loc.Format(postObjKey, partsTotal))` incondicionalmente toda vez que uma conversa termina. Se o jogador já coletou peças (`k/N`), já concluiu o Ato 1, ou está no Ato 2/Setor Externo e fala novamente com a Juno (ou qualquer NPC com `postObjectiveKey`), o objetivo atual no HUD é sobrescrito/resetado para um objetivo antigo (ex.: `"Encontre as peças da máquina (0/3)"` ou `"Ato 1 concluído"`).
-- **Critério de pronto:**
-  1. `DialogueController` rastreia conversas já concluídas (`_completedDialogueIds`) e só aplica `postObjectiveKey` na primeira conclusão E quando a progressão ainda não superou aquele marco (nunca sobrescreve progresso de coleta `k/N`, Ato 2 ou etapas posteriores).
-  2. Teste PlayMode automatizado prova que re-conversar com Juno/NPCs durante coleta (`2/5`), após Ato 1 e durante Ato 2 mantém o objetivo intacto.
-  3. `0 warnings CS`, `Tests/SmokeTest/` 7/7 verde, evidência em `captures/backlog/bl001_objetivo_intacto.png`, commit + push.
-
 ### `BL-002` — HUD Overlap superior esquerdo (`QA-01`)
 - **Severidade:** `MÉDIO`
-- **Status:** `ABERTO`
+- **Status:** `EM_ANDAMENTO`
 - **Descrição:** Reportado em `QA_AUTOMATIZADO.md` (`QA-01`): em `1280x720`, os 4 segmentos de HP (`PlayerHealthController`) sobrepõem diretamente o texto `"OBJETIVO / Fale com Juno"` no canto superior esquerdo.
 - **Critério de pronto:** Separar verticalmente a barra de HP e o banner de Objetivo sem nenhum pixel de sobreposição em `1280x720`, evidência visual em `captures/backlog/bl002_hud_top_left_depois.png`, `0 warnings CS`, `Tests/SmokeTest/` 7/7 verde, commit + push.
 
@@ -67,3 +58,4 @@
 | `QA-F1` | QA Automatizado — Fase 1 (Playcaller MCP, SmokeTest 7/7, sessão 2min MP4, `QA_AUTOMATIZADO.md`) | Infra | `FEITO` | 2026-11-24 | `6d46986` |
 | `PERF-01` | Pass de Performance (-19% a -46% ms/frame, NonAlloc physics, Camera cache, HUD dirty-check) | Médio | `FEITO` | 2026-11-24 | `bf1f859` |
 | `ANIM-01` | Polimento de animação do Dez (braços afastados, arma em RightHand + swing/coice, mantle 3 fases, pouso correndo sem deslize, passos NPC sincronizados) | Médio | `FEITO` | 2026-11-24 | `b633c5d` |
+| `BL-001` | Bug crítico: missão/objetivo reseta ou troca indevidamente ao falar com NPC | Crítico | `FEITO` | 2026-11-25 | `24bbf37` |

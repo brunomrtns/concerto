@@ -275,6 +275,7 @@ namespace Studio.Game.Combat
             var scaler = canvasGo.AddComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1920f, 1080f);
+            scaler.matchWidthOrHeight = 0.5f;
 
             // Vignette vermelha de dano (tela inteira, nao bloqueia raycasts)
             var vigGo = new GameObject("DamageVignette");
@@ -288,14 +289,14 @@ namespace Studio.Game.Combat
             _redVignette.color = new Color(0.85f, 0.08f, 0.08f, 0f);
             _redVignette.raycastTarget = false;
 
-            // Barra de 4 segmentos no canto superior esquerdo
+            // BL-002 (QA-01): Barra de 4 segmentos posicionada limpa ABAIXO do banner de OBJETIVO (zero overlap!)
             var rootGo = new GameObject("HP_SegmentsRoot");
             rootGo.transform.SetParent(canvasGo.transform, false);
             var rrt = rootGo.AddComponent<RectTransform>();
             rrt.anchorMin = new Vector2(0f, 1f);
             rrt.anchorMax = new Vector2(0f, 1f);
             rrt.pivot = new Vector2(0f, 1f);
-            rrt.anchoredPosition = new Vector2(32f, -32f);
+            rrt.anchoredPosition = new Vector2(32f, -112f);
             rrt.sizeDelta = new Vector2(260f, 44f);
             _hudGroup = rootGo.AddComponent<CanvasGroup>();
 
