@@ -864,5 +864,68 @@ namespace Studio.Tests.SmokeTest
 
             Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_15: {string.Join(" | ", _consoleErrors)}");
         }
+
+        // (n) Sistema de Dialogo (GATE 5): trava input, avanca, pula tudo, libera gameplay limpo e repeticao nao reseta missao!
+        [UnityTest]
+        public IEnumerator Smoke_16_DialogueQueueHoldSkipRepeatAndGameplayRestore()
+        {
+            yield return LoadSceneAndVerifyCleanConsole("Caldeiral");
+
+            var cs01T  = GameType("Studio.Game.Cutscenes.CutsceneManager");
+            var dlgT   = GameType("Studio.Game.Dialogue.DialogueController");
+            var partsT = GameType("Studio.Game.Parts.PartsLoopManager");
+            var objT   = GameType("Studio.Game.Dialogue.ObjectiveSystem");
+            var locoT  = GameType("Studio.Game.Animation.DezLocomotionController");
+            var a11yT  = GameType("Studio.Game.UI.AccessibilityRuntimeController");
+
+            var cs01 = UnityEngine.Object.FindAnyObjectByType(cs01T);
+            if (cs01 != null && (bool)cs01T.GetProperty("IsPlaying").GetValue(cs01))
+                cs01T.GetMethod("SkipCutscene").Invoke(cs01, null);
+            yield return null;
+
+            var dlg   = UnityEngine.Object.FindAnyObjectByType(dlgT);
+            var parts = UnityEngine.Object.FindAnyObjectByType(partsT);
+            var loco  = UnityEngine.Object.FindAnyObjectByType(locoT) as Behaviour;
+            var a11y  = UnityEngine.Object.FindAnyObjectByType(a11yT);
+            Assert.IsNotNull(dlg);
+            Assert.IsNotNull(parts);
+            Assert.IsNotNull(loco);
+
+            var junoNpc   = partsT.GetField("junoNpc").GetValue(parts);
+            var introJson = partsT.GetField("junoIntroDialogueJson").GetValue(parts) as TextAsset;
+
+            // 1. Inicia dialogo -> input travado + legenda visivel com falante
+            dlgT.GetMethod("StartConversation").Invoke(dlg, new object[] { junoNpc, introJson });
+            yield return null;
+            Assert.IsTrue((bool)dlgT.GetProperty("IsDialogueActive").GetValue(dlg));
+            Assert.IsFalse(loco.enabled, "Input de gameplay deve ficar travado durante o dialogo.");
+            if (a11y != null)
+                Assert.IsTrue((bool)a11yT.GetProperty("IsSubtitleVisible").GetValue(a11y), "Legenda deve aparecer em toda fala.");
+
+            // 2. Avanca 1 passo e pula o resto segurando botao (SkipAllConversation) -> gameplay volta limpo!
+            dlgT.GetMethod("PressAdvanceInput").Invoke(dlg, null);
+            yield return null;
+            dlgT.GetMethod("SkipAllConversation").Invoke(dlg, null);
+            yield return null;
+            Assert.IsFalse((bool)dlgT.GetProperty("IsDialogueActive").GetValue(dlg));
+            Assert.IsTrue((bool)dlgT.GetProperty("WasLastConversationSkipped").GetValue(dlg));
+            Assert.IsTrue(loco.enabled, "Input de gameplay deve ser liberado limpo ao fim do dialogo.");
+
+            // 3. Falar de novo com o mesmo NPC -> fala curta de repeticao e NUNCA altera o objetivo da missao!
+            const string midObj = "Pecas (3/5) — Intacto";
+            objT.GetMethod("Set").Invoke(null, new object[] { midObj });
+            dlgT.GetMethod("StartConversation").Invoke(dlg, new object[] { junoNpc, introJson });
+            yield return null;
+            Assert.IsTrue((bool)dlgT.GetProperty("IsLastConversationRepeated").GetValue(dlg), "Repetir NPC deve disparar fala curta.");
+            string repeatLine = (string)dlgT.GetProperty("CurrentFullText").GetValue(dlg);
+            Assert.LessOrEqual(repeatLine.Length, 90, $"Fala de repeticao deve ser curta (<=90 chars, obtido={repeatLine.Length}).");
+
+            dlgT.GetMethod("SkipAllConversation").Invoke(dlg, null);
+            yield return null;
+            Assert.AreEqual(midObj, (string)objT.GetProperty("CurrentObjective").GetValue(null), "Falar de novo com NPC NUNCA pode alterar a missao.");
+            Assert.IsTrue(loco.enabled);
+
+            Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_16: {string.Join(" | ", _consoleErrors)}");
+        }
     }
 }

@@ -54,11 +54,15 @@ namespace Studio.Game.Dialogue
         private float _revealedChars;
         private bool _isTyping;
         private bool _isDialogueActive;
+        private float _skipHoldTimer;
+        private const float SkipHoldDurationSec = 0.65f;
 
         public bool IsDialogueActive => _isDialogueActive;
         public bool HasFocusedInteractable => _focused != null;
         public IInteractable FocusedInteractable => _focused;
         public bool IsTyping => _isTyping;
+        public bool IsLastConversationRepeated { get; private set; }
+        public bool WasLastConversationSkipped { get; private set; }
         public string CurrentDisplayedText => dialogueBodyText != null ? dialogueBodyText.text : string.Empty;
         public string CurrentFullText => _currentFullLine;
 
@@ -159,7 +163,35 @@ namespace Studio.Game.Dialogue
             if (promptGroup != null) promptGroup.alpha = 0f;
 
             _activeNpc = npc;
-            _activeData = data;
+            _skipHoldTimer = 0f;
+            WasLastConversationSkipped = false;
+
+            // GATE 2: Falar de novo com o mesmo NPC entrega fala curta de repeticao e NUNCA reativa a missao!
+            bool alreadyCompleted = !SimulateLegacyObjectiveOverwriteBug
+                && !string.IsNullOrEmpty(data.dialogueId)
+                && _completedDialogueIds.Contains(data.dialogueId);
+
+            if (alreadyCompleted)
+            {
+                IsLastConversationRepeated = true;
+                string speakerKey = data.lines[0].speakerKey;
+                string repeatTextKey = speakerKey == "speaker_vera" ? "repeat_vera" : "repeat_juno";
+                _activeData = new DialogueConversationData
+                {
+                    dialogueId = data.dialogueId,
+                    postObjectiveKey = string.Empty,
+                    lines = new List<DialogueEntry>
+                    {
+                        new DialogueEntry { speakerKey = speakerKey, textKey = repeatTextKey }
+                    }
+                };
+            }
+            else
+            {
+                IsLastConversationRepeated = false;
+                _activeData = data;
+            }
+
             _lineIndex = 0;
             _isDialogueActive = true;
 
@@ -205,6 +237,17 @@ namespace Studio.Game.Dialogue
             }
         }
 
+        /// <summary>
+        /// GATE 1: Pula todas as falas restantes imediatamente e libera gameplay limpo.
+        /// </summary>
+        public void SkipAllConversation()
+        {
+            if (!_isDialogueActive) return;
+            WasLastConversationSkipped = true;
+            _skipHoldTimer = 0f;
+            EndConversation();
+        }
+
         private void ShowCurrentLine()
         {
             var entry = _activeData.lines[_lineIndex];
@@ -215,6 +258,11 @@ namespace Studio.Game.Dialogue
 
             if (speakerNameText != null) speakerNameText.text = speaker;
             if (dialogueBodyText != null) dialogueBodyText.text = string.Empty;
+
+            // GATE 4: Legendas globais sincronizadas em toda fala (com nome do falante)
+            if (Studio.Game.UI.AccessibilityRuntimeController.Instance != null)
+                Studio.Game.UI.AccessibilityRuntimeController.Instance.ShowSubtitle(speaker, _currentFullLine, 4.5f);
+
             UpdateAdvanceHint();
         }
 
@@ -248,7 +296,24 @@ namespace Studio.Game.Dialogue
                 }
             }
 
-            if (Input.GetKeyDown(interactKey) || Input.GetKeyDown(KeyCode.Space))
+            // GATE 1: Segurar [Esc]/[Backspace]/[Tab] ou Gamepad [B] por 0.65s pula todo o dialogo limpo
+            bool holdingSkip = Input.GetKey(KeyCode.Escape) || Input.GetKey(KeyCode.Backspace)
+                || Input.GetKey(KeyCode.Tab) || Input.GetKey(KeyCode.JoystickButton1);
+            if (holdingSkip)
+            {
+                _skipHoldTimer += dt;
+                if (_skipHoldTimer >= SkipHoldDurationSec)
+                {
+                    SkipAllConversation();
+                    return;
+                }
+            }
+            else
+            {
+                _skipHoldTimer = 0f;
+            }
+
+            if (Input.GetKeyDown(interactKey) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.JoystickButton0))
             {
                 PressAdvanceInput();
             }

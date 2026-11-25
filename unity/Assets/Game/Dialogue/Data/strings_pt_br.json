@@ -5,8 +5,8 @@
     { "key": "prompt_pickup", "value": "[E] Pegar peça" },
     { "key": "prompt_activate_machine", "value": "[E] Ativar máquina" },
     { "key": "prompt_interact", "value": "[E] Interagir" },
-    { "key": "prompt_advance", "value": "[E] Continuar" },
-    { "key": "prompt_finish", "value": "[E] Encerrar" },
+    { "key": "prompt_advance", "value": "[E/A] Avançar  •  [Segure Esc/B] Pular" },
+    { "key": "prompt_finish", "value": "[E/A] Encerrar" },
     { "key": "objective_prefix", "value": "OBJETIVO" },
     { "key": "obj_talk_juno", "value": "Fale com Juno" },
     { "key": "obj_find_parts", "value": "Encontre as peças da máquina (0/{0})" },
@@ -19,25 +19,28 @@
     { "key": "speaker_juno", "value": "Juno" },
     { "key": "speaker_dez", "value": "Dez" },
 
-    { "key": "juno_intro_01", "value": "Até que enfim saiu da bancada, Dez. Tenho uma notícia ótima e outra que vai te dar dor de cabeça." },
-    { "key": "juno_intro_02", "value": "O Projeto Echo está completamente travado. O delivery com as peças principais tombou na entrega e espalhou os módulos pela oficina." },
-    { "key": "dez_intro_03", "value": "Maravilha... E o conselho quer tudo montado antes do próximo ciclo. Quantas peças ficaram faltando?" },
-    { "key": "juno_intro_04", "value": "Todas as peças marcadas no quadro da parede. Se você recuperar cada uma delas aqui pela oficina, eu preparo a calibração no terminal." },
-    { "key": "juno_intro_05", "value": "Olha pelo lado positivo: se a gente atrasar mais um dia, pelo menos você não precisa explicar pro conselho por que a máquina ainda parece uma torradeira gigante." },
+    { "key": "repeat_juno", "value": "Já alinhamos isso, Dez. Traga as peças do quadro." },
+    { "key": "repeat_vera", "value": "Sem novidade no barramento. Siga o sinal para o epicentro." },
 
-    { "key": "juno_deliver_01", "value": "Todas as peças inteiras... confesso que eu estava apostando que pelo menos uma tinha caído no fosso." },
-    { "key": "dez_deliver_02", "value": "Estão todas aí. Pode iniciar a calibração da estrutura principal." },
-    { "key": "juno_deliver_03", "value": "Fechado, chefe. Segura firme — o Projeto Echo finalmente vai sair do papel." },
+    { "key": "juno_intro_01", "value": "Saiu da bancada, Dez? O Projeto Echo travou antes do teste." },
+    { "key": "juno_intro_02", "value": "O carrinho de entrega tombou. Os módulos se espalharam pela oficina." },
+    { "key": "dez_intro_03", "value": "Módulos soltos? Curioso... Quantas peças faltam no esquema?" },
+    { "key": "juno_intro_04", "value": "Cinco no quadro da parede. Recupere todas que eu calibro o terminal." },
+    { "key": "juno_intro_05", "value": "E depressa — sem elas o Echo parece só uma caixa de cobre." },
 
-    { "key": "juno_test_01", "value": "[PROVA DE SISTEMA] Esta segunda conversa foi carregada trocando apenas o arquivo JSON de dados." },
-    { "key": "juno_test_02", "value": "[PROVA DE SISTEMA] Nenhuma linha de código C# foi alterada para exibir este diálogo." },
+    { "key": "juno_deliver_01", "value": "Cinco de cinco intactas. Achei que uma teria rolado pro fosso." },
+    { "key": "dez_deliver_02", "value": "Encaixes conferidos. Pode iniciar a calibração do núcleo." },
+    { "key": "juno_deliver_03", "value": "Fechado. Ative o terminal quando estiver pronto." },
+
+    { "key": "juno_test_01", "value": "[TESTE] Segunda conversa carregada direto do arquivo JSON." },
+    { "key": "juno_test_02", "value": "[TESTE] Sistema data-driven validado sem código extra." },
 
     { "key": "speaker_vera", "value": "Vera (Chefe de Setor)" },
     { "key": "obj_act3_stabilize_sector", "value": "Estabilize as anomalias do Setor Externo (0/3)" },
-    { "key": "dlg_vera_01", "value": "Dez... não encosta na grade. Eu estava sozinha aqui fora quando o céu rasgou." },
-    { "key": "dlg_vera_02", "value": "Vera, respira. O que aconteceu com o gerador e a antena?" },
-    { "key": "dlg_vera_03", "value": "Primeiro o vento parou. Depois a aurora subiu ao contrário e tudo no pátio começou a sair do compasso." },
-    { "key": "dlg_vera_04", "value": "Se você ainda tem sua ferramenta, estabiliza os três pontos do pátio antes que essa rachadura desça até a instalação." },
+    { "key": "dlg_vera_01", "value": "Dez, não encoste na grade. O céu rasgou enquanto eu checava o pátio." },
+    { "key": "dlg_vera_02", "value": "Frequência anômala detectada. O gerador e a antena falharam juntos?" },
+    { "key": "dlg_vera_03", "value": "O vento parou, a aurora inverteu e tudo perdeu o compasso." },
+    { "key": "dlg_vera_04", "value": "Estabilize os três nós do pátio antes que a fenda desça." },
 
     { "key": "obj_signal_talk_vera", "value": "Fale com Vera" },
     { "key": "obj_signal_restore_feeders", "value": "Restaure o alimentador do gerador" },
@@ -45,15 +48,15 @@
     { "key": "obj_signal_report_vera", "value": "Mostre a leitura para Vera" },
     { "key": "obj_signal_reach_epicenter", "value": "Chegue ao epicentro" },
 
-    { "key": "sig_intro_01", "value": "Dez... ainda bem que você saiu. Eu tentei puxar telemetria da rachadura pela antena de comunicação, mas o barramento caiu." },
-    { "key": "sig_intro_02", "value": "A gente precisa saber o tamanho disso antes que a estrutura inteira entre em colapso." },
-    { "key": "sig_intro_03", "value": "Restaura os dois alimentadores do gerador aqui no pátio. Assim que a carga voltar, captura a leitura direto na antena." },
-    { "key": "sig_intro_04", "value": "Pode deixar comigo, Vera. Vou religar os alimentadores e trazer essa leitura." },
+    { "key": "sig_intro_01", "value": "Tentei puxar telemetria da rachadura, mas o barramento caiu." },
+    { "key": "sig_intro_02", "value": "Sem leitura limpa, a estrutura pode colapsar sem aviso." },
+    { "key": "sig_intro_03", "value": "Religue os dois alimentadores do pátio e capture o sinal na antena." },
+    { "key": "sig_intro_04", "value": "Entendido. Alimentadores primeiro, leitura de frequência depois." },
 
-    { "key": "sig_result_01", "value": "Consegui a captura da antena, Vera. O terminal cuspiu uma curva toda quebrada." },
-    { "key": "sig_result_02", "value": "Espera... isso não faz sentido. O pico inicial não é gradual. A perturbação começou num instante exato: 14h02m11s." },
-    { "key": "sig_result_03", "value": "Um pulso limpo no meio do nada... deve ser um registro corrompido, erro de relógio dos sensores da torre." },
-    { "key": "sig_result_04", "value": "Mas o vetor de propagação não mente: a origem está no epicentro, logo além do portão leste." },
-    { "key": "sig_result_05", "value": "Destravei a trava de emergência do portão leste. Vai até o epicentro e descobre o que está rasgando o céu." }
+    { "key": "sig_result_01", "value": "Sinal capturado, Vera. A curva tem um corte perfeito no meio." },
+    { "key": "sig_result_02", "value": "Não foi gradual... o pulso começou exato às 14h02m11s." },
+    { "key": "sig_result_03", "value": "Pulso artificial no registro? Parece disparo de máquina, não erro." },
+    { "key": "sig_result_04", "value": "O vetor aponta direto pro epicentro, além do portão leste." },
+    { "key": "sig_result_05", "value": "Trava de emergência aberta. Vá ao epicentro e descubra a origem." }
   ]
 }
