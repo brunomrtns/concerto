@@ -20293,7 +20293,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 494689983}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 876596608}
+  m_Script: {fileID: 11500000, guid: cb258ed128786cb4eb2fcb1ca02d8012, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Studio.Game.Save.CheckpointTrigger
   checkpointId: cp_oficina_maquina
@@ -30042,7 +30042,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 715077135}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1888171866}
+  m_Script: {fileID: 11500000, guid: 6b68f4050dc2a4541a575dfe35f00dc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Studio.Gameplay::Studio.Gameplay.InteractableBase
   promptText: 'Girar I4_Valvula_C [E/B]'
@@ -30983,7 +30983,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 745036922}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1820596290}
+  m_Script: {fileID: 11500000, guid: 20d71198e30aa9f45a0e3d3d8fccd497, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Studio.Game.Tool.EnergyCellPickup
   cellAmount: 1
@@ -50778,7 +50778,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1109780217}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1888171866}
+  m_Script: {fileID: 11500000, guid: 6b68f4050dc2a4541a575dfe35f00dc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Studio.Gameplay::Studio.Gameplay.InteractableBase
   promptText: 'Girar I3_Valvula_B [E/B]'
@@ -70051,7 +70051,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1532637692}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1888171866}
+  m_Script: {fileID: 11500000, guid: 6b68f4050dc2a4541a575dfe35f00dc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Studio.Gameplay::Studio.Gameplay.InteractableBase
   promptText: "Ouvir V\xF3 Segunda [E/B]"
@@ -71132,7 +71132,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1556850261}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1820596290}
+  m_Script: {fileID: 11500000, guid: 20d71198e30aa9f45a0e3d3d8fccd497, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Studio.Game.Tool.EnergyCellPickup
   cellAmount: 1
@@ -74289,7 +74289,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1667410254}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1888171866}
+  m_Script: {fileID: 11500000, guid: 6b68f4050dc2a4541a575dfe35f00dc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Studio.Gameplay::Studio.Gameplay.InteractableBase
   promptText: 'Examinar Bancada [E/B]'
@@ -74460,7 +74460,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1681813447}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1888171866}
+  m_Script: {fileID: 11500000, guid: 6b68f4050dc2a4541a575dfe35f00dc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Studio.Gameplay::Studio.Gameplay.InteractableBase
   promptText: 'Ativar Re-Sincronia (Bis) [Y/E]'
@@ -75334,7 +75334,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1719731370}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1888171866}
+  m_Script: {fileID: 11500000, guid: 6b68f4050dc2a4541a575dfe35f00dc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Studio.Gameplay::Studio.Gameplay.InteractableBase
   promptText: "Conversar com Tio Hor\xE1rio [E/B]"
@@ -77377,7 +77377,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1806088515}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1888171866}
+  m_Script: {fileID: 11500000, guid: 6b68f4050dc2a4541a575dfe35f00dc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Studio.Gameplay::Studio.Gameplay.InteractableBase
   promptText: 'Abrir Passagem ao Mercado [E/B]'

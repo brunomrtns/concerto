@@ -3851,7 +3851,6 @@ GameObject:
   - component: {fileID: 324890700}
   - component: {fileID: 324890699}
   - component: {fileID: 324890698}
-  - component: {fileID: 324890697}
   m_Layer: 0
   m_Name: EnergyCell_cell_01_bancada
   m_TagString: Untagged
@@ -3874,18 +3873,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 677796820}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &324890697
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 324890695}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Studio.Game.Tool.EnergyCellPickup
 --- !u!23 &324890698
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -16058,7 +16045,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 654765752}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 876596608}
+  m_Script: {fileID: 11500000, guid: cb258ed128786cb4eb2fcb1ca02d8012, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Studio.Game.Save.CheckpointTrigger
   checkpointId: cp_oficina_bancada
@@ -16387,7 +16374,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 689745383}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 876596608}
+  m_Script: {fileID: 11500000, guid: cb258ed128786cb4eb2fcb1ca02d8012, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Studio.Game.Save.CheckpointTrigger
   checkpointId: cp_oficina_passarela
@@ -22145,7 +22132,6 @@ GameObject:
   m_Component:
   - component: {fileID: 771484520}
   - component: {fileID: 771484522}
-  - component: {fileID: 771484521}
   m_Layer: 0
   m_Name: CP_cp_oficina_maquina
   m_TagString: Untagged
@@ -22168,18 +22154,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1948953222}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &771484521
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 771484519}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Studio.Game.Save.CheckpointTrigger
 --- !u!65 &771484522
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -22980,21 +22954,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 868830886}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
---- !u!115 &876596608
-MonoScript:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  serializedVersion: 7
-  m_DefaultReferences: {}
-  m_Icon: {fileID: 0}
-  m_Type: 0
-  m_ExecutionOrder: 0
-  m_ClassName: CheckpointTrigger
-  m_Namespace: Studio.Game.Save
-  m_AssemblyName: Assembly-CSharp
 --- !u!1 &885300057
 GameObject:
   m_ObjectHideFlags: 0
@@ -30808,6 +30767,7 @@ MonoBehaviour:
   minArmClearanceIdleDeg: 9
   minArmClearanceWalkDeg: 12
   minArmClearanceRunDeg: 11
+  shoulderOutwardLiftDeg: 7.5
   walkArmSwingTargetDeg: 20
   runArmSwingTargetDeg: 36
   walkForearmBendDeg: 10
@@ -30821,6 +30781,7 @@ MonoBehaviour:
   landingMaxDip: 0.14
   landingSpringK: 180
   landingDamping: 20
+  runningRollDurationSec: 0.36
   breathCycleSec: 3.8
   breathChestDeg: 1.8
   enableContactShadow: 1
@@ -31327,7 +31288,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1267061809}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1820596290}
+  m_Script: {fileID: 11500000, guid: 20d71198e30aa9f45a0e3d3d8fccd497, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Studio.Game.Tool.EnergyCellPickup
   cellAmount: 1
@@ -32433,7 +32394,6 @@ GameObject:
   - component: {fileID: 1385497839}
   - component: {fileID: 1385497838}
   - component: {fileID: 1385497837}
-  - component: {fileID: 1385497836}
   m_Layer: 0
   m_Name: EnergyCell_cell_02_estante
   m_TagString: Untagged
@@ -32456,18 +32416,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 677796820}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1385497836
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1385497834}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Studio.Game.Tool.EnergyCellPickup
 --- !u!23 &1385497837
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -40377,21 +40325,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1787711963}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!115 &1820596290
-MonoScript:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  serializedVersion: 7
-  m_DefaultReferences: {}
-  m_Icon: {fileID: 0}
-  m_Type: 0
-  m_ExecutionOrder: 0
-  m_ClassName: EnergyCellPickup
-  m_Namespace: Studio.Game.Tool
-  m_AssemblyName: Assembly-CSharp
 --- !u!1 &1832478866
 GameObject:
   m_ObjectHideFlags: 0
