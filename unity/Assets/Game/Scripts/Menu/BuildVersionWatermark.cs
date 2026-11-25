@@ -128,6 +128,8 @@ namespace Studio.Game.Menu
             var scaler = go.AddComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1920f, 1080f);
+            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
+            scaler.matchWidthOrHeight = 1f;
 
             var bgGo = new GameObject("VersionPill");
             bgGo.transform.SetParent(go.transform, false);

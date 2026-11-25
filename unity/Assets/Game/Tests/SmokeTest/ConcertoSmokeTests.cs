@@ -1097,5 +1097,41 @@ namespace Studio.Tests.SmokeTest
             Assert.GreaterOrEqual((int)cyclesProp.GetValue(pause) - startCycles, 4, "PauseCycleCount deve contabilizar todos os 4 ciclos.");
             Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_19: {string.Join(" | ", _consoleErrors)}");
         }
+
+        // (r) BL-006 (QA-05): Todos os CanvasScalers de HUD normalizados para 1920x1080 Expand (16:9 e 21:9 ultrawide sem corte/sobreposicao).
+        [UnityTest]
+        public IEnumerator Smoke_20_BL006_AllHudCanvasScalersResponsiveForUltrawide()
+        {
+            yield return LoadSceneAndVerifyCleanConsole("Caldeiral");
+
+            var cs01T = GameType("Studio.Game.Cutscenes.CutsceneManager");
+            var cs01 = UnityEngine.Object.FindAnyObjectByType(cs01T);
+            if (cs01 != null && (bool)cs01T.GetProperty("IsPlaying").GetValue(cs01))
+                cs01T.GetMethod("SkipCutscene").Invoke(cs01, null);
+
+            for (int f = 0; f < 4; f++) yield return null;
+
+            var scalerMgrT = GameType("Studio.Game.Menu.HudResponsiveScaler");
+            Assert.IsNotNull(scalerMgrT, "HudResponsiveScaler deve existir.");
+            var mgr = UnityEngine.Object.FindAnyObjectByType(scalerMgrT);
+            Assert.IsNotNull(mgr, "HudResponsiveScaler deve estar ativo na cena.");
+            int normalized = (int)scalerMgrT.GetMethod("NormalizeAllActiveScalers").Invoke(mgr, null);
+            Assert.GreaterOrEqual(normalized, 4, $"Esperado >= 4 CanvasScalers normalizados em Caldeiral (obtido={normalized}).");
+
+            var scalers = UnityEngine.Object.FindObjectsByType<UnityEngine.UI.CanvasScaler>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            foreach (var sc in scalers)
+            {
+                if (sc == null) continue;
+                var canvas = sc.GetComponent<Canvas>();
+                if (canvas != null && canvas.renderMode == RenderMode.WorldSpace) continue;
+
+                Assert.AreEqual(UnityEngine.UI.CanvasScaler.ScaleMode.ScaleWithScreenSize, sc.uiScaleMode, $"{sc.name}: uiScaleMode deve ser ScaleWithScreenSize.");
+                Assert.AreEqual(new Vector2(1920f, 1080f), sc.referenceResolution, $"{sc.name}: referenceResolution deve ser 1920x1080.");
+                Assert.AreEqual(UnityEngine.UI.CanvasScaler.ScreenMatchMode.Expand, sc.screenMatchMode, $"{sc.name}: screenMatchMode deve ser Expand para 21:9.");
+                Assert.AreEqual(1f, sc.matchWidthOrHeight, 0.001f, $"{sc.name}: matchWidthOrHeight deve ser 1f.");
+            }
+
+            Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_20: {string.Join(" | ", _consoleErrors)}");
+        }
     }
 }

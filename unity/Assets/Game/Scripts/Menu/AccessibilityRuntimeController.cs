@@ -252,6 +252,8 @@ namespace Studio.Game.UI
             var scaler = go.AddComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1920f, 1080f);
+            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
+            scaler.matchWidthOrHeight = 1f;
 
             // Camada de brilho (non-raycast)
             var brightGo = new GameObject("BrightnessOverlay");

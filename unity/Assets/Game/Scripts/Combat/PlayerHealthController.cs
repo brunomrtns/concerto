@@ -290,7 +290,8 @@ namespace Studio.Game.Combat
             var scaler = canvasGo.AddComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1920f, 1080f);
-            scaler.matchWidthOrHeight = 0.5f;
+            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
+            scaler.matchWidthOrHeight = 1f;
 
             // Vignette vermelha de dano (tela inteira, nao bloqueia raycasts)
             var vigGo = new GameObject("DamageVignette");
