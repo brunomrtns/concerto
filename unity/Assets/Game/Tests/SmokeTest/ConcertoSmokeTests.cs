@@ -981,5 +981,60 @@ namespace Studio.Tests.SmokeTest
 
             Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_17: {string.Join(" | ", _consoleErrors)}");
         }
+
+        // (p) Anti-Softlock (GATE 5): morrer no meio da missao -> respawn mantem objetivo, porta aberta e pecas coletadas intactas!
+        [UnityTest]
+        public IEnumerator Smoke_18_DeathRespawnPreservesMissionDoorsAndParts()
+        {
+            yield return LoadSceneAndVerifyCleanConsole("Caldeiral");
+
+            var cs01T   = GameType("Studio.Game.Cutscenes.CutsceneManager");
+            var hpT     = GameType("Studio.Game.Combat.PlayerHealthController");
+            var objT    = GameType("Studio.Game.Dialogue.ObjectiveSystem");
+            var doorT   = GameType("Studio.Game.Sector.SectorDoorInteractable");
+            var partsT  = GameType("Studio.Game.Parts.PartsLoopManager");
+            var pickupT = GameType("Studio.Game.Parts.MachinePartPickup");
+
+            var cs01 = UnityEngine.Object.FindAnyObjectByType(cs01T);
+            if (cs01 != null && (bool)cs01T.GetProperty("IsPlaying").GetValue(cs01))
+                cs01T.GetMethod("SkipCutscene").Invoke(cs01, null);
+            yield return null;
+
+            var hp = UnityEngine.Object.FindAnyObjectByType(hpT);
+            var parts = UnityEngine.Object.FindAnyObjectByType(partsT);
+            Assert.IsNotNull(hp, "PlayerHealthController obrigatorio.");
+
+            // Configura estado em andamento: objetivo, porta destravada e 1 peca coletada
+            const string midObj = "Pecas (3/5) — AntiSoftlock";
+            objT.GetMethod("Set").Invoke(null, new object[] { midObj });
+            doorT.GetProperty("IsSectorUnlocked").SetValue(null, true);
+
+            var pickup = UnityEngine.Object.FindAnyObjectByType(pickupT) as Component;
+            if (pickup != null)
+                pickupT.GetMethod("MarkCollectedSilent").Invoke(pickup, null);
+
+            int maxSeg = (int)hpT.GetProperty("MaxSegments").GetValue(hp);
+            int respawnsBefore = (int)hpT.GetProperty("RespawnCount").GetValue(hp);
+
+            // Mata o Dez no meio da missao (dispara RunKnockdownAndRespawn)
+            Assert.IsTrue((bool)hpT.GetMethod("TryTakeDamage").Invoke(hp, new object[] { maxSeg, Vector3.zero }), "Dano letal deve ser aplicado.");
+
+            float wait = 0f;
+            while ((int)hpT.GetProperty("RespawnCount").GetValue(hp) == respawnsBefore && wait < 5f)
+            {
+                yield return null;
+                wait += Time.unscaledDeltaTime;
+            }
+
+            Assert.Greater((int)hpT.GetProperty("RespawnCount").GetValue(hp), respawnsBefore, "Dez deve renascer no checkpoint em <= 3s.");
+            Assert.AreEqual(maxSeg, (int)hpT.GetProperty("CurrentSegments").GetValue(hp), "HP deve ser restaurado no respawn.");
+            Assert.AreEqual(1.0f, Time.timeScale, 0.01f, "Time.timeScale deve voltar a 1.0 apos respawn (SL-002).");
+            Assert.AreEqual(midObj, (string)objT.GetProperty("CurrentObjective").GetValue(null), "Objetivo da missao deve permanecer intacto apos morte.");
+            Assert.IsTrue((bool)doorT.GetProperty("IsSectorUnlocked").GetValue(null), "Porta destravada deve permanecer aberta apos morte (SL-001).");
+            if (pickup != null)
+                Assert.IsTrue((bool)pickupT.GetProperty("IsCollected").GetValue(pickup), "Peca ja coletada nao pode reaparecer apos morte.");
+
+            Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_18: {string.Join(" | ", _consoleErrors)}");
+        }
     }
 }
