@@ -325,13 +325,23 @@ namespace Studio.Game.Save
                 onboarding.CopyCompletedStepsTo(data.completedOnboardingSteps);
             }
 
-            // 4. Loop de pecas do Ato 1
+            // 4. Loop de pecas do Ato 1 & Economia/Upgrades
             var parts = PartsLoopManager.Instance;
             if (parts != null)
             {
                 data.partsCollectedMask = parts.GetCollectedMask();
                 data.canCollectParts    = parts.CanCollectParts;
                 data.act1Completed      = parts.Act1Completed;
+            }
+            var econ = EconomyUpgradeSystem.Instance;
+            if (econ != null)
+            {
+                data.partsCurrencyEarned = econ.PartsEarned;
+                data.partsCurrencySpent  = econ.PartsSpent;
+                if (data.purchasedUpgradeIds == null)
+                    data.purchasedUpgradeIds = new System.Collections.Generic.List<string>();
+                data.purchasedUpgradeIds.Clear();
+                econ.CopyPurchasedUpgradesTo(data.purchasedUpgradeIds);
             }
 
             // 5. Cutscenes assistidas, porta do Setor Externo & Missao "Sinal"
@@ -479,6 +489,8 @@ namespace Studio.Game.Save
                     data.completedOnboardingSteps);
             if (PartsLoopManager.Instance != null)
                 PartsLoopManager.Instance.RestoreFromSave(data.partsCollectedMask, data.canCollectParts, data.act1Completed);
+            if (EconomyUpgradeSystem.Instance != null)
+                EconomyUpgradeSystem.Instance.RestoreFromSave(data.partsCurrencyEarned, data.partsCurrencySpent, data.purchasedUpgradeIds);
 
             // 3. Anomalias do Ato 2 (ativa todas e resolve exatamente as ja resolvidas!)
             var anomMgr = WorkshopAnomalyManager.Instance;

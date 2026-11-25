@@ -62,6 +62,8 @@ namespace Studio.Game.Parts
             _collected = true;
             if (Studio.Game.Combat.GameFeelJuiceController.Instance != null)
                 Studio.Game.Combat.GameFeelJuiceController.Instance.TriggerItemPickupJuice(transform.position, gameObject.name);
+            if (EconomyUpgradeSystem.Instance != null)
+                EconomyUpgradeSystem.Instance.NotifyPartEarned(1);
             if (PartsLoopManager.Instance != null)
                 PartsLoopManager.Instance.NotifyPartCollected(this);
             gameObject.SetActive(false);

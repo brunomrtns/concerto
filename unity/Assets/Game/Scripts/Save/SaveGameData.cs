@@ -72,6 +72,11 @@ namespace Studio.Game.Save
         public int onboardingStepIndex;
         public List<string> completedOnboardingSteps = new List<string>();
 
+        [Header("Economia & Upgrades (Exclusivamente JSON — ZERO PlayerPrefs)")]
+        public int partsCurrencyEarned;
+        public int partsCurrencySpent;
+        public List<string> purchasedUpgradeIds = new List<string>();
+
         [Header("Ferramenta Multi-Uso & Poderes")]
         public int energyCells = 3;
         public float energyBar = 100f;
@@ -89,6 +94,7 @@ namespace Studio.Game.Save
             if (unlockedPowerIds == null) unlockedPowerIds = new List<string>();
             if (completedDialogueIds == null) completedDialogueIds = new List<string>();
             if (completedOnboardingSteps == null) completedOnboardingSteps = new List<string>();
+            if (purchasedUpgradeIds == null) purchasedUpgradeIds = new List<string>();
             if (string.IsNullOrEmpty(activeToolModeId)) activeToolModeId = "mode_concertar";
 
             // Migracao v1 -> v2 (FIX 3): traz flags legados de PlayerPrefs para o JSON versionado

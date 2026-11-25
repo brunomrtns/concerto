@@ -749,5 +749,89 @@ namespace Studio.Tests.SmokeTest
 
             Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_13: {string.Join(" | ", _consoleErrors)}");
         }
+
+        // (l) Economia e Progressao (GATE 5): coletar pecas -> contador + save JSON -> comprar upgrades -> efeito aplicado e persistido apos reload!
+        [UnityTest]
+        public IEnumerator Smoke_14_EconomyPartsCollectAndUpgradePersistsAcrossReload()
+        {
+            yield return LoadSceneAndVerifyCleanConsole("Caldeiral");
+
+            var cs01T    = GameType("Studio.Game.Cutscenes.CutsceneManager");
+            var econT    = GameType("Studio.Game.Parts.EconomyUpgradeSystem");
+            var saveSysT = GameType("Studio.Game.Save.SaveSystem");
+            var hpT      = GameType("Studio.Game.Combat.PlayerHealthController");
+            var powersT  = GameType("Studio.Game.Powers.DezPowersController");
+
+            var cs01 = UnityEngine.Object.FindAnyObjectByType(cs01T);
+            if (cs01 != null && (bool)cs01T.GetProperty("IsPlaying").GetValue(cs01))
+                cs01T.GetMethod("SkipCutscene").Invoke(cs01, null);
+            yield return null;
+
+            var econ   = UnityEngine.Object.FindAnyObjectByType(econT);
+            var hp     = UnityEngine.Object.FindAnyObjectByType(hpT);
+            var powers = UnityEngine.Object.FindAnyObjectByType(powersT);
+            Assert.IsNotNull(econ, "EconomyUpgradeSystem obrigatorio.");
+            Assert.IsNotNull(hp, "PlayerHealthController obrigatorio.");
+            Assert.IsNotNull(powers, "DezPowersController obrigatorio.");
+
+            string tmpDir = Path.Combine(Application.temporaryCachePath, $"concerto_smoke14_{Guid.NewGuid():N}");
+            Directory.CreateDirectory(tmpDir);
+            string tmpSave = Path.Combine(tmpDir, "concerto_save.json");
+            var mSetPath = saveSysT.GetMethod("SetCustomPathForTests");
+
+            try
+            {
+                mSetPath.Invoke(null, new object[] { tmpSave });
+                econT.GetMethod("ResetStateForNewGame").Invoke(econ, null);
+
+                // 1. Coleta 3 pecas -> contador + Save JSON atualizados
+                var mEarn = econT.GetMethod("NotifyPartEarned");
+                mEarn.Invoke(econ, new object[] { 1 });
+                mEarn.Invoke(econ, new object[] { 1 });
+                mEarn.Invoke(econ, new object[] { 1 });
+                yield return null;
+
+                Assert.AreEqual(3, (int)econT.GetProperty("PartsEarned").GetValue(econ));
+                Assert.AreEqual(3, (int)econT.GetProperty("PartsAvailable").GetValue(econ));
+
+                // 2. Abre posto de troca e compra 2 upgrades (upg_vida_extra = 1, upg_eco_recarga = 1)
+                econT.GetMethod("OpenBenchUI").Invoke(econ, null);
+                Assert.IsTrue((bool)econT.GetProperty("IsBenchUiOpen").GetValue(econ));
+                Assert.IsTrue((bool)econT.GetMethod("TryPurchaseUpgrade").Invoke(econ, new object[] { "upg_vida_extra" }));
+                Assert.IsTrue((bool)econT.GetMethod("TryPurchaseUpgrade").Invoke(econ, new object[] { "upg_eco_recarga" }));
+                econT.GetMethod("CloseBenchUI").Invoke(econ, null);
+                yield return null;
+
+                // Efeitos aplicados na hora
+                Assert.AreEqual(1, (int)econT.GetProperty("PartsAvailable").GetValue(econ), "Saldo deve ser 3 - 2 = 1.");
+                Assert.AreEqual(5, (int)hpT.GetProperty("MaxSegments").GetValue(hp), "upg_vida_extra deve elevar vida maxima para 5.");
+                var pCfg = powersT.GetProperty("Cfg").GetValue(powers);
+                Assert.AreEqual(2.0f, (float)pCfg.GetType().GetField("ecoCooldownSec").GetValue(pCfg), 0.01f, "upg_eco_recarga deve reduzir cooldown do Eco para 2.0s.");
+
+                // 3. Simula reload completo via Save JSON versionado -> progresso e efeitos persistem!
+                econT.GetMethod("ResetStateForNewGame").Invoke(econ, null);
+                Assert.AreEqual(0, (int)econT.GetProperty("PurchasedCount").GetValue(econ));
+
+                var loadArgs = new object[] { null };
+                Assert.IsTrue((bool)saveSysT.GetMethod("TryLoad").Invoke(null, loadArgs), "Save JSON deve carregar apos compra.");
+                saveSysT.GetMethod("ApplyLoadedStateToCurrentScene").Invoke(null, new object[] { loadArgs[0] });
+                yield return null;
+
+                Assert.AreEqual(3, (int)econT.GetProperty("PartsEarned").GetValue(econ));
+                Assert.AreEqual(2, (int)econT.GetProperty("PartsSpent").GetValue(econ));
+                Assert.AreEqual(1, (int)econT.GetProperty("PartsAvailable").GetValue(econ));
+                Assert.IsTrue((bool)econT.GetMethod("HasUpgrade").Invoke(econ, new object[] { "upg_vida_extra" }));
+                Assert.IsTrue((bool)econT.GetMethod("HasUpgrade").Invoke(econ, new object[] { "upg_eco_recarga" }));
+                Assert.AreEqual(5, (int)hpT.GetProperty("MaxSegments").GetValue(hp));
+
+                Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_14: {string.Join(" | ", _consoleErrors)}");
+            }
+            finally
+            {
+                econT.GetMethod("ResetStateForNewGame").Invoke(econ, null);
+                mSetPath.Invoke(null, new object[] { null });
+                if (Directory.Exists(tmpDir)) Directory.Delete(tmpDir, true);
+            }
+        }
     }
 }
