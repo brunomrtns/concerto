@@ -12,18 +12,6 @@
 
 ## Itens Abertos / Em Andamento (Prioridade: Crítico → Médio → Baixo)
 
-### `BL-002` — HUD Overlap superior esquerdo (`QA-01`)
-- **Severidade:** `MÉDIO`
-- **Status:** `EM_ANDAMENTO`
-- **Descrição:** Reportado em `QA_AUTOMATIZADO.md` (`QA-01`): em `1280x720`, os 4 segmentos de HP (`PlayerHealthController`) sobrepõem diretamente o texto `"OBJETIVO / Fale com Juno"` no canto superior esquerdo.
-- **Critério de pronto:** Separar verticalmente a barra de HP e o banner de Objetivo sem nenhum pixel de sobreposição em `1280x720`, evidência visual em `captures/backlog/bl002_hud_top_left_depois.png`, `0 warnings CS`, `Tests/SmokeTest/` 7/7 verde, commit + push.
-
-### `BL-003` — HUD Overlap inferior direito (`QA-02`)
-- **Severidade:** `MÉDIO`
-- **Status:** `ABERTO`
-- **Descrição:** Reportado em `QA_AUTOMATIZADO.md` (`QA-02`): em `1280x720`, o painel `[TAB] MODO: CONCERTAR / CÉLULAS` (`MultiToolController`) sobrepõe parcialmente o indicador `ECO [Q] / PRONTO` (`DezPowersController`) no canto inferior direito.
-- **Critério de pronto:** Reposicionar o HUD de Poderes (`PowersHUD_Canvas`) acima ou à esquerda limpa do painel da ferramenta sem nenhum pixel de sobreposição em `1280x720`, evidência visual em `captures/backlog/bl003_hud_bottom_right_depois.png`, `0 warnings CS`, `Tests/SmokeTest/` 7/7 verde, commit + push.
-
 ### `BL-004` — Modelos 3D faltantes das peças 4 e 5 do Ato 1 (TripoSG exclusivo)
 - **Severidade:** `MÉDIO`
 - **Status:** `ABERTO`
@@ -59,3 +47,5 @@
 | `PERF-01` | Pass de Performance (-19% a -46% ms/frame, NonAlloc physics, Camera cache, HUD dirty-check) | Médio | `FEITO` | 2026-11-24 | `bf1f859` |
 | `ANIM-01` | Polimento de animação do Dez (braços afastados, arma em RightHand + swing/coice, mantle 3 fases, pouso correndo sem deslize, passos NPC sincronizados) | Médio | `FEITO` | 2026-11-24 | `b633c5d` |
 | `BL-001` | Bug crítico: missão/objetivo reseta ou troca indevidamente ao falar com NPC | Crítico | `FEITO` | 2026-11-25 | `24bbf37` |
+| `BL-002` | HUD Overlap superior esquerdo (`QA-01` — HP vs Objetivo) | Médio | `FEITO` | 2026-11-25 | `c9a8fe9` |
+| `BL-003` | HUD Overlap inferior direito (`QA-02` — ToolHUD vs Poderes ECO/ESTASE) | Médio | `FEITO` | 2026-11-25 | *(commit atual)* |

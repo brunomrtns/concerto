@@ -490,15 +490,17 @@ namespace Studio.Game.Powers
             var scaler = canvasGo.AddComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1920f, 1080f);
+            scaler.matchWidthOrHeight = 0.5f;
 
             _hudGroup = canvasGo.AddComponent<CanvasGroup>();
             _hudGroup.alpha = 0f;
             _hudGroup.blocksRaycasts = false;
             _hudGroup.interactable = false;
 
+            // BL-003 (QA-02): Posiciona slots de poderes ACIMA do painel ToolHUD_Canvas (y=196, zero overlap!)
             Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            CreatePowerSlot(canvasGo.transform, font, "ECO [ALT/C]", new Vector2(-240f, 36f), new Color(0.18f, 0.85f, 0.96f, 0.92f), out _ecoFillImg, out _ecoCdText);
-            CreatePowerSlot(canvasGo.transform, font, "ESTASE [R]",  new Vector2(-40f,  36f), new Color(0.32f, 0.72f, 1.00f, 0.92f), out _stasisFillImg, out _stasisCdText);
+            CreatePowerSlot(canvasGo.transform, font, "ECO [ALT/C]", new Vector2(-240f, 196f), new Color(0.18f, 0.85f, 0.96f, 0.92f), out _ecoFillImg, out _ecoCdText);
+            CreatePowerSlot(canvasGo.transform, font, "ESTASE [R]",  new Vector2(-40f,  196f), new Color(0.32f, 0.72f, 1.00f, 0.92f), out _stasisFillImg, out _stasisCdText);
 
             // Hint discreta pos-CS03 no topo-centro inferior
             var hintGo = new GameObject("PowersUnlockHint");
