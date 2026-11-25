@@ -833,5 +833,36 @@ namespace Studio.Tests.SmokeTest
                 if (Directory.Exists(tmpDir)) Directory.Delete(tmpDir, true);
             }
         }
+
+        // (m) Epicentro V2 (GATES 2-5): 5 checkpoints (<=30s retrabalho), leitura visual e recompensa secreta lateral!
+        [UnityTest]
+        public IEnumerator Smoke_15_EpicentroV2CheckpointsPacingAndSecretReward()
+        {
+            yield return LoadSceneAndVerifyCleanConsole("Epicentro");
+
+            var dirT  = GameType("Studio.Game.Epicenter.EpicenterV2LevelDesignDirector");
+            var econT = GameType("Studio.Game.Parts.EconomyUpgradeSystem");
+            var dir   = UnityEngine.Object.FindAnyObjectByType(dirT);
+            Assert.IsNotNull(dir, "EpicenterV2LevelDesignDirector deve estar ativo em Epicentro.");
+
+            int cpCount    = (int)dirT.GetProperty("TotalCheckpoints").GetValue(dir);
+            float maxGap   = (float)dirT.GetProperty("MaxCheckpointGapMeters").GetValue(dir);
+            float maxSec   = (float)dirT.GetProperty("MaxExpectedRetraceSeconds").GetValue(dir);
+            int beacons    = (int)dirT.GetProperty("GuidanceBeaconsCount").GetValue(dir);
+
+            Assert.GreaterOrEqual(cpCount, 5, $"Epicentro V2 deve ter >= 5 checkpoints (encontrado={cpCount}).");
+            Assert.LessOrEqual(maxSec, 30.0f, $"Nenhum trecho pode exigir >30s de retrabalho (calculado={maxSec:F1}s, gap={maxGap:F1}m).");
+            Assert.GreaterOrEqual(beacons, 10, "Rota principal deve ter balizas de leitura visual.");
+
+            // Valida recompensa da saida lateral secreta (nunca castigada)
+            Assert.IsFalse((bool)dirT.GetProperty("SecretRewardCollected").GetValue(dir));
+            Assert.IsTrue((bool)dirT.GetMethod("CollectSecretRewardForTest").Invoke(dir, null), "Recompensa lateral secreta deve ser coletavel.");
+            Assert.IsTrue((bool)dirT.GetProperty("SecretRewardCollected").GetValue(dir));
+
+            var econ = UnityEngine.Object.FindAnyObjectByType(econT);
+            if (econ != null) econT.GetMethod("ResetStateForNewGame").Invoke(econ, null);
+
+            Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_15: {string.Join(" | ", _consoleErrors)}");
+        }
     }
 }
