@@ -1,0 +1,28 @@
+﻿=====================================================================
+CONCERTO — RELATORIO DE VALIDACAO DE RAMPAS E CORRIMAOS (TODAS AS CENAS)
+Data: 2026-11-25 17:35:12
+Dez CharacterController.slopeLimit = 50,0 deg | Limite seguro c/ folga <= 35,0 deg | Tolerancia bordas <= 5 cm
+=====================================================================
+
+[CENA] MainMenu (Assets/Game/Scenes/MainMenu.unity) — Rampas detectadas: 0
+
+[CENA] Caldeiral (Assets/Game/Scenes/Caldeiral.unity) — Rampas detectadas: 3
+  * Z2_Passarela_da_Bigorna/Z2_Mezzanine_Ramp_16_9deg [REPROVADA (2 defeitos)] | pitch=16.93 deg | L=12.02m W=2.80m | base=(-17.54,-0.01,-12.60) -> topo=(-6.04,3.49,-12.60)
+      chao=Z2_Floor_18x14 (Y=0.000, gap=0.006m) | plataforma_topo=Z2_Mezzanine_Deck (Y=3.500, gap=0.006m) | corrimaos_pareados=1
+      [DEFEITO] (d) Corrimao 'Z2_C3_OpenRailings' com pitch=0,00 deg difere da rampa (16,93 deg) em 16,93 deg > 1.0 deg
+      [DEFEITO] (d) Corrimao dedicado inclinado ausente/incompleto (1/2 lados alinhados ao pitch 16,93 deg)
+  * Z3_Patio_das_Sirenes/Z3_VoSegunda_Ramp_16_9deg [REPROVADA (1 defeitos)] | pitch=16.93 deg | L=12.02m W=3.00m | base=(7.46,-0.01,-22.00) -> topo=(18.96,3.49,-22.00)
+      chao=Z3_Patio_Floor (Y=0.000, gap=0.006m) | plataforma_topo=Z3_VoSegunda_Deck (Y=3.500, gap=0.006m) | corrimaos_pareados=0
+      [DEFEITO] (d) Corrimao dedicado inclinado ausente/incompleto (0/2 lados alinhados ao pitch 16,93 deg)
+  * Z4_Camara_Caldeiral_Central/Z4_Arena_Ramp_16_9deg [REPROVADA (2 defeitos)] | pitch=16.93 deg | L=12.02m W=2.80m | base=(7.00,-0.01,15.79) -> topo=(7.00,3.49,4.29)
+      chao=Z4_Floor_22x22 (Y=0.000, gap=0.006m) | plataforma_topo=Z4_C3_RingRailings_And_ExitArch (Y=4.050, gap=0.556m) | corrimaos_pareados=0
+      [DEFEITO] (b) Borda superior desalinhada da plataforma 'Z4_C3_RingRailings_And_ExitArch' em 55,6cm > 5cm (topoY=3,494, platY=4,050)
+      [DEFEITO] (d) Corrimao dedicado inclinado ausente/incompleto (0/2 lados alinhados ao pitch 16,93 deg)
+
+[CENA] SetorExterno (Assets/Game/Scenes/SetorExterno.unity) — Rampas detectadas: 0
+
+[CENA] Epicentro (Assets/Game/Scenes/Epicentro.unity) — Rampas detectadas: 0
+
+=====================================================================
+RESUMO GLOBAL: TOTAL_RAMPAS=3 | APROVADAS=0 | REPROVADAS=3
+=====================================================================

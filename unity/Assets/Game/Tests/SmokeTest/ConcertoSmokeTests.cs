@@ -1133,5 +1133,108 @@ namespace Studio.Tests.SmokeTest
 
             Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_20: {string.Join(" | ", _consoleErrors)}");
         }
+
+        // (s) GATE 5 (Rampas e Corrimaos): Dez sobe e desce CADA rampa do jogo por input simulado, chegando ao topo (Y>=3.35) e descendo ao chao (Y<=0.30) sem travar, deslizar ou cair!
+        [UnityTest]
+        public IEnumerator Smoke_21_AllRampsUpAndDownTraversalProof()
+        {
+            yield return LoadSceneAndVerifyCleanConsole("Caldeiral");
+
+            var cs01T = GameType("Studio.Game.Cutscenes.CutsceneManager");
+            var locoT = GameType("Studio.Game.Animation.DezLocomotionController");
+
+            var cs01 = UnityEngine.Object.FindAnyObjectByType(cs01T);
+            if (cs01 != null && (bool)cs01T.GetProperty("IsPlaying").GetValue(cs01))
+                cs01T.GetMethod("SkipCutscene").Invoke(cs01, null);
+            yield return null;
+
+            var loco = UnityEngine.Object.FindAnyObjectByType(locoT) as Component;
+            Assert.IsNotNull(loco, "DezLocomotionController obrigatorio em Caldeiral.");
+            var cc = loco.GetComponent<CharacterController>();
+            Assert.IsNotNull(cc, "CharacterController obrigatorio no Dez.");
+
+            // GATE 1: Confirma slopeLimit >= 45 deg no runtime
+            Assert.GreaterOrEqual(cc.slopeLimit, 45f, $"CharacterController.slopeLimit deve ser >= 45 deg (obtido={cc.slopeLimit}).");
+
+            var useScripted = locoT.GetProperty("UseScriptedInput");
+            var moveDirProp = locoT.GetProperty("ScriptedMoveDir");
+            var runProp     = locoT.GetProperty("ScriptedRun");
+
+            var ramps = new (string name, Vector3 basePos, Vector3 topPos, Vector3 upDir)[]
+            {
+                ("Z2_Mezzanine_Ramp_16_9deg", new Vector3(-15.75f, 0.08f, -12.60f), new Vector3(-5.2f, 3.50f, -12.60f), Vector3.right),
+                ("Z3_VoSegunda_Ramp_16_9deg", new Vector3(7.0f,    0.08f, -22.00f), new Vector3(19.8f, 3.50f, -22.00f), Vector3.right),
+                ("Z4_Arena_Ramp_16_9deg",     new Vector3(7.00f,   0.08f,  16.20f), new Vector3(7.00f, 3.50f,   3.50f), Vector3.back)
+            };
+
+            useScripted.SetValue(loco, true);
+            if (runProp != null) runProp.SetValue(loco, true);
+
+            try
+            {
+                foreach (var r in ramps)
+                {
+                    // Teleporta Dez para a base da rampa
+                    cc.enabled = false;
+                    loco.transform.position = r.basePos;
+                    cc.enabled = true;
+                    moveDirProp.SetValue(loco, Vector3.zero);
+                    yield return null;
+                    yield return null;
+
+                    // 1. SUBIDA: base -> topo (input simulado mirando o centro do topo da rampa)
+                    float elapsed = 0f;
+                    float peakY = loco.transform.position.y;
+                    float minY  = loco.transform.position.y;
+                    while (elapsed < 6.0f)
+                    {
+                        Vector3 toTop = r.topPos - loco.transform.position;
+                        toTop.y = 0f;
+                        moveDirProp.SetValue(loco, toTop.sqrMagnitude > 0.01f ? toTop.normalized : r.upDir);
+                        yield return null;
+                        elapsed += Time.deltaTime;
+                        float y = loco.transform.position.y;
+                        if (y > peakY) peakY = y;
+                        if (y < minY)  minY  = y;
+                        if (y >= 3.35f && Vector3.Dot(loco.transform.position - r.topPos, r.upDir) >= -0.8f)
+                            break;
+                    }
+
+                    var nearCols = Physics.OverlapSphere(loco.transform.position + Vector3.up * 0.6f, 0.9f, ~0, QueryTriggerInteraction.Ignore);
+                    var colNames = new System.Collections.Generic.List<string>();
+                    foreach (var nc in nearCols) if (nc != cc) colNames.Add(nc.name);
+                    string blocker = colNames.Count > 0 ? string.Join(",", colNames) : "none";
+                    Assert.GreaterOrEqual(minY, -0.35f, $"{r.name}: Dez caiu durante subida (minY={minY:F2}).");
+                    Assert.GreaterOrEqual(loco.transform.position.y, 3.35f, $"{r.name}: Dez nao atingiu o topo (y={loco.transform.position.y:F2}, peakY={peakY:F2}, pos={loco.transform.position}, locoEnabled={(loco as Behaviour).enabled}, near=[{blocker}]).");
+
+                    // 2. DESCIDA: topo -> base
+                    elapsed = 0f;
+                    minY = loco.transform.position.y;
+                    while (elapsed < 6.0f)
+                    {
+                        Vector3 toBase = r.basePos - loco.transform.position;
+                        toBase.y = 0f;
+                        moveDirProp.SetValue(loco, toBase.sqrMagnitude > 0.01f ? toBase.normalized : -r.upDir);
+                        yield return null;
+                        elapsed += Time.deltaTime;
+                        float y = loco.transform.position.y;
+                        if (y < minY) minY = y;
+                        if (y <= 0.30f && Vector3.Dot(loco.transform.position - r.basePos, -r.upDir) >= -0.8f)
+                            break;
+                    }
+
+                    Assert.GreaterOrEqual(minY, -0.35f, $"{r.name}: Dez caiu durante descida (minY={minY:F2}).");
+                    Assert.LessOrEqual(loco.transform.position.y, 0.30f, $"{r.name}: Dez nao retornou ao chao na descida (y={loco.transform.position.y:F2}, pos={loco.transform.position}).");
+                }
+            }
+            finally
+            {
+                moveDirProp.SetValue(loco, Vector3.zero);
+                if (runProp != null) runProp.SetValue(loco, false);
+                useScripted.SetValue(loco, false);
+            }
+
+            Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_21: {string.Join(" | ", _consoleErrors)}");
+        }
     }
 }

@@ -1,0 +1,23 @@
+﻿=====================================================================
+CONCERTO — RELATORIO DE VALIDACAO DE RAMPAS E CORRIMAOS (TODAS AS CENAS)
+Data: 2026-11-25 20:41:13
+Dez CharacterController.slopeLimit = 50,0 deg | Limite seguro c/ folga <= 35,0 deg | Tolerancia bordas <= 5 cm
+=====================================================================
+
+[CENA] MainMenu (Assets/Game/Scenes/MainMenu.unity) — Rampas detectadas: 0
+
+[CENA] Caldeiral (Assets/Game/Scenes/Caldeiral.unity) — Rampas detectadas: 3
+  * Z2_Passarela_da_Bigorna/Z2_Mezzanine_Ramp_16_9deg [APROVADA] | pitch=20.22 deg | L=10.12m W=2.80m | base=(-15.54,0.00,-12.60) -> topo=(-6.04,3.50,-12.60)
+      chao=Z2_Floor_18x14 (Y=0.000, gap=0.000m) | plataforma_topo=Z2_Mezzanine_Deck (Y=3.500, gap=0.000m) | corrimaos_pareados=2
+  * Z3_Patio_das_Sirenes/Z3_VoSegunda_Ramp_16_9deg [APROVADA] | pitch=16.93 deg | L=12.02m W=3.00m | base=(7.46,0.00,-22.00) -> topo=(18.96,3.50,-22.00)
+      chao=Z3_Patio_Floor (Y=0.000, gap=0.000m) | plataforma_topo=Z3_VoSegunda_Deck (Y=3.500, gap=0.000m) | corrimaos_pareados=2
+  * Z4_Camara_Caldeiral_Central/Z4_Arena_Ramp_16_9deg [APROVADA] | pitch=16.93 deg | L=12.02m W=2.80m | base=(7.00,0.00,15.79) -> topo=(7.00,3.50,4.29)
+      chao=Z4_Floor_22x22 (Y=0.000, gap=0.000m) | plataforma_topo=Z4_RingDeck_East (Y=3.500, gap=0.000m) | corrimaos_pareados=2
+
+[CENA] SetorExterno (Assets/Game/Scenes/SetorExterno.unity) — Rampas detectadas: 0
+
+[CENA] Epicentro (Assets/Game/Scenes/Epicentro.unity) — Rampas detectadas: 0
+
+=====================================================================
+RESUMO GLOBAL: TOTAL_RAMPAS=3 | APROVADAS=3 | REPROVADAS=0
+=====================================================================
