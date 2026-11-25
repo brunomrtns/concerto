@@ -106,6 +106,11 @@ namespace Studio.Game.Combat
             {
                 SetCheckpointWithId("cp_setor_externo_entrada", transform.position);
             }
+            else if (!SaveSystem.IsPendingContinueLoad)
+            {
+                // Anti-softlock SL-002: garante checkpoint valido na cena atual (ex: Epicentro), nunca coordenada de outra cena!
+                respawnPosition = transform.position;
+            }
 
             _cs03 = FindAnyObjectByType<Cutscene03ReturnController>();
             if (_cs03 != null) _cs03.OnCutscene03Ended += HandleCs03Checkpoint;
@@ -214,9 +219,16 @@ namespace Studio.Game.Combat
                 yield return null;
             }
 
-            // Respawn seguro no checkpoint preservando anomalias/progresso!
+            // Anti-softlock SL-002: garante Time.timeScale = 1f (nunca preso em hitstop) e checkpoint valido da secao no Epicentro!
+            Time.timeScale = 1f;
+            Vector3 safeRespawn = respawnPosition;
+            var epicVoid = Studio.Game.Epicenter.EpicenterCheckpointAndVoidZone.Instance;
+            if (epicVoid != null)
+                safeRespawn = epicVoid.ActiveCheckpointPos;
+
+            // Respawn seguro no checkpoint preservando anomalias/missao/portas/pecas coletadas!
             if (_cc != null) _cc.enabled = false;
-            transform.position = respawnPosition;
+            transform.position = safeRespawn;
             if (_cc != null) _cc.enabled = true;
 
             CurrentSegments = MaxSegments;
