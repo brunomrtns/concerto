@@ -188,6 +188,9 @@ namespace Studio.Game.Combat
                     _cc.Move(away.normalized * 0.45f);
             }
 
+            if (GameFeelJuiceController.Instance != null)
+                GameFeelJuiceController.Instance.TriggerPlayerDamaged(transform, hitFromWorldPos, CurrentSegments <= 0);
+
             if (CurrentSegments <= 0)
                 StartCoroutine(RunKnockdownAndRespawn());
 

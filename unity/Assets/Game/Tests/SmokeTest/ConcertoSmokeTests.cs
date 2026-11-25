@@ -682,5 +682,72 @@ namespace Studio.Tests.SmokeTest
                 setT.GetMethod("SetActionKey").Invoke(null, new object[] { "Jump", origJump });
             }
         }
+
+        // (k) Game Feel Pass (GATES 1-5): hitstop 50-100ms, shake decay <300ms, mesmo frame, squash/stretch e 3 camadas na coleta
+        [UnityTest]
+        public IEnumerator Smoke_13_GameFeelJuiceMatchesDesignBible()
+        {
+            yield return LoadSceneAndVerifyCleanConsole("Caldeiral");
+
+            var cs01T  = GameType("Studio.Game.Cutscenes.CutsceneManager");
+            var juiceT = GameType("Studio.Game.Combat.GameFeelJuiceController");
+            var locoT  = GameType("Studio.Game.Animation.DezLocomotionController");
+
+            var cs01 = UnityEngine.Object.FindAnyObjectByType(cs01T);
+            if (cs01 != null && (bool)cs01T.GetProperty("IsPlaying").GetValue(cs01))
+                cs01T.GetMethod("SkipCutscene").Invoke(cs01, null);
+            yield return null;
+
+            var juice = UnityEngine.Object.FindAnyObjectByType(juiceT);
+            var loco  = UnityEngine.Object.FindAnyObjectByType(locoT) as Component;
+            Assert.IsNotNull(juice, "GameFeelJuiceController obrigatorio.");
+            Assert.IsNotNull(loco, "DezLocomotionController obrigatorio.");
+
+            var pDisable = juiceT.GetProperty("DisableJuiceForComparison");
+            pDisable.SetValue(null, false);
+
+            // GATE 1: Golpe do Dez — hitstop 50-100ms + shake <300ms + particula + som no MESMO frame
+            juiceT.GetMethod("TriggerDezAttackHit").Invoke(juice, new object[] { loco.transform.position + Vector3.forward, false });
+            float hitstop = (float)juiceT.GetProperty("LastHitstopAppliedSec").GetValue(juice);
+            float shakeDecay = (float)juiceT.GetProperty("LastShakeDecayAppliedSec").GetValue(juice);
+            int fHit = (int)juiceT.GetProperty("LastHitHitstopFrame").GetValue(juice);
+            int fPart = (int)juiceT.GetProperty("LastHitParticleFrame").GetValue(juice);
+            int fSfx = (int)juiceT.GetProperty("LastHitSfxFrame").GetValue(juice);
+
+            Assert.That(hitstop, Is.InRange(0.050f, 0.100f), $"Hitstop ({hitstop:F3}s) fora da faixa DESIGN_BIBLE 50-100ms.");
+            Assert.Less(shakeDecay, 0.300f, $"Shake decay ({shakeDecay:F3}s) deve ser <300ms.");
+            Assert.AreEqual(fHit, fPart, "Hitstop e particula devem disparar no MESMO frame.");
+            Assert.AreEqual(fHit, fSfx, "Hitstop e som devem disparar no MESMO frame.");
+            yield return new WaitForSecondsRealtime(0.12f);
+
+            // GATE 2: Receber dano (nao fatal) — flash + shake direcional + pausa curta de input
+            juiceT.GetMethod("TriggerPlayerDamaged").Invoke(juice, new object[] { loco.transform, loco.transform.position + Vector3.forward * 2f, false });
+            Assert.IsTrue((bool)juiceT.GetProperty("IsInputPausedForHit").GetValue(juice), "Pausa curta de input deve ativar ao receber dano.");
+            Assert.Less((float)juiceT.GetProperty("LastShakeDecayAppliedSec").GetValue(juice), 0.300f);
+            yield return new WaitForSecondsRealtime(0.16f);
+
+            // GATE 3: Inimigo morto — hitstop maior (95ms, dentro de 50-100ms) sem travar fluxo
+            juiceT.GetMethod("TriggerEnemyKilled").Invoke(juice, new object[] { null, Vector3.forward });
+            float deathHitstop = (float)juiceT.GetProperty("LastHitstopAppliedSec").GetValue(juice);
+            Assert.Greater(deathHitstop, hitstop, "Hitstop de morte deve ser maior que golpe leve.");
+            Assert.That(deathHitstop, Is.InRange(0.050f, 0.100f), "Hitstop de morte deve permanecer dentro de 50-100ms.");
+            yield return new WaitForSecondsRealtime(0.14f);
+            Assert.Greater(Time.timeScale, 0.9f, "Time.timeScale deve voltar a 1.0 sem travar o fluxo.");
+
+            // GATE 4: Pulo / Aterrissagem — squash & stretch + poeira
+            juiceT.GetMethod("TriggerJumpStretch").Invoke(juice, null);
+            yield return null;
+            juiceT.GetMethod("TriggerLandingSquashAndDust").Invoke(juice, new object[] { loco.transform.position });
+            Assert.GreaterOrEqual((int)juiceT.GetProperty("JumpStretchCount").GetValue(juice), 1);
+            Assert.GreaterOrEqual((int)juiceT.GetProperty("LandingSquashDustCount").GetValue(juice), 1);
+
+            // GATE 5: Coletar item — 3 camadas (visual + som + "clim" HUD)
+            juiceT.GetMethod("TriggerItemPickupJuice").Invoke(juice, new object[] { loco.transform.position + Vector3.right, "Peca Nucleo" });
+            yield return null;
+            Assert.GreaterOrEqual((int)juiceT.GetProperty("Pickup3LayerCount").GetValue(juice), 1);
+            Assert.IsTrue((bool)juiceT.GetProperty("IsHudClimVisible").GetValue(juice), "HUD 'clim' deve estar visivel na coleta.");
+
+            Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_13: {string.Join(" | ", _consoleErrors)}");
+        }
     }
 }

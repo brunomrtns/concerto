@@ -261,6 +261,8 @@ namespace Studio.Game.Combat
 
             PlayEnemySfx(dissolveReverseClip, 0.90f, 1.0f);
             SpawnGlitchDissolveParticles(transform.position + Vector3.up * 0.8f);
+            if (GameFeelJuiceController.Instance != null)
+                GameFeelJuiceController.Instance.TriggerEnemyKilled(transform, -transform.forward);
             TrySpawnCellDrop();
             OnEnemyDied?.Invoke(this);
             StartCoroutine(RunDissolveScaleOut());

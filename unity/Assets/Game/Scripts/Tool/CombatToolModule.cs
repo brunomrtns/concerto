@@ -208,7 +208,11 @@ namespace Studio.Game.Tool
             }
 
             if (_meleeHitSet.Count > 0)
+            {
                 Controller.TriggerHitImpactFeedback(center, isHeavy);
+                if (Studio.Game.Combat.GameFeelJuiceController.Instance != null)
+                    Studio.Game.Combat.GameFeelJuiceController.Instance.TriggerDezAttackHit(center, isHeavy);
+            }
             return _meleeHitSet.Count;
         }
     }

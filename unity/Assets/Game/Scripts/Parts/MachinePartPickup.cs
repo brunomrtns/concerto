@@ -60,6 +60,8 @@ namespace Studio.Game.Parts
         {
             if (!CanInteract(interactor)) return;
             _collected = true;
+            if (Studio.Game.Combat.GameFeelJuiceController.Instance != null)
+                Studio.Game.Combat.GameFeelJuiceController.Instance.TriggerItemPickupJuice(transform.position, gameObject.name);
             if (PartsLoopManager.Instance != null)
                 PartsLoopManager.Instance.NotifyPartCollected(this);
             gameObject.SetActive(false);
