@@ -176,13 +176,14 @@ namespace Studio.Game.Epicenter
                     new Vector3(bx, by, 0f), new Vector3(1.1f, 0.04f, 0.36f), cyanMat, withCollider: false);
             }
 
-            // Portico dourado monumental na entrada da Arena Final (x=102) — leitura imediata do pico da fase
+            // Portico obsidiana-ciano na entrada da Arena Final (x=102) — coerente com a paleta da Fenda (VA-08)
+            var archMat = CreateMat(new Color(0.14f, 0.20f, 0.28f, 1f), new Color(0.12f, 0.55f, 0.78f, 1f));
             CreatePrimitive(PrimitiveType.Cube, "V2_BossGatePillar_L", _v2Root,
-                new Vector3(102.0f, 3.8f, -3.6f), new Vector3(0.65f, 6.0f, 0.65f), goldMat, withCollider: false);
+                new Vector3(102.0f, 3.8f, -3.6f), new Vector3(0.65f, 6.0f, 0.65f), archMat, withCollider: false);
             CreatePrimitive(PrimitiveType.Cube, "V2_BossGatePillar_R", _v2Root,
-                new Vector3(102.0f, 3.8f, +3.6f), new Vector3(0.65f, 6.0f, 0.65f), goldMat, withCollider: false);
+                new Vector3(102.0f, 3.8f, +3.6f), new Vector3(0.65f, 6.0f, 0.65f), archMat, withCollider: false);
             CreatePrimitive(PrimitiveType.Cube, "V2_BossGateArch", _v2Root,
-                new Vector3(102.0f, 6.8f, 0f), new Vector3(0.75f, 0.65f, 7.8f), goldMat, withCollider: false);
+                new Vector3(102.0f, 6.8f, 0f), new Vector3(0.75f, 0.65f, 7.8f), archMat, withCollider: false);
 
             // 4. GATE 4 (Saida lateral recompensada — nunca castigada): desvio seguro em x=71, z=+6.8
             CreatePrimitive(PrimitiveType.Cube, "V2_SecretSideBridge", _v2Root,

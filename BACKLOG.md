@@ -12,7 +12,29 @@
 
 ## Itens Abertos / Em Andamento (Prioridade: Crítico → Médio → Baixo)
 
-*(Nenhum item aberto — backlog 100% zerado em 2026-11-25.)*
+### `BL-007` — Substituir arquitetura greybox do Setor Externo por kit TripoSG + PBR (`AUDITORIA_VISUAL`)
+- **Severidade:** `ALTO` (Custo estimado: `~4h`)
+- **Status:** `ABERTO`
+- **Descrição:** As paredes, torres e pátio estrutural de `SetorExterno.unity` ainda usam blocos primitivos greybox; receberam materiais PBR paliativos na auditoria visual, mas exigem kit arquitetônico externo dedicado (TripoSG).
+- **Critério de pronto:** Kit arquitetônico externo TripoSG aplicado em `SetorExterno.unity` com texturas PBR coerentes, `0` erros de colisão/Z-Fighting, screenshot antes/depois + `Tests/SmokeTest/` 100% verde.
+
+### `BL-008` — Skybox cósmico da Fenda Temporal + Portal arquitetônico TripoSG no Epicentro (`AUDITORIA_VISUAL`)
+- **Severidade:** `ALTO` (Custo estimado: `~3h`)
+- **Status:** `ABERTO`
+- **Descrição:** `Epicentro.unity` ainda usa o skybox padrão cinza-bege do Unity e um arco-guia de entrada composto por cubos primitivos na arena do Guardião.
+- **Critério de pronto:** Skybox cósmico da Fenda Temporal configurado + portal da arena substituído por modelo TripoSG dedicado, mantendo 60fps e `Tests/SmokeTest/` 100% verde.
+
+### `BL-009` — Substituir primitivos de EnergyCell e Alvo de Treino em Caldeiral Z1 por malhas TripoSG (`AUDITORIA_VISUAL`)
+- **Severidade:** `MÉDIO` (Custo estimado: `~2h`)
+- **Status:** `ABERTO`
+- **Descrição:** Em `Caldeiral.unity` (Z1 Oficina), `EnergyCell_cell_*` e `Tool_TrainingTarget_Dummy` ainda exibem primitivos lisos (cápsula ciano e cilindro laranja) em vez das malhas TripoSG texturizadas (`prop_celula_energia` / alvo mecânico).
+- **Critério de pronto:** Pickups de célula e alvo de treino usando malhas TripoSG com materiais PBR, apoiados no piso (`gap = 0`) + `Tests/SmokeTest/` 100% verde.
+
+### `BL-010` — Regenerar malha `c5_prop_sirene_mestra` (TripoSG) em Caldeiral Z4 (`AUDITORIA_VISUAL`)
+- **Severidade:** `MÉDIO` (Custo estimado: `~2h`)
+- **Status:** `ABERTO`
+- **Descrição:** Em `Caldeiral.unity` (Z4 Câmara Central), `ENT_Sirene_Mestra_Placeholder` (`c5_prop_sirene_mestra`) apresenta facetas esticadas nas colunas laterais em close-up.
+- **Critério de pronto:** Nova malha TripoSG com topologia limpa substituindo `c5_prop_sirene_mestra` mantendo escala/ancoragem + `Tests/SmokeTest/` 100% verde.
 
 ---
 
