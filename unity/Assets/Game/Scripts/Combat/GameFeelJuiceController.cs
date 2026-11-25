@@ -434,29 +434,145 @@ namespace Studio.Game.Combat
 
         private void BuildPooledParticles()
         {
-            _impactParticles = CreateParticlePool("Juice_ImpactSparks", new Color(1.0f, 0.82f, 0.28f, 1f), 4.5f, 0.24f, 0.12f);
-            _dustParticles   = CreateParticlePool("Juice_LandingDust",  new Color(0.82f, 0.80f, 0.74f, 0.7f), 2.2f, 0.35f, 0.20f);
-            _pickupParticles = CreateParticlePool("Juice_PickupBurst",  new Color(0.28f, 0.95f, 1.0f, 1f), 3.6f, 0.42f, 0.16f);
+            _impactParticles = CreateParticlePool("Juice_ImpactSparks", new Color(1.0f, 0.84f, 0.32f, 1f), 5.2f, 0.26f, 0.09f, additive: true, stretchedSpark: true, isDust: false);
+            _dustParticles   = CreateParticlePool("Juice_LandingDust",  new Color(0.86f, 0.84f, 0.78f, 0.42f), 1.4f, 0.42f, 0.26f, additive: false, stretchedSpark: false, isDust: true);
+            _pickupParticles = CreateParticlePool("Juice_PickupBurst",  new Color(0.28f, 0.95f, 1.0f, 0.95f), 3.2f, 0.44f, 0.14f, additive: true, stretchedSpark: false, isDust: false);
         }
 
-        private ParticleSystem CreateParticlePool(string name, Color color, float speed, float lifetime, float size)
+        private static Texture2D _softCircleTex;
+        private static Material _sharedAdditiveMat;
+        private static Material _sharedAlphaDustMat;
+
+        public static Texture2D GetOrCreateSoftCircleTexture()
+        {
+            if (_softCircleTex != null) return _softCircleTex;
+            const int size = 64;
+            var tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
+            tex.wrapMode = TextureWrapMode.Clamp;
+            tex.filterMode = FilterMode.Bilinear;
+            float half = (size - 1) * 0.5f;
+            var pixels = new Color[size * size];
+            for (int y = 0; y < size; y++)
+            {
+                for (int x = 0; x < size; x++)
+                {
+                    float dx = (x - half) / half;
+                    float dy = (y - half) / half;
+                    float r = Mathf.Sqrt(dx * dx + dy * dy);
+                    // Queda radial suave (zero borda quadrada: r >= 1.0 => alpha = 0)
+                    float a = Mathf.Clamp01(1f - r);
+                    a = a * a * (3f - 2f * a); // smoothstep
+                    pixels[y * size + x] = new Color(1f, 1f, 1f, a);
+                }
+            }
+            tex.SetPixels(pixels);
+            tex.Apply(false, true);
+            _softCircleTex = tex;
+            return _softCircleTex;
+        }
+
+        public static Material GetOrCreateSoftParticleMaterial(bool additive)
+        {
+            if (additive && _sharedAdditiveMat != null) return _sharedAdditiveMat;
+            if (!additive && _sharedAlphaDustMat != null) return _sharedAlphaDustMat;
+
+            Shader sh = Shader.Find("Universal Render Pipeline/Particles/Unlit")
+                     ?? Shader.Find("Particles/Standard Unlit")
+                     ?? Shader.Find("Sprites/Default");
+            var mat = new Material(sh);
+            mat.name = additive ? "Mat_SoftGlowParticle_Additive" : "Mat_SoftDustParticle_Alpha";
+            var tex = GetOrCreateSoftCircleTexture();
+
+            if (mat.HasProperty("_BaseMap")) mat.SetTexture("_BaseMap", tex);
+            if (mat.HasProperty("_MainTex")) mat.SetTexture("_MainTex", tex);
+            if (mat.HasProperty("_BaseColor")) mat.SetColor("_BaseColor", Color.white);
+            if (mat.HasProperty("_Color")) mat.SetColor("_Color", Color.white);
+            if (mat.HasProperty("_Surface")) mat.SetFloat("_Surface", 1f); // Transparent
+            if (mat.HasProperty("_Blend")) mat.SetFloat("_Blend", additive ? 2f : 0f);
+            if (mat.HasProperty("_SrcBlend")) mat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+            if (mat.HasProperty("_DstBlend")) mat.SetInt("_DstBlend", (int)(additive ? UnityEngine.Rendering.BlendMode.One : UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha));
+            if (mat.HasProperty("_SrcBlendAlpha")) mat.SetInt("_SrcBlendAlpha", (int)UnityEngine.Rendering.BlendMode.One);
+            if (mat.HasProperty("_DstBlendAlpha")) mat.SetInt("_DstBlendAlpha", (int)(additive ? UnityEngine.Rendering.BlendMode.One : UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha));
+            if (mat.HasProperty("_AlphaClip")) mat.SetFloat("_AlphaClip", 0f);
+            if (mat.HasProperty("_ColorMode")) mat.SetFloat("_ColorMode", 0f);
+            if (mat.HasProperty("_ZWrite")) mat.SetInt("_ZWrite", 0);
+            mat.SetOverrideTag("RenderType", "Transparent");
+            mat.renderQueue = 3000;
+            mat.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+
+            if (additive) _sharedAdditiveMat = mat;
+            else _sharedAlphaDustMat = mat;
+            return mat;
+        }
+
+        private ParticleSystem CreateParticlePool(string name, Color color, float speed, float lifetime, float size,
+            bool additive, bool stretchedSpark, bool isDust)
         {
             var go = new GameObject(name);
             go.transform.SetParent(transform, false);
             var ps = go.AddComponent<ParticleSystem>();
+            ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+
             var main = ps.main;
             main.playOnAwake = false;
             main.loop = false;
-            main.startLifetime = lifetime;
-            main.startSpeed = speed;
-            main.startSize = size;
+            main.startLifetime = new ParticleSystem.MinMaxCurve(lifetime * 0.75f, lifetime);
+            main.startSpeed = new ParticleSystem.MinMaxCurve(speed * 0.55f, speed);
+            main.startSize = new ParticleSystem.MinMaxCurve(size * 0.7f, size * 1.25f);
             main.startColor = color;
+            main.gravityModifier = isDust ? -0.05f : (stretchedSpark ? 0.85f : 0.15f);
             main.simulationSpace = ParticleSystemSimulationSpace.World;
+
             var emission = ps.emission;
             emission.enabled = false;
+
             var shape = ps.shape;
-            shape.shapeType = ParticleSystemShapeType.Sphere;
-            shape.radius = 0.22f;
+            if (isDust)
+            {
+                shape.shapeType = ParticleSystemShapeType.Circle;
+                shape.radius = 0.28f;
+                shape.rotation = new Vector3(-90f, 0f, 0f);
+            }
+            else
+            {
+                shape.shapeType = ParticleSystemShapeType.Sphere;
+                shape.radius = 0.16f;
+            }
+
+            // Fade suave de opacidade ate sumir completamente
+            var colOverLife = ps.colorOverLifetime;
+            colOverLife.enabled = true;
+            var grad = new Gradient();
+            grad.SetKeys(
+                new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 1f) },
+                new[] { new GradientAlphaKey(0f, 0f), new GradientAlphaKey(1f, 0.12f), new GradientAlphaKey(0f, 1f) });
+            colOverLife.color = new ParticleSystem.MinMaxGradient(grad);
+
+            // Tamanho cresce suavemente na poeira ou encolhe ate 0 nas faiscas/brilhos
+            var sizeOverLife = ps.sizeOverLifetime;
+            sizeOverLife.enabled = true;
+            var curve = isDust
+                ? AnimationCurve.EaseInOut(0f, 0.55f, 1f, 1.45f)
+                : AnimationCurve.EaseInOut(0f, 1.0f, 1f, 0.0f);
+            sizeOverLife.size = new ParticleSystem.MinMaxCurve(1f, curve);
+
+            var psr = go.GetComponent<ParticleSystemRenderer>();
+            if (psr != null)
+            {
+                psr.sharedMaterial = GetOrCreateSoftParticleMaterial(additive);
+                if (stretchedSpark)
+                {
+                    psr.renderMode = ParticleSystemRenderMode.Stretch;
+                    psr.velocityScale = 0.07f;
+                    psr.lengthScale = 1.4f;
+                }
+                else
+                {
+                    psr.renderMode = ParticleSystemRenderMode.Billboard;
+                }
+                psr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                psr.receiveShadows = false;
+            }
             return ps;
         }
 

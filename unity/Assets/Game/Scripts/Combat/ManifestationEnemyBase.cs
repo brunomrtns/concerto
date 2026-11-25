@@ -304,27 +304,28 @@ namespace Studio.Game.Combat
             shape.shapeType = ParticleSystemShapeType.Sphere;
             shape.radius = 0.45f;
 
-            // FIX 1 (P1): Material URP/Particles/Unlit cacheado estaticamente (ZERO magenta!)
+            var colLife = ps.colorOverLifetime;
+            colLife.enabled = true;
+            var grad = new Gradient();
+            grad.SetKeys(
+                new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 1f) },
+                new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(0f, 1f) });
+            colLife.color = new ParticleSystem.MinMaxGradient(grad);
+
+            var sizeLife = ps.sizeOverLifetime;
+            sizeLife.enabled = true;
+            sizeLife.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.EaseInOut(0f, 1f, 1f, 0f));
+
+            // Material circular suave URP/Particles/Unlit (ZERO quadrados duros e ZERO magenta!)
             var psr = pGo.GetComponent<ParticleSystemRenderer>();
             if (psr != null && !SimulateLegacyMagentaParticleBug)
             {
                 if (_cachedDissolveParticleMat == null)
-                {
-                    Shader sh = Shader.Find("Universal Render Pipeline/Particles/Unlit")
-                             ?? Shader.Find("Particles/Standard Unlit")
-                             ?? Shader.Find("Universal Render Pipeline/Unlit");
-                    if (sh != null)
-                    {
-                        _cachedDissolveParticleMat = new Material(sh);
-                        _cachedDissolveParticleMat.name = "Mat_GlitchDissolve_URP_Cached";
-                        if (_cachedDissolveParticleMat.HasProperty(BaseColorPropId))
-                            _cachedDissolveParticleMat.SetColor(BaseColorPropId, new Color(0.25f, 0.92f, 1f, 1f));
-                        if (_cachedDissolveParticleMat.HasProperty(ColorPropId))
-                            _cachedDissolveParticleMat.SetColor(ColorPropId, new Color(0.25f, 0.92f, 1f, 1f));
-                    }
-                }
+                    _cachedDissolveParticleMat = GameFeelJuiceController.GetOrCreateSoftParticleMaterial(additive: true);
                 if (_cachedDissolveParticleMat != null)
                     psr.sharedMaterial = _cachedDissolveParticleMat;
+                psr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                psr.receiveShadows = false;
             }
 
             ps.Play();
