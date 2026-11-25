@@ -138,9 +138,14 @@ namespace Studio.Game.Save
                 data.checkpointPosition = new SaveVec3(PlayerHealthController.Instance.respawnPosition);
             }
 
-            // 3. Objetivo atual
+            // 3. Objetivo atual & dialogos concluidos (BL-001 — zero reset apos reload!)
             if (!string.IsNullOrEmpty(ObjectiveSystem.CurrentObjective))
                 data.currentObjective = ObjectiveSystem.CurrentObjective;
+            if (DialogueController.Instance != null)
+            {
+                data.completedDialogueIds.Clear();
+                DialogueController.Instance.CopyCompletedDialogueIdsTo(data.completedDialogueIds);
+            }
 
             // 4. Loop de pecas do Ato 1
             var parts = PartsLoopManager.Instance;
@@ -278,7 +283,9 @@ namespace Studio.Game.Save
             if (PlayerHealthController.Instance != null)
                 PlayerHealthController.Instance.SetCheckpointFromSaveOnly(data.checkpointPosition.ToVector3());
 
-            // 2. Pecas do Ato 1
+            // 2. Pecas do Ato 1 & Dialogos Concluidos (BL-001)
+            if (DialogueController.Instance != null && data.completedDialogueIds != null)
+                DialogueController.Instance.RestoreCompletedDialogues(data.completedDialogueIds);
             if (PartsLoopManager.Instance != null)
                 PartsLoopManager.Instance.RestoreFromSave(data.partsCollectedMask, data.canCollectParts, data.act1Completed);
 

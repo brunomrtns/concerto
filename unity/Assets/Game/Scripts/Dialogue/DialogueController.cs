@@ -273,10 +273,18 @@ namespace Studio.Game.Dialogue
             _activeNpcRoutine = null;
 
             // BL-001 (CRITICO): Nunca sobrescreve/reseta objetivo ao re-conversar com NPC ou quando a progressao ja avancou!
-            bool isFirstCompletion = string.IsNullOrEmpty(finishedId) || _completedDialogueIds.Add(finishedId);
-            if (isFirstCompletion && !string.IsNullOrEmpty(postObjKey) && ShouldApplyPostObjective(postObjKey))
+            if (SimulateLegacyObjectiveOverwriteBug)
             {
-                ObjectiveSystem.Set(_loc.Format(postObjKey, partsTotal));
+                if (!string.IsNullOrEmpty(postObjKey))
+                    ObjectiveSystem.Set(_loc.Format(postObjKey, partsTotal));
+            }
+            else
+            {
+                bool isFirstCompletion = string.IsNullOrEmpty(finishedId) || _completedDialogueIds.Add(finishedId);
+                if (isFirstCompletion && !string.IsNullOrEmpty(postObjKey) && ShouldApplyPostObjective(postObjKey))
+                {
+                    ObjectiveSystem.Set(_loc.Format(postObjKey, partsTotal));
+                }
             }
 
             OnConversationFinished?.Invoke(finishedId);
@@ -306,7 +314,25 @@ namespace Studio.Game.Dialogue
         private string _lastPromptShown = string.Empty;
         private Camera _cachedMainCam;
 
+        /// <summary>Flag QA exclusiva para reproduzir o bug original no MP4 ANTES (GATE 1).</summary>
+        public static bool SimulateLegacyObjectiveOverwriteBug { get; set; }
+
         public bool HasCompletedDialogue(string dialogueId) => !string.IsNullOrEmpty(dialogueId) && _completedDialogueIds.Contains(dialogueId);
+
+        public void CopyCompletedDialogueIdsTo(List<string> dest)
+        {
+            if (dest == null) return;
+            foreach (var id in _completedDialogueIds)
+                if (!string.IsNullOrEmpty(id)) dest.Add(id);
+        }
+
+        public void RestoreCompletedDialogues(List<string> ids)
+        {
+            _completedDialogueIds.Clear();
+            if (ids == null) return;
+            for (int i = 0; i < ids.Count; i++)
+                if (!string.IsNullOrEmpty(ids[i])) _completedDialogueIds.Add(ids[i]);
+        }
 
         public void ScanFocusedInteractable()
         {

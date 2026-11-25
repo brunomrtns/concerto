@@ -61,6 +61,9 @@ namespace Studio.Game.Save
         public List<string> resolvedAnomalyIds = new List<string>();
         public bool act2Completed;
 
+        [Header("Dialogos Concluidos (Prevencao de Reset de Missao — BL-001)")]
+        public List<string> completedDialogueIds = new List<string>();
+
         [Header("Ferramenta Multi-Uso & Poderes")]
         public int energyCells = 3;
         public float energyBar = 100f;

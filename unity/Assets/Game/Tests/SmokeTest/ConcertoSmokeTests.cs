@@ -249,5 +249,70 @@ namespace Studio.Tests.SmokeTest
             }
             Assert.IsEmpty(_consoleErrors, $"Transicoes de cena geraram erros: {string.Join(" | ", _consoleErrors)}");
         }
+
+        // (f) Regressao BL-001 (GATE 4): iniciar missao -> dialogo completo com NPC -> missao segue intacta (sem reset!)
+        [UnityTest]
+        public IEnumerator Smoke_08_MissionDoesNotResetAfterTalkingToNpc()
+        {
+            yield return LoadSceneAndVerifyCleanConsole("Caldeiral");
+
+            var cs01T    = GameType("Studio.Game.Cutscenes.CutsceneManager");
+            var dlgT     = GameType("Studio.Game.Dialogue.DialogueController");
+            var objT     = GameType("Studio.Game.Dialogue.ObjectiveSystem");
+            var partsT   = GameType("Studio.Game.Parts.PartsLoopManager");
+            var saveSysT = GameType("Studio.Game.Save.SaveSystem");
+
+            var cs01 = UnityEngine.Object.FindAnyObjectByType(cs01T);
+            if (cs01 != null && (bool)cs01T.GetProperty("IsPlaying").GetValue(cs01))
+                cs01T.GetMethod("SkipCutscene").Invoke(cs01, null);
+            yield return null;
+
+            var dlg   = UnityEngine.Object.FindAnyObjectByType(dlgT);
+            var parts = UnityEngine.Object.FindAnyObjectByType(partsT);
+            Assert.IsNotNull(dlg, "DialogueController obrigatorio.");
+            Assert.IsNotNull(parts, "PartsLoopManager obrigatorio.");
+
+            var junoNpc   = partsT.GetField("junoNpc").GetValue(parts);
+            var introJson = partsT.GetField("junoIntroDialogueJson").GetValue(parts) as TextAsset;
+            Assert.IsNotNull(junoNpc);
+            Assert.IsNotNull(introJson);
+
+            var pActive  = dlgT.GetProperty("IsDialogueActive");
+            var mStart   = dlgT.GetMethod("StartConversation");
+            var mAdvance = dlgT.GetMethod("PressAdvanceInput");
+            var pCurObj  = objT.GetProperty("CurrentObjective");
+
+            // 1. Primeira conversa com Juno inicia a missao
+            mStart.Invoke(dlg, new object[] { junoNpc, introJson });
+            for (int g = 0; g < 30 && (bool)pActive.GetValue(dlg); g++) { mAdvance.Invoke(dlg, null); yield return null; }
+            Assert.IsTrue((bool)partsT.GetProperty("CanCollectParts").GetValue(parts), "Missao de coleta deve iniciar apos 1a conversa.");
+
+            // 2. Avanca progresso da missao e grava em Save JSON versionado
+            const string midObj = "Peças (2/5)";
+            objT.GetMethod("Set").Invoke(null, new object[] { midObj });
+
+            string tmpSave = Path.Combine(Application.temporaryCachePath, $"concerto_smoke08_{Guid.NewGuid():N}.json");
+            var mSetPath = saveSysT.GetMethod("SetCustomPathForTests");
+            try
+            {
+                mSetPath.Invoke(null, new object[] { tmpSave });
+                saveSysT.GetMethod("Save").Invoke(null, new object[] { "cp_smoke08", null, null });
+                var loadArgs = new object[] { null };
+                Assert.IsTrue((bool)saveSysT.GetMethod("TryLoad").Invoke(null, loadArgs));
+                saveSysT.GetMethod("ApplyLoadedStateToCurrentScene").Invoke(null, new object[] { loadArgs[0] });
+            }
+            finally
+            {
+                mSetPath.Invoke(null, new object[] { null });
+                if (File.Exists(tmpSave)) File.Delete(tmpSave);
+            }
+
+            // 3. Re-conversa completa com Juno -> objetivo DEVE permanecer "Pecas (2/5)" sem reset!
+            mStart.Invoke(dlg, new object[] { junoNpc, introJson });
+            for (int g = 0; g < 30 && (bool)pActive.GetValue(dlg); g++) { mAdvance.Invoke(dlg, null); yield return null; }
+
+            Assert.AreEqual(midObj, (string)pCurObj.GetValue(null), "Smoke_08 FALHOU: Falar com NPC resetou/trocou o objetivo da missao!");
+            Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_08: {string.Join(" | ", _consoleErrors)}");
+        }
     }
 }
