@@ -1,0 +1,108 @@
+name: Concerto — Unity Smoke & QA Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+concurrency:
+  group: unity-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unity-tests:
+    name: Unity EditMode + PlayMode Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout repository (with Git LFS)
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Verify Unity License Secrets
+        shell: bash
+        run: |
+          if [ -z "${{ secrets.UNITY_LICENSE }}" ] && [ -z "${{ secrets.UNITY_SERIAL }}" ]; then
+            echo "::error::Missing Unity license secrets. Configure UNITY_LICENSE (or UNITY_SERIAL) + UNITY_EMAIL + UNITY_PASSWORD in GitHub Repo Settings -> Secrets -> Actions."
+            exit 1
+          fi
+
+      - name: Cache Unity Library
+        uses: actions/cache@v4
+        with:
+          path: unity/Library
+          key: Library-tests-${{ hashFiles('unity/Assets/**', 'unity/Packages/**', 'unity/ProjectSettings/**') }}
+          restore-keys: |
+            Library-tests-
+
+      - name: Run Unity EditMode & PlayMode Tests (Batchmode)
+        id: unity-tests
+        uses: game-ci/unity-test-runner@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          projectPath: unity
+          unityVersion: 6000.3.26f1
+          testMode: all
+          artifactsPath: test-artifacts
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          checkName: Unity Smoke & QA Tests
+
+      - name: Generate HTML Test Summary from NUnit XML
+        if: always()
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import glob, html, xml.etree.ElementTree as ET
+          from pathlib import Path
+
+          out_dir = Path("test-artifacts")
+          out_dir.mkdir(parents=True, exist_ok=True)
+          xml_files = sorted(glob.glob("test-artifacts/**/*.xml", recursive=True))
+          rows = []
+          totals = {"total": 0, "passed": 0, "failed": 0, "skipped": 0}
+
+          for xf in xml_files:
+              try:
+                  root = ET.parse(xf).getroot()
+                  totals["total"] += int(root.attrib.get("total", 0))
+                  totals["passed"] += int(root.attrib.get("passed", 0))
+                  totals["failed"] += int(root.attrib.get("failed", 0))
+                  totals["skipped"] += int(root.attrib.get("skipped", 0))
+                  for tc in root.findall(".//test-case"):
+                      res = tc.attrib.get("result", "Unknown")
+                      name = tc.attrib.get("fullname", tc.attrib.get("name", ""))
+                      dur = tc.attrib.get("duration", "0")
+                      color = "#16a34a" if res == "Passed" else ("#dc2626" if res == "Failed" else "#ca8a04")
+                      rows.append(f"<tr><td style='color:{color};font-weight:bold'>{html.escape(res)}</td><td>{html.escape(name)}</td><td>{html.escape(dur)}s</td></tr>")
+              except Exception as ex:
+                  rows.append(f"<tr><td>ERROR</td><td colspan='2'>{html.escape(str(ex))}</td></tr>")
+
+          doc = f"""<!doctype html>
+          <html lang="pt-BR"><head><meta charset="utf-8"><title>Concerto CI Test Report</title>
+          <style>body{{font-family:Segoe UI,Arial,sans-serif;background:#0b111b;color:#e5eef8;padding:24px}}
+          table{{border-collapse:collapse;width:100%}}th,td{{border:1px solid #233044;padding:8px;text-align:left}}
+          th{{background:#132033}}</style></head><body>
+          <h1>CONCERTO — Relatorio de Testes CI</h1>
+          <p>Total: <b>{totals['total']}</b> | Passed: <b style='color:#22c55e'>{totals['passed']}</b> |
+          Failed: <b style='color:#ef4444'>{totals['failed']}</b> | Skipped: <b>{totals['skipped']}</b></p>
+          <table><thead><tr><th>Resultado</th><th>Teste</th><th>Duracao</th></tr></thead><tbody>
+          {''.join(rows) if rows else '<tr><td colspan="3">Nenhum XML gerado.</td></tr>'}
+          </tbody></table></body></html>"""
+          (out_dir / "test-report.html").write_text(doc, encoding="utf-8")
+          PY
+
+      - name: Upload Test Results (XML + HTML) as Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unity-test-results-${{ github.run_number }}
+          path: test-artifacts
+          retention-days: 30
