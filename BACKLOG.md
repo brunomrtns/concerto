@@ -12,12 +12,6 @@
 
 ## Itens Abertos / Em Andamento (Prioridade: Crítico → Médio → Baixo)
 
-### `BL-004` — Modelos 3D faltantes das peças 4 e 5 do Ato 1 (TripoSG exclusivo)
-- **Severidade:** `MÉDIO`
-- **Status:** `ABERTO`
-- **Descrição:** Em `parts_loop_config.json`, `part_04` (*Condensador de Fluxo*) e `part_05` (*Estabilizador Orbital*) ainda reutilizam os FBXs de `part_bobina_fase` e `part_nucleo_ressonancia` porque `Art/Generated/parts/` possui apenas 3 FBXs (`part_nucleo_ressonancia`, `part_bobina_fase`, `part_regulador_crono`).
-- **Critério de pronto:** Gerar os 2 modelos faltantes **exclusivamente via TripoSG** (`part_condensador_fluxo.fbx` e `part_estabilizador_orbital.fbx`), vincular em `parts_loop_config.json` e na cena `Caldeiral.unity`, validar PBR + evidência visual + `Tests/SmokeTest/` 7/7 verde.
-
 ### `BL-005` — Menu de Pause × Playcaller (`QA-03`)
 - **Severidade:** `MÉDIO`
 - **Status:** `ABERTO`
@@ -48,4 +42,5 @@
 | `ANIM-01` | Polimento de animação do Dez (braços afastados, arma em RightHand + swing/coice, mantle 3 fases, pouso correndo sem deslize, passos NPC sincronizados) | Médio | `FEITO` | 2026-11-24 | `b633c5d` |
 | `BL-001` | Bug crítico: missão/objetivo reseta ou troca indevidamente ao falar com NPC | Crítico | `FEITO` | 2026-11-25 | `24bbf37` |
 | `BL-002` | HUD Overlap superior esquerdo (`QA-01` — HP vs Objetivo) | Médio | `FEITO` | 2026-11-25 | `c9a8fe9` |
-| `BL-003` | HUD Overlap inferior direito (`QA-02` — ToolHUD vs Poderes ECO/ESTASE) | Médio | `FEITO` | 2026-11-25 | *(commit atual)* |
+| `BL-003` | HUD Overlap inferior direito (`QA-02` — ToolHUD vs Poderes ECO/ESTASE) | Médio | `FEITO` | 2026-11-25 | `bfb6f9a` |
+| `BL-004` | Modelos 3D faltantes (peças 4 e 5 + Fragmento de Núcleo + Célula de Energia + Estação de Parry — TripoSG exclusivo) | Médio | `FEITO` | 2026-11-25 | *(lote 1)* |

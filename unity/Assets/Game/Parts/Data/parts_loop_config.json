@@ -25,14 +25,14 @@
     {
       "id": "part_04",
       "displayName": "Condensador de Fluxo",
-      "prefabSlug": "part_bobina_fase",
+      "prefabSlug": "part_condensador_fluxo",
       "locationHint": "Sobre o caixote sudeste",
       "position": { "x": -24.0, "y": 1.24, "z": -22.6 }
     },
     {
       "id": "part_05",
       "displayName": "Estabilizador Orbital",
-      "prefabSlug": "part_nucleo_ressonancia",
+      "prefabSlug": "part_estabilizador_orbital",
       "locationHint": "Sobre o caixote sudoeste",
       "position": { "x": -34.5, "y": 1.24, "z": -22.8 }
     }
