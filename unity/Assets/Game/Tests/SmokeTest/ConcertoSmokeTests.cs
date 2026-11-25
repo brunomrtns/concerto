@@ -314,5 +314,157 @@ namespace Studio.Tests.SmokeTest
             Assert.AreEqual(midObj, (string)pCurObj.GetValue(null), "Smoke_08 FALHOU: Falar com NPC resetou/trocou o objetivo da missao!");
             Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_08: {string.Join(" | ", _consoleErrors)}");
         }
+
+        // (g) Onboarding (GATE 4): iniciar jogo novo -> completar os 5 passos -> Save JSON reflete progresso!
+        [UnityTest]
+        public IEnumerator Smoke_09_NewGameOnboardingUpdatesSaveState()
+        {
+            var saveSysT = GameType("Studio.Game.Save.SaveSystem");
+            var menuT    = GameType("Studio.Game.Menu.BootAndMainMenuController");
+            var onbT     = GameType("Studio.Game.Onboarding.OnboardingSequenceController");
+            var stepEnum = GameType("Studio.Game.Onboarding.OnboardingStep");
+            var locoT    = GameType("Studio.Game.Animation.DezLocomotionController");
+            var powersT  = GameType("Studio.Game.Powers.DezPowersController");
+            var cs01T    = GameType("Studio.Game.Cutscenes.CutsceneManager");
+
+            string tmpSave = Path.Combine(Application.temporaryCachePath, $"concerto_smoke09_{Guid.NewGuid():N}.json");
+            var mSetPath = saveSysT.GetMethod("SetCustomPathForTests");
+
+            try
+            {
+                mSetPath.Invoke(null, new object[] { tmpSave });
+
+                // 1. Iniciar pelo MainMenu -> Novo Jogo
+                yield return LoadSceneAndVerifyCleanConsole("MainMenu");
+                var menu = UnityEngine.Object.FindAnyObjectByType(menuT);
+                Assert.IsNotNull(menu, "BootAndMainMenuController obrigatorio em MainMenu.");
+                menuT.GetMethod("SkipBootSplash").Invoke(menu, null);
+                yield return null;
+                menuT.GetMethod("OnNewGameClicked").Invoke(menu, null);
+
+                float waitLoad = 0f;
+                while (SceneManager.GetActiveScene().name != "Caldeiral" && waitLoad < 10f)
+                {
+                    yield return null;
+                    waitLoad += Time.unscaledDeltaTime;
+                }
+                Assert.AreEqual("Caldeiral", SceneManager.GetActiveScene().name, "Novo Jogo deve carregar Caldeiral.");
+                for (int i = 0; i < 6; i++) yield return null;
+
+                // Pula cutscene de abertura (se ativa) para ir direto ao onboarding
+                var cs01 = UnityEngine.Object.FindAnyObjectByType(cs01T);
+                if (cs01 != null && (bool)cs01T.GetProperty("IsPlaying").GetValue(cs01))
+                    cs01T.GetMethod("SkipCutscene").Invoke(cs01, null);
+                for (int i = 0; i < 4; i++) yield return null;
+
+                var onb = UnityEngine.Object.FindAnyObjectByType(onbT) as Component;
+                Assert.IsNotNull(onb, "OnboardingSequenceController deve iniciar automaticamente no Novo Jogo.");
+                Assert.IsTrue((bool)onbT.GetProperty("IsActive").GetValue(onb), "Onboarding deve estar ativo apos Novo Jogo.");
+
+                var loco = UnityEngine.Object.FindAnyObjectByType(locoT) as Component;
+                var powers = UnityEngine.Object.FindAnyObjectByType(powersT);
+                Assert.IsNotNull(loco, "DezLocomotionController obrigatorio.");
+                Assert.IsNotNull(powers, "DezPowersController obrigatorio.");
+
+                var pCurStep   = onbT.GetProperty("CurrentStep");
+                var pTelegraph = onbT.GetProperty("TelegraphCompletedForCurrentStep");
+                var pPromptCnt = onbT.GetProperty("CurrentPromptLineCount");
+                var mGetPos    = onbT.GetMethod("GetStationPosition");
+                var mIsBarrier = onbT.GetMethod("IsBarrierActive");
+                var pUseScript = locoT.GetProperty("UseScriptedInput");
+                var pMoveDir   = locoT.GetProperty("ScriptedMoveDir");
+                var pJump      = locoT.GetProperty("ScriptedJump");
+                var pJumpHeld  = locoT.GetProperty("ScriptedJumpHeld");
+
+                // Passo 1: Mover
+                Assert.AreEqual(Enum.Parse(stepEnum, "Move"), pCurStep.GetValue(onb));
+                Assert.LessOrEqual((int)pPromptCnt.GetValue(onb), 1, "Onboarding nao pode ter parede de texto (max 1 linha).");
+                Assert.IsTrue((bool)mIsBarrier.Invoke(onb, new object[] { Enum.Parse(stepEnum, "Move") }), "Barreira 1 deve bloquear antes de aprender.");
+                while (!(bool)pTelegraph.GetValue(onb)) yield return null;
+
+                Vector3 st0 = (Vector3)mGetPos.Invoke(onb, new object[] { Enum.Parse(stepEnum, "Move") });
+                pUseScript.SetValue(loco, true);
+                float t = 0f;
+                while (Equals(pCurStep.GetValue(onb), Enum.Parse(stepEnum, "Move")) && t < 5f)
+                {
+                    Vector3 d = st0 - loco.transform.position; d.y = 0f;
+                    pMoveDir.SetValue(loco, d.sqrMagnitude > 0.01f ? d.normalized : Vector3.forward);
+                    yield return null;
+                    t += Time.deltaTime;
+                }
+                pMoveDir.SetValue(loco, Vector3.zero);
+                Assert.AreEqual(Enum.Parse(stepEnum, "Jump"), pCurStep.GetValue(onb), "Passo 1 (Move) deve avancar para Passo 2 (Jump).");
+                Assert.IsFalse((bool)mIsBarrier.Invoke(onb, new object[] { Enum.Parse(stepEnum, "Move") }), "Barreira 1 deve dissolver apos conclusao.");
+
+                // Passo 2: Pular (plato fisico + coyote/buffer)
+                while (!(bool)pTelegraph.GetValue(onb)) yield return null;
+                Vector3 st1 = (Vector3)mGetPos.Invoke(onb, new object[] { Enum.Parse(stepEnum, "Jump") });
+                t = 0f;
+                bool jumpSent = false;
+                int jumpHoldFrames = 0;
+                while (Equals(pCurStep.GetValue(onb), Enum.Parse(stepEnum, "Jump")) && t < 5f)
+                {
+                    Vector3 d = st1 - loco.transform.position; d.y = 0f;
+                    pMoveDir.SetValue(loco, d.sqrMagnitude > 0.04f ? d.normalized : Vector3.zero);
+                    if (!jumpSent && d.magnitude < 1.9f)
+                    {
+                        pJumpHeld.SetValue(loco, true);
+                        pJump.SetValue(loco, true);
+                        jumpSent = true;
+                        jumpHoldFrames = 0;
+                    }
+                    else if (jumpSent)
+                    {
+                        jumpHoldFrames++;
+                        if (jumpHoldFrames == 2) pJump.SetValue(loco, false);
+                        if (jumpHoldFrames == 18) pJumpHeld.SetValue(loco, false);
+                    }
+                    yield return null;
+                    t += Time.deltaTime;
+                }
+                pJump.SetValue(loco, false);
+                pJumpHeld.SetValue(loco, false);
+                pMoveDir.SetValue(loco, Vector3.zero);
+                pUseScript.SetValue(loco, false);
+                Assert.AreEqual(Enum.Parse(stepEnum, "Interact"), pCurStep.GetValue(onb), "Passo 2 (Jump) deve avancar para Passo 3 (Interact).");
+
+                // Passo 3: Interagir
+                while (!(bool)pTelegraph.GetValue(onb)) yield return null;
+                Assert.IsTrue((bool)onbT.GetMethod("TryInteractCurrentTerminal").Invoke(onb, null), "Interacao com terminal deve concluir Passo 3.");
+                yield return null;
+                Assert.AreEqual(Enum.Parse(stepEnum, "EcoTemporal"), pCurStep.GetValue(onb), "Passo 3 (Interact) deve avancar para Passo 4 (EcoTemporal).");
+
+                // Passo 4: Eco Temporal
+                while (!(bool)pTelegraph.GetValue(onb)) yield return null;
+                Assert.IsTrue((bool)powersT.GetMethod("TriggerEcoTemporal").Invoke(powers, null), "Eco Temporal deve ativar no Passo 4.");
+                yield return null;
+                Assert.AreEqual(Enum.Parse(stepEnum, "Estase"), pCurStep.GetValue(onb), "Passo 4 (EcoTemporal) deve avancar para Passo 5 (Estase).");
+
+                // Passo 5: Estase
+                while (!(bool)pTelegraph.GetValue(onb)) yield return null;
+                Assert.IsTrue((bool)powersT.GetMethod("TriggerEstase").Invoke(powers, null), "Estase deve ativar no Passo 5.");
+                yield return null;
+
+                Assert.IsTrue((bool)onbT.GetProperty("IsCompleted").GetValue(onb), "Onboarding deve estar concluido apos os 5 passos.");
+
+                // Verifica persistencia real no Save JSON versionado
+                var loadArgs = new object[] { null };
+                Assert.IsTrue((bool)saveSysT.GetMethod("TryLoad").Invoke(null, loadArgs), "Save JSON deve existir apos concluir onboarding.");
+                var loaded = loadArgs[0];
+                var dataT = loaded.GetType();
+                Assert.IsTrue((bool)dataT.GetField("onboardingCompleted").GetValue(loaded), "Save JSON deve registrar onboardingCompleted=true.");
+                Assert.AreEqual(5, (int)dataT.GetField("onboardingStepIndex").GetValue(loaded), "Save JSON deve registrar onboardingStepIndex=5.");
+                var stepsList = dataT.GetField("completedOnboardingSteps").GetValue(loaded) as List<string>;
+                Assert.IsNotNull(stepsList);
+                Assert.AreEqual(5, stepsList.Count, "Save JSON deve listar os 5 passos concluidos.");
+
+                Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_09: {string.Join(" | ", _consoleErrors)}");
+            }
+            finally
+            {
+                mSetPath.Invoke(null, new object[] { null });
+                if (File.Exists(tmpSave)) File.Delete(tmpSave);
+            }
+        }
     }
 }

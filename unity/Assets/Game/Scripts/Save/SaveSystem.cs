@@ -5,6 +5,7 @@ using Studio.Game.Anomalies;
 using Studio.Game.Combat;
 using Studio.Game.Cutscenes;
 using Studio.Game.Dialogue;
+using Studio.Game.Onboarding;
 using Studio.Game.Parts;
 using Studio.Game.Powers;
 using Studio.Game.Repair;
@@ -29,13 +30,22 @@ namespace Studio.Game.Save
         private static string _customPathOverride;
         private static SaveGameData _lastLoadedOrSaved;
         private static bool _pendingContinueLoad;
+        private static bool _pendingNewGameOnboarding;
 
         public static string SaveFilePath => !string.IsNullOrEmpty(_customPathOverride)
             ? _customPathOverride
             : Path.Combine(Application.persistentDataPath, SaveFileName);
 
         public static bool IsPendingContinueLoad => _pendingContinueLoad;
+        public static bool IsPendingNewGameOnboarding => _pendingNewGameOnboarding;
         public static SaveGameData CachedState => _lastLoadedOrSaved;
+
+        public static bool ConsumePendingNewGameOnboarding()
+        {
+            if (!_pendingNewGameOnboarding) return false;
+            _pendingNewGameOnboarding = false;
+            return true;
+        }
 
         public static event Action<SaveGameData> OnGameSaved;
         public static event Action<SaveGameData> OnGameLoaded;
@@ -147,6 +157,19 @@ namespace Studio.Game.Save
                 DialogueController.Instance.CopyCompletedDialogueIdsTo(data.completedDialogueIds);
             }
 
+            // 3b. Progresso do Onboarding (JSON versionado — NUNCA PlayerPrefs)
+            var onboarding = OnboardingSequenceController.Instance;
+            if (onboarding != null)
+            {
+                data.onboardingCompleted = onboarding.IsCompleted;
+                data.onboardingSkipped = onboarding.WasSkipped;
+                data.onboardingStepIndex = (int)onboarding.CurrentStep;
+                if (data.completedOnboardingSteps == null)
+                    data.completedOnboardingSteps = new System.Collections.Generic.List<string>();
+                data.completedOnboardingSteps.Clear();
+                onboarding.CopyCompletedStepsTo(data.completedOnboardingSteps);
+            }
+
             // 4. Loop de pecas do Ato 1
             var parts = PartsLoopManager.Instance;
             if (parts != null)
@@ -227,6 +250,7 @@ namespace Studio.Game.Save
         public static void MarkNewGameRequested()
         {
             Delete();
+            _pendingNewGameOnboarding = true;
             PlayerPrefs.DeleteKey(CutsceneManager.PlayedPrefKey);
             PlayerPrefs.Save();
         }
@@ -242,6 +266,7 @@ namespace Studio.Game.Save
             }
 
             _pendingContinueLoad = true;
+            _pendingNewGameOnboarding = false;
             sceneToLoad = string.IsNullOrEmpty(data.sceneName) ? DefaultGameScene : data.sceneName;
             if (data.cs01Played)
             {
@@ -283,9 +308,15 @@ namespace Studio.Game.Save
             if (PlayerHealthController.Instance != null)
                 PlayerHealthController.Instance.SetCheckpointFromSaveOnly(data.checkpointPosition.ToVector3());
 
-            // 2. Pecas do Ato 1 & Dialogos Concluidos (BL-001)
+            // 2. Pecas do Ato 1, Dialogos Concluidos (BL-001) & Onboarding
             if (DialogueController.Instance != null && data.completedDialogueIds != null)
                 DialogueController.Instance.RestoreCompletedDialogues(data.completedDialogueIds);
+            if (OnboardingSequenceController.Instance != null)
+                OnboardingSequenceController.Instance.RestoreFromSave(
+                    data.onboardingCompleted,
+                    data.onboardingSkipped,
+                    data.onboardingStepIndex,
+                    data.completedOnboardingSteps);
             if (PartsLoopManager.Instance != null)
                 PartsLoopManager.Instance.RestoreFromSave(data.partsCollectedMask, data.canCollectParts, data.act1Completed);
 
