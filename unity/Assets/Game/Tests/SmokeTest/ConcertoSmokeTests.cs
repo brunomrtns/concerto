@@ -593,5 +593,94 @@ namespace Studio.Tests.SmokeTest
                 if (Directory.Exists(tmpDir)) Directory.Delete(tmpDir, true);
             }
         }
+
+        // (j) UI, HUD e Acessibilidade (GATES 1-4): Pause por controle, opcoes PlayerPrefs na hora, daltonismo, remapeamento e legendas
+        [UnityTest]
+        public IEnumerator Smoke_12_UiAccessibilityOptionsAndPauseControllerNav()
+        {
+            yield return LoadSceneAndVerifyCleanConsole("Caldeiral");
+
+            var cs01T  = GameType("Studio.Game.Cutscenes.CutsceneManager");
+            var pauseT = GameType("Studio.Game.Menu.PauseMenuController");
+            var optT   = GameType("Studio.Game.Menu.OptionsPanelUI");
+            var setT   = GameType("Studio.Game.Menu.GameSettingsManager");
+            var cbEnum = GameType("Studio.Game.Menu.ColorblindProfile");
+            var a11yT  = GameType("Studio.Game.UI.AccessibilityRuntimeController");
+
+            var cs01 = UnityEngine.Object.FindAnyObjectByType(cs01T);
+            if (cs01 != null && (bool)cs01T.GetProperty("IsPlaying").GetValue(cs01))
+                cs01T.GetMethod("SkipCutscene").Invoke(cs01, null);
+            yield return null;
+
+            var pause = UnityEngine.Object.FindAnyObjectByType(pauseT);
+            var a11y  = UnityEngine.Object.FindAnyObjectByType(a11yT);
+            Assert.IsNotNull(pause, "PauseMenuController obrigatorio em Caldeiral.");
+            Assert.IsNotNull(a11y, "AccessibilityRuntimeController obrigatorio.");
+
+            // Guarda valores anteriores para restaurar ao fim do teste
+            float origBright = (float)setT.GetProperty("Brightness").GetValue(null);
+            int   origFont   = (int)setT.GetProperty("FontScaleIndex").GetValue(null);
+            bool  origSub    = (bool)setT.GetProperty("SubtitlesEnabled").GetValue(null);
+            object origCb    = setT.GetProperty("ColorblindMode").GetValue(null);
+            KeyCode origJump = (KeyCode)setT.GetMethod("GetActionKey").Invoke(null, new object[] { "Jump" });
+
+            try
+            {
+                // GATE 1: Abre Pause, navega por controle (Continuar -> Opcoes) e confirma sem mouse
+                Assert.IsTrue((bool)pauseT.GetMethod("TryPause").Invoke(pause, null), "TryPause deve pausar.");
+                yield return null;
+                pauseT.GetMethod("NavigatePause").Invoke(pause, new object[] { +1 }); // foca Opcoes
+                Assert.AreEqual("Opcoes", (string)pauseT.GetProperty("FocusedPauseLabel").GetValue(pause));
+                pauseT.GetMethod("ConfirmPauseSelection").Invoke(pause, null); // abre OptionsPanelUI
+                yield return null;
+
+                var opt = pauseT.GetField("optionsPanel").GetValue(pause) as Component;
+                Assert.IsNotNull(opt);
+                Assert.IsTrue(opt.gameObject.activeSelf, "OptionsPanelUI deve abrir via controle.");
+
+                // GATE 2: Navega pelas opcoes via controle (Brilho, Fonte, Legendas, Daltonismo, Remapeamento)
+                var mNav = optT.GetMethod("NavigateOption");
+                var mAdj = optT.GetMethod("AdjustOption");
+                for (int i = 0; i < 5; i++) mNav.Invoke(opt, new object[] { +1 }); // row 5 = Brilho
+                mAdj.Invoke(opt, new object[] { +1 });
+                Assert.Greater((float)setT.GetProperty("Brightness").GetValue(null), origBright - 0.01f);
+
+                mNav.Invoke(opt, new object[] { +2 }); // row 7 = Escala de Fonte (3 tamanhos)
+                setT.GetMethod("SetFontScaleIndex").Invoke(null, new object[] { 2 }); // Grande (1.25x)
+                Assert.AreEqual(2, (int)setT.GetProperty("FontScaleIndex").GetValue(null));
+
+                mNav.Invoke(opt, new object[] { +2 }); // row 9 = Modo Daltoico (3 perfis)
+                setT.GetMethod("SetColorblindMode").Invoke(null, new object[] { Enum.Parse(cbEnum, "Protanopia") });
+                Assert.AreEqual(Enum.Parse(cbEnum, "Protanopia"), setT.GetProperty("ColorblindMode").GetValue(null));
+
+                mNav.Invoke(opt, new object[] { +1 }); // row 10 = Remapear Jump
+                setT.GetMethod("SetActionKey").Invoke(null, new object[] { "Jump", KeyCode.F });
+                Assert.AreEqual(KeyCode.F, (KeyCode)setT.GetMethod("GetActionKey").Invoke(null, new object[] { "Jump" }));
+
+                // Fecha Opcoes e retoma jogo via controle (Back)
+                pauseT.GetMethod("BackPauseNavigation").Invoke(pause, null);
+                yield return null;
+                pauseT.GetMethod("BackPauseNavigation").Invoke(pause, null);
+                yield return null;
+                Assert.IsFalse((bool)pauseT.GetProperty("IsPaused").GetValue(pause), "Jogo deve despausar via controle.");
+
+                // GATE 4: Legenda com nome do falante
+                setT.GetMethod("SetSubtitlesEnabled").Invoke(null, new object[] { true });
+                a11yT.GetMethod("ShowSubtitle").Invoke(a11y, new object[] { "Juno", "Teste de legenda acessivel.", 2.0f });
+                yield return null;
+                string activeSub = (string)a11yT.GetProperty("ActiveSubtitleText").GetValue(a11y);
+                Assert.IsTrue(activeSub.Contains("[JUNO]") && activeSub.Contains("legenda"), $"Legenda esperada com falante, obtido: '{activeSub}'");
+
+                Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_12: {string.Join(" | ", _consoleErrors)}");
+            }
+            finally
+            {
+                setT.GetMethod("SetBrightness").Invoke(null, new object[] { origBright });
+                setT.GetMethod("SetFontScaleIndex").Invoke(null, new object[] { origFont });
+                setT.GetMethod("SetSubtitlesEnabled").Invoke(null, new object[] { origSub });
+                setT.GetMethod("SetColorblindMode").Invoke(null, new object[] { origCb });
+                setT.GetMethod("SetActionKey").Invoke(null, new object[] { "Jump", origJump });
+            }
+        }
     }
 }

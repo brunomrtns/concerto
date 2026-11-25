@@ -34,6 +34,8 @@ namespace Studio.Game.Menu
 
         public bool IsPaused { get; private set; }
         public bool IsConfirmModalOpen => confirmMenuModal != null && confirmMenuModal.activeSelf;
+        public int FocusedPauseIndex => _pauseFocusIndex;
+        public string FocusedPauseLabel => _pauseFocusIndex == 0 ? "Continuar" : (_pauseFocusIndex == 1 ? "Opcoes" : "Menu Principal");
 
         private CutsceneManager _cs01;
         private Cutscene02TravelController _cs02;
@@ -41,6 +43,8 @@ namespace Studio.Game.Menu
         private Cutscene04SkyCrackedController _cs04;
         private DezLocomotionController _playerLoco;
         private bool _locoWasEnabledBeforePause;
+        private int _pauseFocusIndex;
+        private float _navCooldownUntil;
 
         private void Awake()
         {
@@ -101,28 +105,119 @@ namespace Studio.Game.Menu
 
         private void Update()
         {
-            if (!Input.GetKeyDown(KeyCode.Escape)) return;
+            // GATE 1: Abrir/fechar Pause por teclado (Esc / tecla remapeada) OU controle (Start = JoystickButton7)
+            KeyCode pauseKey = GameSettingsManager.GetActionKey("Pause");
+            bool pausePressed = Input.GetKeyDown(pauseKey) || Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.JoystickButton7);
+            bool backPressed  = Input.GetKeyDown(KeyCode.JoystickButton1); // Gamepad B / Circulo
 
             if (IsPaused)
             {
                 if (optionsPanel != null && optionsPanel.gameObject.activeSelf)
                 {
-                    optionsPanel.Close();
+                    if (pausePressed || backPressed)
+                        optionsPanel.Close();
                     return;
                 }
-                if (IsConfirmModalOpen)
+
+                if (pausePressed || backPressed)
                 {
-                    CancelReturnToMenu();
+                    BackPauseNavigation();
                     return;
                 }
-                ResumeGame();
+
+                // Navegacao 100% por teclado e controle (setas + D-pad/analogico + confirmar)
+                if (Time.unscaledTime >= _navCooldownUntil)
+                {
+                    float vAxis = Input.GetAxisRaw("Vertical");
+                    if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S) || vAxis < -0.55f)
+                    {
+                        NavigatePause(+1);
+                        _navCooldownUntil = Time.unscaledTime + 0.18f;
+                    }
+                    else if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) || vAxis > 0.55f)
+                    {
+                        NavigatePause(-1);
+                        _navCooldownUntil = Time.unscaledTime + 0.18f;
+                    }
+                }
+
+                if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.JoystickButton0))
+                {
+                    ConfirmPauseSelection();
+                }
                 return;
             }
+
+            if (!pausePressed) return;
 
             if (CanOpenPauseNow())
                 PauseGame();
             else if (AudioMixController.Instance != null)
                 AudioMixController.Instance.PlayUiDeny();
+        }
+
+        public void NavigatePause(int delta)
+        {
+            if (!IsPaused) return;
+            if (IsConfirmModalOpen)
+            {
+                _pauseFocusIndex = (_pauseFocusIndex == 0) ? 1 : 0;
+                SelectButtonVisual(_pauseFocusIndex == 0 ? confirmReturnNoButton : confirmReturnYesButton);
+                return;
+            }
+            _pauseFocusIndex = (_pauseFocusIndex + delta + 3) % 3;
+            ApplyPauseFocusVisual();
+            if (AudioMixController.Instance != null) AudioMixController.Instance.PlayUiConfirm();
+        }
+
+        public void ConfirmPauseSelection()
+        {
+            if (!IsPaused) return;
+            if (IsConfirmModalOpen)
+            {
+                if (_pauseFocusIndex == 1) ConfirmReturnToMenu();
+                else CancelReturnToMenu();
+                return;
+            }
+            if (_pauseFocusIndex == 0) ResumeGame();
+            else if (_pauseFocusIndex == 1) OpenOptions();
+            else OnReturnToMenuClicked();
+        }
+
+        public void BackPauseNavigation()
+        {
+            if (!IsPaused) return;
+            if (optionsPanel != null && optionsPanel.gameObject.activeSelf)
+            {
+                optionsPanel.Close();
+                return;
+            }
+            if (IsConfirmModalOpen)
+            {
+                CancelReturnToMenu();
+                return;
+            }
+            ResumeGame();
+        }
+
+        private void ApplyPauseFocusVisual()
+        {
+            Button[] btns = { resumeButton, optionsButton, returnToMenuButton };
+            for (int i = 0; i < btns.Length; i++)
+            {
+                if (btns[i] == null) continue;
+                var img = btns[i].targetGraphic as Image;
+                if (img != null)
+                    img.color = (i == _pauseFocusIndex) ? new Color(0.22f, 0.78f, 1.0f, 1f) : new Color(0.16f, 0.22f, 0.30f, 0.92f);
+            }
+            if (_pauseFocusIndex >= 0 && _pauseFocusIndex < btns.Length)
+                SelectButtonVisual(btns[_pauseFocusIndex]);
+        }
+
+        private static void SelectButtonVisual(Button btn)
+        {
+            if (btn != null && UnityEngine.EventSystems.EventSystem.current != null)
+                UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(btn.gameObject);
         }
 
         /// <summary>
@@ -170,6 +265,8 @@ namespace Studio.Game.Menu
             if (pauseButtonsGroup != null) pauseButtonsGroup.interactable = true;
             if (confirmMenuModal != null) confirmMenuModal.SetActive(false);
             if (optionsPanel != null) optionsPanel.gameObject.SetActive(false);
+            _pauseFocusIndex = 0;
+            ApplyPauseFocusVisual();
             if (AudioMixController.Instance != null) AudioMixController.Instance.PlayUiOpen();
         }
 
