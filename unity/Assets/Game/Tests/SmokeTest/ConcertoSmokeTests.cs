@@ -927,5 +927,59 @@ namespace Studio.Tests.SmokeTest
 
             Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_16: {string.Join(" | ", _consoleErrors)}");
         }
+
+        // (o) Camera Pass Cinemachine (GATES 1-5 + Regra 3): look-ahead <100ms, Impulse <300ms, blend <0.5s e pull-in sem clip!
+        [UnityTest]
+        public IEnumerator Smoke_17_CameraDirectorFollowImpulseZonesAndPullIn()
+        {
+            yield return LoadSceneAndVerifyCleanConsole("Caldeiral");
+
+            var cs01T = GameType("Studio.Game.Cutscenes.CutsceneManager");
+            var camT  = GameType("Studio.Game.CameraSystem.ConcertoCameraDirector");
+            var zoneE = GameType("Studio.Game.CameraSystem.CameraZoneMode");
+            var locoT = GameType("Studio.Game.Animation.DezLocomotionController");
+
+            var cs01 = UnityEngine.Object.FindAnyObjectByType(cs01T);
+            if (cs01 != null && (bool)cs01T.GetProperty("IsPlaying").GetValue(cs01))
+                cs01T.GetMethod("SkipCutscene").Invoke(cs01, null);
+            yield return null;
+
+            var camDir = UnityEngine.Object.FindAnyObjectByType(camT);
+            var loco   = UnityEngine.Object.FindAnyObjectByType(locoT) as Component;
+            Assert.IsNotNull(camDir, "ConcertoCameraDirector obrigatorio.");
+            Assert.IsNotNull(loco);
+
+            camT.GetProperty("DisableCameraPassForComparison").SetValue(null, false);
+
+            // Regra 3: Cinemachine Impulse com decay < 300ms
+            camT.GetMethod("TriggerCinemachineImpulse").Invoke(camDir, new object[] { Vector3.down * 0.25f, 0.22f });
+            float decay = (float)camT.GetProperty("LastImpulseDecaySec").GetValue(camDir);
+            Assert.Less(decay, 0.300f, $"Impulse decay ({decay:F3}s) deve ser < 300ms.");
+            Assert.GreaterOrEqual((int)camT.GetProperty("ImpulseTriggerCount").GetValue(camDir), 1);
+
+            // GATE 5: Blend < 0.5s e transicao limpa entre zonas
+            float blendSec = (float)camT.GetField("ZoneBlendDurationSec").GetValue(null);
+            Assert.Less(blendSec, 0.50f, "Blend entre zonas deve ser < 0.5s.");
+            camT.GetMethod("RequestZoneTransition").Invoke(camDir, new object[] { Enum.Parse(zoneE, "TightCorridor") });
+            yield return null;
+            Assert.AreEqual(Enum.Parse(zoneE, "TightCorridor"), camT.GetProperty("ActiveZone").GetValue(camDir));
+            camT.GetMethod("RequestZoneTransition").Invoke(camDir, new object[] { Enum.Parse(zoneE, "Exploration") });
+
+            // GATE 1: Look-ahead responde ao movimento (<100ms)
+            locoT.GetProperty("UseScriptedInput").SetValue(loco, true);
+            locoT.GetProperty("ScriptedMoveDir").SetValue(loco, Vector3.right);
+            float moveElapsed = 0f;
+            while (moveElapsed < 0.35f) { yield return null; moveElapsed += Time.deltaTime; }
+            Vector3 la = (Vector3)camT.GetProperty("CurrentLookAheadOffset").GetValue(camDir);
+            locoT.GetProperty("ScriptedMoveDir").SetValue(loco, Vector3.zero);
+            locoT.GetProperty("UseScriptedInput").SetValue(loco, false);
+            Assert.Greater(la.magnitude, 0.05f, "Look-ahead deve acompanhar direcao do movimento.");
+
+            // GATE 4: Pull-in seguro (nunca maior que distancia desejada)
+            float safeDist = (float)camT.GetMethod("ComputeSafePullInDistance").Invoke(camDir, new object[] { loco.transform.position, 3.25f });
+            Assert.LessOrEqual(safeDist, 3.25f);
+
+            Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_17: {string.Join(" | ", _consoleErrors)}");
+        }
     }
 }
