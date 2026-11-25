@@ -12,12 +12,6 @@
 
 ## Itens Abertos / Em Andamento (Prioridade: Crítico → Médio → Baixo)
 
-### `BL-005` — Menu de Pause × Playcaller (`QA-03`)
-- **Severidade:** `MÉDIO`
-- **Status:** `ABERTO`
-- **Descrição:** Reportado em `QA_AUTOMATIZADO.md` (`QA-03`): no 2º ciclo de abrir/fechar Pause via `Escape` durante gravação no Unity Recorder, comandos subsequentes do Playcaller deram timeout.
-- **Critério de pronto:** Diagnosticar interação `PauseMenuController` (`Time.timeScale = 0`) × input externo, corrigir sem quebrar o pause normal do jogador, validar 3+ ciclos de Pause via Playcaller + `Tests/SmokeTest/` 7/7 verde.
-
 ### `BL-006` — Layout HUD responsivo em ultrawide (`QA-05`)
 - **Severidade:** `BAIXO`
 - **Status:** `ABERTO`
@@ -44,3 +38,4 @@
 | `BL-002` | HUD Overlap superior esquerdo (`QA-01` — HP vs Objetivo) | Médio | `FEITO` | 2026-11-25 | `c9a8fe9` |
 | `BL-003` | HUD Overlap inferior direito (`QA-02` — ToolHUD vs Poderes ECO/ESTASE) | Médio | `FEITO` | 2026-11-25 | `bfb6f9a` |
 | `BL-004` | Modelos 3D faltantes (peças 4 e 5 + Fragmento de Núcleo + Célula de Energia + Estação de Parry — TripoSG exclusivo) | Médio | `FEITO` | 2026-11-25 | *(lote 1)* |
+| `BL-005` | Menu de Pause × Playcaller (`QA-03` — ponte `PlaycallerPauseBridge`, `SimulateKeyPress` unscaled, `Smoke_19` 4 ciclos, `captures/qa/bl005_antes.mp4`) | Médio | `FEITO` | 2026-11-25 | *(este commit)* |

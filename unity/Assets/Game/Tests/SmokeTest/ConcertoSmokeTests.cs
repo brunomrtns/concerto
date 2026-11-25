@@ -1036,5 +1036,66 @@ namespace Studio.Tests.SmokeTest
 
             Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_18: {string.Join(" | ", _consoleErrors)}");
         }
+
+        // (q) BL-005: 3+ ciclos Pause -> Unpause por input simulado, navegacao ativa com timeScale=0, sem timeout e sem estado preso!
+        [UnityTest]
+        public IEnumerator Smoke_19_BL005_PauseUnpauseThreeCyclesSimulatedInputNoTimeout()
+        {
+            yield return LoadSceneAndVerifyCleanConsole("Caldeiral");
+
+            var cs01T  = GameType("Studio.Game.Cutscenes.CutsceneManager");
+            var pauseT = GameType("Studio.Game.Menu.PauseMenuController");
+            var locoT  = GameType("Studio.Game.Animation.DezLocomotionController");
+
+            var cs01 = UnityEngine.Object.FindAnyObjectByType(cs01T);
+            if (cs01 != null && (bool)cs01T.GetProperty("IsPlaying").GetValue(cs01))
+                cs01T.GetMethod("SkipCutscene").Invoke(cs01, null);
+            yield return null;
+
+            var pause = UnityEngine.Object.FindAnyObjectByType(pauseT);
+            var loco  = UnityEngine.Object.FindAnyObjectByType(locoT) as Behaviour;
+            Assert.IsNotNull(pause, "PauseMenuController obrigatorio em Caldeiral.");
+            Assert.IsNotNull(loco, "DezLocomotionController obrigatorio em Caldeiral.");
+
+            var simKey = pauseT.GetMethod("SimulateKeyPress");
+            var isPausedProp = pauseT.GetProperty("IsPaused");
+            var cyclesProp   = pauseT.GetProperty("PauseCycleCount");
+            var focusProp    = pauseT.GetProperty("FocusedPauseIndex");
+
+            int startCycles = (int)cyclesProp.GetValue(pause);
+            float t0 = Time.realtimeSinceStartup;
+
+            for (int cycle = 1; cycle <= 4; cycle++)
+            {
+                // Abrir Pause via Escape simulado
+                Assert.IsTrue((bool)simKey.Invoke(pause, new object[] { KeyCode.Escape }), $"Ciclo {cycle}: Escape deve abrir o Pause.");
+                yield return null;
+
+                Assert.IsTrue((bool)isPausedProp.GetValue(pause), $"Ciclo {cycle}: IsPaused deve ser true.");
+                Assert.AreEqual(0f, Time.timeScale, 0.001f, $"Ciclo {cycle}: Time.timeScale deve congelar em 0.");
+                Assert.IsTrue(AudioListener.pause, $"Ciclo {cycle}: AudioListener.pause deve ser true.");
+                Assert.IsFalse(loco.enabled, $"Ciclo {cycle}: Locomocao deve ficar travada durante Pause.");
+
+                // Navegacao do menu 100% funcional com Time.timeScale = 0
+                Assert.IsTrue((bool)simKey.Invoke(pause, new object[] { KeyCode.DownArrow }), $"Ciclo {cycle}: DownArrow deve navegar no Pause.");
+                Assert.AreEqual(1, (int)focusProp.GetValue(pause), $"Ciclo {cycle}: foco deve ir para Opcoes (1).");
+                Assert.IsTrue((bool)simKey.Invoke(pause, new object[] { KeyCode.UpArrow }), $"Ciclo {cycle}: UpArrow deve voltar foco.");
+                Assert.AreEqual(0, (int)focusProp.GetValue(pause), $"Ciclo {cycle}: foco deve voltar para Continuar (0).");
+
+                // Fechar Pause via Escape simulado
+                Assert.IsTrue((bool)simKey.Invoke(pause, new object[] { KeyCode.Escape }), $"Ciclo {cycle}: Escape deve fechar o Pause.");
+                yield return null;
+
+                Assert.IsFalse((bool)isPausedProp.GetValue(pause), $"Ciclo {cycle}: IsPaused deve voltar a false.");
+                Assert.AreEqual(1f, Time.timeScale, 0.001f, $"Ciclo {cycle}: Time.timeScale deve voltar a 1.");
+                Assert.IsFalse(AudioListener.pause, $"Ciclo {cycle}: AudioListener.pause deve voltar a false.");
+                Assert.IsTrue(loco.enabled, $"Ciclo {cycle}: Locomocao deve voltar habilitada.");
+            }
+
+            float elapsed = Time.realtimeSinceStartup - t0;
+            Assert.Less(elapsed, 5.0f, $"4 ciclos de Pause nao podem dar timeout (levou {elapsed:F2}s).");
+            Assert.GreaterOrEqual((int)cyclesProp.GetValue(pause) - startCycles, 4, "PauseCycleCount deve contabilizar todos os 4 ciclos.");
+            Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_19: {string.Join(" | ", _consoleErrors)}");
+        }
     }
 }

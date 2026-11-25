@@ -32,7 +32,10 @@ namespace Studio.Game.Menu
         public Button confirmReturnYesButton;
         public Button confirmReturnNoButton;
 
+        public static PauseMenuController Instance { get; private set; }
+
         public bool IsPaused { get; private set; }
+        public int PauseCycleCount { get; private set; }
         public bool IsConfirmModalOpen => confirmMenuModal != null && confirmMenuModal.activeSelf;
         public int FocusedPauseIndex => _pauseFocusIndex;
         public string FocusedPauseLabel => _pauseFocusIndex == 0 ? "Continuar" : (_pauseFocusIndex == 1 ? "Opcoes" : "Menu Principal");
@@ -45,9 +48,11 @@ namespace Studio.Game.Menu
         private bool _locoWasEnabledBeforePause;
         private int _pauseFocusIndex;
         private float _navCooldownUntil;
+        private float _lastPauseSaveUnscaledTime = -999f;
 
         private void Awake()
         {
+            Instance = this;
             Time.timeScale = 1f;
             AudioListener.pause = false;
             GameSettingsManager.LoadAndApply();
@@ -69,6 +74,7 @@ namespace Studio.Game.Menu
 
         private void OnDestroy()
         {
+            if (Instance == this) Instance = null;
             if (optionsPanel != null) optionsPanel.OnClosed -= HandleOptionsClosed;
             if (PartsLoopManager.Instance != null)
             {
@@ -110,50 +116,86 @@ namespace Studio.Game.Menu
             bool pausePressed = Input.GetKeyDown(pauseKey) || Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.JoystickButton7);
             bool backPressed  = Input.GetKeyDown(KeyCode.JoystickButton1); // Gamepad B / Circulo
 
+            bool navDown = false;
+            bool navUp = false;
+            if (IsPaused && Time.unscaledTime >= _navCooldownUntil)
+            {
+                float vAxis = Input.GetAxisRaw("Vertical");
+                navDown = Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S) || vAxis < -0.55f;
+                navUp   = !navDown && (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) || vAxis > 0.55f);
+            }
+
+            bool confirmPressed = IsPaused && (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.JoystickButton0));
+            ProcessInputFrame(pausePressed, backPressed, navDown, navUp, confirmPressed, applyNavCooldown: true);
+        }
+
+        /// <summary>
+        /// BL-005: Entrada simulada (Playcaller / Smoke Tests) independente de foco da Game View
+        /// e totalmente funcional com Time.timeScale = 0 (usa Time.unscaledTime).
+        /// </summary>
+        public bool SimulateKeyPress(KeyCode key)
+        {
+            KeyCode pauseKey = GameSettingsManager.GetActionKey("Pause");
+            bool pausePressed   = key == KeyCode.Escape || key == pauseKey || key == KeyCode.JoystickButton7;
+            bool backPressed    = key == KeyCode.JoystickButton1;
+            bool navDown        = IsPaused && (key == KeyCode.DownArrow || key == KeyCode.S);
+            bool navUp          = IsPaused && (key == KeyCode.UpArrow || key == KeyCode.W);
+            bool confirmPressed = IsPaused && (key == KeyCode.Return || key == KeyCode.Space || key == KeyCode.JoystickButton0);
+            return ProcessInputFrame(pausePressed, backPressed, navDown, navUp, confirmPressed, applyNavCooldown: false);
+        }
+
+        private bool ProcessInputFrame(bool pausePressed, bool backPressed, bool navDown, bool navUp, bool confirmPressed, bool applyNavCooldown)
+        {
             if (IsPaused)
             {
                 if (optionsPanel != null && optionsPanel.gameObject.activeSelf)
                 {
                     if (pausePressed || backPressed)
+                    {
                         optionsPanel.Close();
-                    return;
+                        return true;
+                    }
+                    return false;
                 }
 
                 if (pausePressed || backPressed)
                 {
                     BackPauseNavigation();
-                    return;
+                    return true;
                 }
 
-                // Navegacao 100% por teclado e controle (setas + D-pad/analogico + confirmar)
-                if (Time.unscaledTime >= _navCooldownUntil)
+                if (navDown)
                 {
-                    float vAxis = Input.GetAxisRaw("Vertical");
-                    if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S) || vAxis < -0.55f)
-                    {
-                        NavigatePause(+1);
-                        _navCooldownUntil = Time.unscaledTime + 0.18f;
-                    }
-                    else if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) || vAxis > 0.55f)
-                    {
-                        NavigatePause(-1);
-                        _navCooldownUntil = Time.unscaledTime + 0.18f;
-                    }
+                    NavigatePause(+1);
+                    if (applyNavCooldown) _navCooldownUntil = Time.unscaledTime + 0.18f;
+                    return true;
+                }
+                if (navUp)
+                {
+                    NavigatePause(-1);
+                    if (applyNavCooldown) _navCooldownUntil = Time.unscaledTime + 0.18f;
+                    return true;
                 }
 
-                if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.JoystickButton0))
+                if (confirmPressed)
                 {
                     ConfirmPauseSelection();
+                    return true;
                 }
-                return;
+                return false;
             }
 
-            if (!pausePressed) return;
+            if (!pausePressed) return false;
 
             if (CanOpenPauseNow())
+            {
                 PauseGame();
-            else if (AudioMixController.Instance != null)
+                return true;
+            }
+
+            if (AudioMixController.Instance != null)
                 AudioMixController.Instance.PlayUiDeny();
+            return false;
         }
 
         public void NavigatePause(int delta)
@@ -246,7 +288,11 @@ namespace Studio.Game.Menu
             if (IsPaused) return;
             IsPaused = true;
 
-            GameSaveState.SaveCurrentWorkshopState();
+            if (Time.unscaledTime - _lastPauseSaveUnscaledTime >= 2.0f)
+            {
+                GameSaveState.SaveCurrentWorkshopState();
+                _lastPauseSaveUnscaledTime = Time.unscaledTime;
+            }
 
             if (_playerLoco == null)
             {
@@ -282,6 +328,7 @@ namespace Studio.Game.Menu
 
             Time.timeScale = 1f;
             AudioListener.pause = false;
+            PauseCycleCount++;
             if (_playerLoco != null && _locoWasEnabledBeforePause)
                 _playerLoco.enabled = true;
         }
