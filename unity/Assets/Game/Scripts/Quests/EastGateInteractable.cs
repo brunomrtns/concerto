@@ -1,4 +1,5 @@
 using Studio.Game.Dialogue;
+using Studio.Game.Save;
 using Studio.Gameplay;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -27,11 +28,22 @@ namespace Studio.Game.Quests
         private bool _cachedClosed;
         private float _openAmount;
 
+        private static bool _sessionUnlocked;
+
         public static bool IsEastGateUnlocked
         {
-            get => PlayerPrefs.GetInt(EastGateUnlockedPrefKey, 0) == 1;
+            get
+            {
+                if (_sessionUnlocked) return true;
+                var saved = SaveSystem.CachedState;
+                if (saved != null && saved.eastGateUnlocked) return true;
+                return PlayerPrefs.GetInt(EastGateUnlockedPrefKey, 0) == 1;
+            }
             set
             {
+                _sessionUnlocked = value;
+                var saved = SaveSystem.CachedState;
+                if (saved != null) saved.eastGateUnlocked = value;
                 PlayerPrefs.SetInt(EastGateUnlockedPrefKey, value ? 1 : 0);
                 PlayerPrefs.Save();
             }

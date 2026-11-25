@@ -25,11 +25,22 @@ namespace Studio.Game.Sector
         public Color lockedColor = new Color(0.95f, 0.22f, 0.18f, 1f);
         public Color unlockedColor = new Color(0.28f, 0.94f, 1.0f, 1f);
 
+        private static bool _sessionUnlocked;
+
         public static bool IsSectorUnlocked
         {
-            get => PlayerPrefs.GetInt(SectorUnlockedPrefKey, 0) == 1;
+            get
+            {
+                if (_sessionUnlocked) return true;
+                var saved = SaveSystem.CachedState;
+                if (saved != null && saved.sectorDoorUnlocked) return true;
+                return PlayerPrefs.GetInt(SectorUnlockedPrefKey, 0) == 1;
+            }
             set
             {
+                _sessionUnlocked = value;
+                var saved = SaveSystem.CachedState;
+                if (saved != null) saved.sectorDoorUnlocked = value;
                 PlayerPrefs.SetInt(SectorUnlockedPrefKey, value ? 1 : 0);
                 PlayerPrefs.Save();
             }
