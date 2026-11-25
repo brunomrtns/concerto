@@ -1,0 +1,250 @@
+{
+  "baseline_dir": "C:\\Users\\Bruno\\workspace\\game-concerto\\captures\\regressao\\baseline",
+  "run_dir": "C:\\Users\\Bruno\\workspace\\game-concerto\\captures\\regressao\\2026-11-25_prova_diff",
+  "pixel_threshold": 12,
+  "pct_threshold": 0.15,
+  "shots": [
+    {
+      "shot": "01_mainmenu_title.png",
+      "status": "PASS",
+      "changed_pixels": 2969,
+      "changed_pct": 0.1432,
+      "changed_regions_count": 2,
+      "changed_regions": [
+        {
+          "x0": 720,
+          "y0": 540,
+          "x1": 960,
+          "y1": 720,
+          "changed_pct": 1.95
+        },
+        {
+          "x0": 960,
+          "y0": 540,
+          "x1": 1200,
+          "y1": 720,
+          "changed_pct": 4.93
+        }
+      ]
+    },
+    {
+      "shot": "02_ato1_caldeiral_bancada.png",
+      "status": "DIFF_DETECTED",
+      "changed_pixels": 119970,
+      "changed_pct": 5.7856,
+      "changed_regions_count": 13,
+      "changed_regions": [
+        {
+          "x0": 0,
+          "y0": 360,
+          "x1": 240,
+          "y1": 540,
+          "changed_pct": 10.22
+        },
+        {
+          "x0": 240,
+          "y0": 360,
+          "x1": 480,
+          "y1": 540,
+          "changed_pct": 5.52
+        },
+        {
+          "x0": 720,
+          "y0": 360,
+          "x1": 960,
+          "y1": 540,
+          "changed_pct": 59.15
+        },
+        {
+          "x0": 960,
+          "y0": 360,
+          "x1": 1200,
+          "y1": 540,
+          "changed_pct": 33.83
+        },
+        {
+          "x0": 0,
+          "y0": 540,
+          "x1": 240,
+          "y1": 720,
+          "changed_pct": 7.97
+        },
+        {
+          "x0": 720,
+          "y0": 540,
+          "x1": 960,
+          "y1": 720,
+          "changed_pct": 40.85
+        },
+        {
+          "x0": 960,
+          "y0": 540,
+          "x1": 1200,
+          "y1": 720,
+          "changed_pct": 31.22
+        },
+        {
+          "x0": 0,
+          "y0": 720,
+          "x1": 240,
+          "y1": 900,
+          "changed_pct": 0.45
+        },
+        {
+          "x0": 720,
+          "y0": 720,
+          "x1": 960,
+          "y1": 900,
+          "changed_pct": 11.69
+        },
+        {
+          "x0": 960,
+          "y0": 720,
+          "x1": 1200,
+          "y1": 900,
+          "changed_pct": 31.25
+        }
+      ]
+    },
+    {
+      "shot": "03_ato1_caldeiral_corredor.png",
+      "status": "DIFF_DETECTED",
+      "changed_pixels": 18190,
+      "changed_pct": 0.8772,
+      "changed_regions_count": 9,
+      "changed_regions": [
+        {
+          "x0": 1440,
+          "y0": 360,
+          "x1": 1680,
+          "y1": 540,
+          "changed_pct": 16.22
+        },
+        {
+          "x0": 960,
+          "y0": 540,
+          "x1": 1200,
+          "y1": 720,
+          "changed_pct": 4.75
+        },
+        {
+          "x0": 1440,
+          "y0": 540,
+          "x1": 1680,
+          "y1": 720,
+          "changed_pct": 4.05
+        },
+        {
+          "x0": 480,
+          "y0": 720,
+          "x1": 720,
+          "y1": 900,
+          "changed_pct": 1.87
+        },
+        {
+          "x0": 720,
+          "y0": 720,
+          "x1": 960,
+          "y1": 900,
+          "changed_pct": 1.84
+        },
+        {
+          "x0": 960,
+          "y0": 720,
+          "x1": 1200,
+          "y1": 900,
+          "changed_pct": 5.49
+        },
+        {
+          "x0": 1200,
+          "y0": 720,
+          "x1": 1440,
+          "y1": 900,
+          "changed_pct": 4.65
+        },
+        {
+          "x0": 480,
+          "y0": 900,
+          "x1": 720,
+          "y1": 1080,
+          "changed_pct": 0.94
+        },
+        {
+          "x0": 720,
+          "y0": 900,
+          "x1": 960,
+          "y1": 1080,
+          "changed_pct": 2.05
+        }
+      ]
+    },
+    {
+      "shot": "04_ato3_setorexterno_patio.png",
+      "status": "PASS",
+      "changed_pixels": 0,
+      "changed_pct": 0.0,
+      "changed_regions_count": 0,
+      "changed_regions": []
+    },
+    {
+      "shot": "05_ato4_epicentro_travessia.png",
+      "status": "DIFF_DETECTED",
+      "changed_pixels": 7840,
+      "changed_pct": 0.3781,
+      "changed_regions_count": 6,
+      "changed_regions": [
+        {
+          "x0": 960,
+          "y0": 360,
+          "x1": 1200,
+          "y1": 540,
+          "changed_pct": 0.37
+        },
+        {
+          "x0": 960,
+          "y0": 540,
+          "x1": 1200,
+          "y1": 720,
+          "changed_pct": 0.38
+        },
+        {
+          "x0": 0,
+          "y0": 720,
+          "x1": 240,
+          "y1": 900,
+          "changed_pct": 12.96
+        },
+        {
+          "x0": 240,
+          "y0": 720,
+          "x1": 480,
+          "y1": 900,
+          "changed_pct": 1.92
+        },
+        {
+          "x0": 480,
+          "y0": 720,
+          "x1": 720,
+          "y1": 900,
+          "changed_pct": 0.45
+        },
+        {
+          "x0": 0,
+          "y0": 900,
+          "x1": 240,
+          "y1": 1080,
+          "changed_pct": 1.82
+        }
+      ]
+    },
+    {
+      "shot": "06_ato4_epicentro_arena.png",
+      "status": "PASS",
+      "changed_pixels": 0,
+      "changed_pct": 0.0,
+      "changed_regions_count": 0,
+      "changed_regions": []
+    }
+  ],
+  "top10_image": "C:\\Users\\Bruno\\workspace\\game-concerto\\captures\\regressao\\2026-11-25_prova_diff\\top10_diferencas_lado_a_lado.png"
+}
