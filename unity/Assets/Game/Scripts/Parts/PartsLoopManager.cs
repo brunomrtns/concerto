@@ -106,7 +106,7 @@ namespace Studio.Game.Parts
 
         private void HandleConversationFinished(string dialogueId)
         {
-            if (dialogueId == "dlg_juno_oficina_intro" && !_act1Completed)
+            if (dialogueId == "dlg_juno_oficina_intro" && !_canCollectParts && !_act1Completed)
             {
                 _canCollectParts = true;
                 UpdateProgressObjective(flash: true);

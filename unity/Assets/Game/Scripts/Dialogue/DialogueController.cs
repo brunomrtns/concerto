@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Studio.Game.Animation;
 using Studio.Game.Cutscenes;
 using Studio.Gameplay;
@@ -271,8 +272,9 @@ namespace Studio.Game.Dialogue
             _activeNpc = null;
             _activeNpcRoutine = null;
 
-            // Atualiza objetivo minimo no HUD (ex.: "Encontre as pecas da maquina (0/3)")
-            if (!string.IsNullOrEmpty(postObjKey))
+            // BL-001 (CRITICO): Nunca sobrescreve/reseta objetivo ao re-conversar com NPC ou quando a progressao ja avancou!
+            bool isFirstCompletion = string.IsNullOrEmpty(finishedId) || _completedDialogueIds.Add(finishedId);
+            if (isFirstCompletion && !string.IsNullOrEmpty(postObjKey) && ShouldApplyPostObjective(postObjKey))
             {
                 ObjectiveSystem.Set(_loc.Format(postObjKey, partsTotal));
             }
@@ -280,9 +282,31 @@ namespace Studio.Game.Dialogue
             OnConversationFinished?.Invoke(finishedId);
         }
 
+        private static bool ShouldApplyPostObjective(string postObjKey)
+        {
+            var parts = Studio.Game.Parts.PartsLoopManager.Instance;
+            if (postObjKey == "obj_find_parts")
+            {
+                if (parts != null && (parts.CanCollectParts || parts.CollectedCount > 0 || parts.Act1Completed))
+                    return false;
+            }
+            else if (postObjKey == "obj_act1_done")
+            {
+                var anoms = Studio.Game.Anomalies.WorkshopAnomalyManager.Instance;
+                if (anoms != null && anoms.ActiveAnomalyCount > 0)
+                    return false;
+                if (parts != null && parts.Act1Completed)
+                    return false;
+            }
+            return true;
+        }
+
         private readonly Collider[] _scanBuf = new Collider[24];
+        private readonly HashSet<string> _completedDialogueIds = new HashSet<string>();
         private string _lastPromptShown = string.Empty;
         private Camera _cachedMainCam;
+
+        public bool HasCompletedDialogue(string dialogueId) => !string.IsNullOrEmpty(dialogueId) && _completedDialogueIds.Contains(dialogueId);
 
         public void ScanFocusedInteractable()
         {
