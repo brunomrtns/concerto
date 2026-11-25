@@ -466,5 +466,132 @@ namespace Studio.Tests.SmokeTest
                 if (File.Exists(tmpSave)) File.Delete(tmpSave);
             }
         }
+
+        // (h) Save a Prova de Corrupcao (GATE 5b): forcar corrupcao do save atual -> recupera do backup rotativo sem crash!
+        [UnityTest]
+        public IEnumerator Smoke_10_CorruptSaveRecoversFromBackupSlotWithoutCrash()
+        {
+            yield return LoadSceneAndVerifyCleanConsole("Caldeiral");
+
+            var saveSysT = GameType("Studio.Game.Save.SaveSystem");
+            var objT     = GameType("Studio.Game.Dialogue.ObjectiveSystem");
+            string tmpDir = Path.Combine(Application.temporaryCachePath, $"concerto_smoke10_{Guid.NewGuid():N}");
+            Directory.CreateDirectory(tmpDir);
+            string tmpSave = Path.Combine(tmpDir, "concerto_save.json");
+
+            var mSetPath = saveSysT.GetMethod("SetCustomPathForTests");
+            var mSave    = saveSysT.GetMethod("Save");
+            var mTryLoad = saveSysT.GetMethod("TryLoad");
+            var mVerify  = saveSysT.GetMethod("VerifyChecksum");
+
+            try
+            {
+                mSetPath.Invoke(null, new object[] { tmpSave });
+
+                // Grava 3 saves consecutivos para popular os 3 slots rotativos (atual, bak1, bak2)
+                objT.GetMethod("Set").Invoke(null, new object[] { "Smoke10_Slot_MaisAntigo" });
+                mSave.Invoke(null, new object[] { "cp_smoke10_1", null, null });
+                yield return null;
+
+                objT.GetMethod("Set").Invoke(null, new object[] { "Smoke10_Slot_BackupAnterior" });
+                mSave.Invoke(null, new object[] { "cp_smoke10_2", null, null });
+                yield return null;
+
+                objT.GetMethod("Set").Invoke(null, new object[] { "Smoke10_Slot_Atual" });
+                mSave.Invoke(null, new object[] { "cp_smoke10_3", null, null });
+                yield return null;
+
+                string bak1 = (string)saveSysT.GetProperty("Backup1FilePath").GetValue(null);
+                string bak2 = (string)saveSysT.GetProperty("Backup2FilePath").GetValue(null);
+                Assert.IsTrue(File.Exists(tmpSave), "Slot 0 (atual) deve existir.");
+                Assert.IsTrue(File.Exists(bak1), "Slot 1 (bak1) deve existir apos rotacao.");
+                Assert.IsTrue(File.Exists(bak2), "Slot 2 (bak2) deve existir apos 3 saves.");
+
+                // 1) Adulteracao sutil de campo (quebra checksum SHA-256 sem quebrar sintaxe JSON)
+                string rawJson = File.ReadAllText(tmpSave);
+                string tampered = rawJson.Replace("Smoke10_Slot_Atual", "Smoke10_ADULTERADO");
+                File.WriteAllText(tmpSave, tampered);
+
+                var loadArgs = new object[] { null };
+                Assert.IsTrue((bool)mTryLoad.Invoke(null, loadArgs), "TryLoad deve recuperar do backup quando SHA-256 falhar.");
+                Assert.IsTrue((bool)saveSysT.GetProperty("WasLastLoadRecoveredFromBackup").GetValue(null), "Deve sinalizar recuperacao do backup.");
+                Assert.AreEqual("bak1", (string)saveSysT.GetProperty("LastRecoveredSlotName").GetValue(null));
+
+                var recovered = loadArgs[0];
+                Assert.AreEqual("Smoke10_Slot_BackupAnterior", (string)recovered.GetType().GetField("currentObjective").GetValue(recovered));
+                Assert.IsTrue((bool)mVerify.Invoke(null, new object[] { recovered }), "Save recuperado deve ter SHA-256 valido.");
+
+                // 2) Corrupcao severa (JSON truncado/lixo binario) -> recupera novamente sem crash
+                File.WriteAllText(tmpSave, "{ \"schemaVersion\": 3, \"corrompido_na_mao\": ");
+                loadArgs = new object[] { null };
+                Assert.IsTrue((bool)mTryLoad.Invoke(null, loadArgs), "TryLoad deve recuperar do backup quando JSON estiver truncado.");
+                Assert.IsTrue((bool)saveSysT.GetProperty("WasLastLoadRecoveredFromBackup").GetValue(null));
+
+                Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_10: {string.Join(" | ", _consoleErrors)}");
+            }
+            finally
+            {
+                mSetPath.Invoke(null, new object[] { null });
+                if (Directory.Exists(tmpDir)) Directory.Delete(tmpDir, true);
+            }
+        }
+
+        // (i) Save a Prova de Corrupcao (GATE 5c): save de versao antiga (v1) migra para v3 sem perder dados!
+        [UnityTest]
+        public IEnumerator Smoke_11_LegacySaveVersionMigratesWithoutDataLoss()
+        {
+            var saveSysT = GameType("Studio.Game.Save.SaveSystem");
+            string tmpDir = Path.Combine(Application.temporaryCachePath, $"concerto_smoke11_{Guid.NewGuid():N}");
+            Directory.CreateDirectory(tmpDir);
+            string tmpSave = Path.Combine(tmpDir, "concerto_save.json");
+
+            var mSetPath = saveSysT.GetMethod("SetCustomPathForTests");
+            var mTryLoad = saveSysT.GetMethod("TryLoad");
+            var mVerify  = saveSysT.GetMethod("VerifyChecksum");
+
+            try
+            {
+                mSetPath.Invoke(null, new object[] { tmpSave });
+
+                // Grava um JSON autentico de schemaVersion=1 (sem payloadChecksum e sem campos v3)
+                const string legacyV1Json = @"{
+  ""schemaVersion"": 1,
+  ""savedAtUtc"": ""2026-01-10T12:00:00Z"",
+  ""sceneName"": ""Caldeiral"",
+  ""currentCheckpointId"": ""cp_legado_v1"",
+  ""currentObjective"": ""Pecas Legado (3/5)"",
+  ""partsCollectedMask"": 7,
+  ""canCollectParts"": true,
+  ""act1Completed"": false,
+  ""cs01Played"": true,
+  ""energyCells"": 4,
+  ""energyBar"": 85.0,
+  ""activeToolModeId"": ""mode_combate"",
+  ""unlockedPowerIds"": [""eco_temporal""],
+  ""resolvedAnomalyIds"": [""anom_bancada""]
+}";
+                File.WriteAllText(tmpSave, legacyV1Json);
+                yield return null;
+
+                var loadArgs = new object[] { null };
+                Assert.IsTrue((bool)mTryLoad.Invoke(null, loadArgs), "TryLoad deve migrar save v1 sem falhar.");
+
+                var migrated = loadArgs[0];
+                var dataT = migrated.GetType();
+                Assert.AreEqual(3, (int)dataT.GetField("schemaVersion").GetValue(migrated), "Schema deve migrar para v3.");
+                Assert.AreEqual("Pecas Legado (3/5)", (string)dataT.GetField("currentObjective").GetValue(migrated));
+                Assert.AreEqual(7, (int)dataT.GetField("partsCollectedMask").GetValue(migrated));
+                Assert.AreEqual(4, (int)dataT.GetField("energyCells").GetValue(migrated));
+                Assert.IsTrue((bool)dataT.GetField("powersUnlocked").GetValue(migrated), "Migracao v1->v3 deve inferir powersUnlocked=true a partir de unlockedPowerIds.");
+                Assert.IsTrue((bool)mVerify.Invoke(null, new object[] { migrated }), "Save migrado deve receber assinatura SHA-256 valida.");
+
+                Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_11: {string.Join(" | ", _consoleErrors)}");
+            }
+            finally
+            {
+                mSetPath.Invoke(null, new object[] { null });
+                if (Directory.Exists(tmpDir)) Directory.Delete(tmpDir, true);
+            }
+        }
     }
 }

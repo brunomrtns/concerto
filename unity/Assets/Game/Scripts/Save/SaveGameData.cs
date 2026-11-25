@@ -25,11 +25,12 @@ namespace Studio.Game.Save
     [Serializable]
     public sealed class SaveGameData
     {
-        public const int CurrentSchemaVersion = 2;
+        public const int CurrentSchemaVersion = 3;
 
-        [Header("Metadados")]
+        [Header("Metadados & Integridade (GATE 2 & GATE 4)")]
         public int schemaVersion = CurrentSchemaVersion;
         public string savedAtUtc = string.Empty;
+        public string payloadChecksum = string.Empty;
 
         [Header("Cena & Posicao do Jogador")]
         public string sceneName = "Caldeiral";
@@ -56,10 +57,11 @@ namespace Studio.Game.Save
         public int signalQuestStep;
         public bool eastGateUnlocked;
 
-        [Header("Ato 2 — Anomalias & Reparo")]
+        [Header("Ato 2 & Ato 3 — Anomalias, Reparo & Nucleo")]
         public bool act2AnomaliesActive;
         public List<string> resolvedAnomalyIds = new List<string>();
         public bool act2Completed;
+        public bool act3Completed;
 
         [Header("Dialogos Concluidos (Prevencao de Reset de Missao — BL-001)")]
         public List<string> completedDialogueIds = new List<string>();
@@ -98,6 +100,23 @@ namespace Studio.Game.Save
                     powersUnlocked = true;
                 if (!cs03Played && PlayerPrefs.GetInt("CONCERTO_CS03_PLAYED", 0) == 1)
                     cs03Played = true;
+            }
+
+            // Migracao v2 -> v3 (Save a Prova de Corrupcao): traz flags restantes de PlayerPrefs e prepara checksum SHA-256
+            if (schemaVersion < 3)
+            {
+                if (!cs04Played && PlayerPrefs.GetInt("CONCERTO_CS04_PLAYED", 0) == 1)
+                    cs04Played = true;
+                if (!sectorDoorUnlocked && PlayerPrefs.GetInt("CONCERTO_SECTOR_EXTERNO_UNLOCKED", 0) == 1)
+                    sectorDoorUnlocked = true;
+                if (!eastGateUnlocked && PlayerPrefs.GetInt("CONCERTO_EAST_GATE_UNLOCKED", 0) == 1)
+                    eastGateUnlocked = true;
+                if (!act2Completed && PlayerPrefs.GetInt("CONCERTO_ACT2_COMPLETED", 0) == 1)
+                    act2Completed = true;
+                if (!act3Completed && PlayerPrefs.GetInt("CONCERTO_ACT3_COMPLETED", 0) == 1)
+                    act3Completed = true;
+                if (payloadChecksum == null)
+                    payloadChecksum = string.Empty;
             }
 
             schemaVersion = CurrentSchemaVersion;

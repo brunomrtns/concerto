@@ -1,5 +1,7 @@
 using System;
 using System.IO;
+using System.Security.Cryptography;
+using System.Text;
 using Studio.Game.Animation;
 using Studio.Game.Anomalies;
 using Studio.Game.Combat;
@@ -31,14 +33,30 @@ namespace Studio.Game.Save
         private static SaveGameData _lastLoadedOrSaved;
         private static bool _pendingContinueLoad;
         private static bool _pendingNewGameOnboarding;
+        private static bool _wasLastLoadRecoveredFromBackup;
+        private static string _lastRecoveredSlotName = string.Empty;
+        private static string _pendingRecoveryNotice = string.Empty;
 
         public static string SaveFilePath => !string.IsNullOrEmpty(_customPathOverride)
             ? _customPathOverride
             : Path.Combine(Application.persistentDataPath, SaveFileName);
 
+        public static string Backup1FilePath => BuildSlotPath(SaveFilePath, ".bak1");
+        public static string Backup2FilePath => BuildSlotPath(SaveFilePath, ".bak2");
+
         public static bool IsPendingContinueLoad => _pendingContinueLoad;
         public static bool IsPendingNewGameOnboarding => _pendingNewGameOnboarding;
+        public static bool WasLastLoadRecoveredFromBackup => _wasLastLoadRecoveredFromBackup;
+        public static string LastRecoveredSlotName => _lastRecoveredSlotName;
         public static SaveGameData CachedState => _lastLoadedOrSaved;
+
+        public static string ConsumePendingRecoveryNotice()
+        {
+            if (string.IsNullOrEmpty(_pendingRecoveryNotice)) return string.Empty;
+            string msg = _pendingRecoveryNotice;
+            _pendingRecoveryNotice = string.Empty;
+            return msg;
+        }
 
         public static bool ConsumePendingNewGameOnboarding()
         {
@@ -49,7 +67,41 @@ namespace Studio.Game.Save
 
         public static event Action<SaveGameData> OnGameSaved;
         public static event Action<SaveGameData> OnGameLoaded;
+        public static event Action<string, string> OnBackupRecovered; // (slotName, reason)
         public static event Action<string> OnCorruptSaveFallback;
+
+        private static string BuildSlotPath(string primaryPath, string suffix)
+        {
+            string ext = Path.GetExtension(primaryPath);
+            if (string.IsNullOrEmpty(ext)) return primaryPath + suffix;
+            return primaryPath.Substring(0, primaryPath.Length - ext.Length) + suffix + ext;
+        }
+
+        public static string ComputeChecksum(SaveGameData data)
+        {
+            if (data == null) return string.Empty;
+            string prev = data.payloadChecksum;
+            data.payloadChecksum = string.Empty;
+            string canonical = JsonUtility.ToJson(data, prettyPrint: false);
+            data.payloadChecksum = prev;
+
+            using (var sha = SHA256.Create())
+            {
+                byte[] hash = sha.ComputeHash(Encoding.UTF8.GetBytes(canonical));
+                var sb = new StringBuilder(hash.Length * 2);
+                for (int i = 0; i < hash.Length; i++)
+                    sb.Append(hash[i].ToString("x2"));
+                return sb.ToString();
+            }
+        }
+
+        public static bool VerifyChecksum(SaveGameData data)
+        {
+            if (data == null || string.IsNullOrEmpty(data.payloadChecksum))
+                return false;
+            string expected = ComputeChecksum(data);
+            return string.Equals(data.payloadChecksum, expected, StringComparison.OrdinalIgnoreCase);
+        }
 
         public static void SetCustomPathForTests(string pathOrNull) => _customPathOverride = pathOrNull;
 
@@ -64,53 +116,156 @@ namespace Studio.Game.Save
         }
 
         /// <summary>
-        /// Le e valida o JSON versionado. Se corrompido ou versao incompativel:
-        /// faz backup .corrupt.bak, limpa o arquivo quebrado e retorna false (fallback seguro para Novo Jogo!).
+        /// Le e valida o JSON versionado com verificacao de checksum SHA-256 (GATE 4) e recuperacao
+        /// automatica pelos 3 slots rotativos (atual -> bak1 -> bak2 — GATE 3).
+        /// Nunca crasha e nunca sobrescreve um backup bom com um arquivo corrompido.
         /// </summary>
         public static bool TryLoad(out SaveGameData data)
         {
             data = null;
-            string path = SaveFilePath;
-            if (!File.Exists(path)) return false;
+            _wasLastLoadRecoveredFromBackup = false;
+            _lastRecoveredSlotName = string.Empty;
+
+            string primaryPath = SaveFilePath;
+            string primaryError = string.Empty;
+            bool primaryExisted = File.Exists(primaryPath);
+
+            if (primaryExisted)
+            {
+                if (TryLoadSlot(primaryPath, out var parsed, out primaryError, out bool migrated))
+                {
+                    if (migrated || HasLegacyGameplayPlayerPrefs())
+                    {
+                        MergeAndPurgeLegacyGameplayPlayerPrefs(parsed);
+                        WriteAtomic(primaryPath, parsed, rotateBackups: false);
+                    }
+                    data = parsed;
+                    _lastLoadedOrSaved = parsed;
+                    return true;
+                }
+
+                Debug.LogWarning($"[SaveSystem] Slot principal corrompido ({primaryError}). Quarentenando e tentando recuperar backup rotativo...");
+                QuarantineCorruptFile(primaryPath);
+            }
+
+            // GATE 3: Fallback automatico para os slots de backup (bak1 -> bak2)
+            string[] backupPaths = { Backup1FilePath, Backup2FilePath };
+            string[] backupNames = { "bak1", "bak2" };
+            for (int i = 0; i < backupPaths.Length; i++)
+            {
+                if (!File.Exists(backupPaths[i])) continue;
+                if (TryLoadSlot(backupPaths[i], out var recovered, out _, out _))
+                {
+                    MergeAndPurgeLegacyGameplayPlayerPrefs(recovered);
+                    WriteAtomic(primaryPath, recovered, rotateBackups: false);
+                    data = recovered;
+                    _lastLoadedOrSaved = recovered;
+                    _wasLastLoadRecoveredFromBackup = true;
+                    _lastRecoveredSlotName = backupNames[i];
+                    _pendingRecoveryNotice = $"Save corrompido detectado — progresso recuperado do backup ({backupNames[i]})!";
+                    OnBackupRecovered?.Invoke(backupNames[i], primaryError);
+                    Debug.LogWarning($"[SaveSystem] Progresso recuperado com sucesso do backup '{backupNames[i]}' (cp={recovered.currentCheckpointId}, obj='{recovered.currentObjective}').");
+                    return true;
+                }
+            }
+
+            if (primaryExisted)
+            {
+                _lastLoadedOrSaved = null;
+                OnCorruptSaveFallback?.Invoke(primaryError);
+            }
+            return false;
+        }
+
+        private static bool TryLoadSlot(string path, out SaveGameData parsed, out string errorReason, out bool migrated)
+        {
+            parsed = null;
+            errorReason = string.Empty;
+            migrated = false;
 
             try
             {
                 string json = File.ReadAllText(path);
                 if (string.IsNullOrWhiteSpace(json))
-                    throw new FormatException("Arquivo de save vazio.");
-
-                var parsed = JsonUtility.FromJson<SaveGameData>(json);
-                int loadedVersion = parsed != null ? parsed.schemaVersion : -1;
-                if (parsed == null || !parsed.MigrateIfNeeded())
-                    throw new FormatException($"Schema invalido ou incompativel (version={loadedVersion}).");
-
-                // FIX 3: se migrou de v1 -> v2 trazendo flags legados do PlayerPrefs, persiste v2 e limpa PlayerPrefs
-                bool hadLegacyPrefs = PlayerPrefs.HasKey("CONCERTO_POWERS_UNLOCKED") || PlayerPrefs.HasKey("CONCERTO_CS03_PLAYED");
-                if (loadedVersion < SaveGameData.CurrentSchemaVersion || hadLegacyPrefs)
                 {
-                    if (PlayerPrefs.GetInt("CONCERTO_POWERS_UNLOCKED", 0) == 1) parsed.powersUnlocked = true;
-                    if (PlayerPrefs.GetInt("CONCERTO_CS03_PLAYED", 0) == 1) parsed.cs03Played = true;
-                    if (hadLegacyPrefs)
-                    {
-                        PlayerPrefs.DeleteKey("CONCERTO_POWERS_UNLOCKED");
-                        PlayerPrefs.DeleteKey("CONCERTO_CS03_PLAYED");
-                        PlayerPrefs.Save();
-                    }
-                    WriteAtomic(path, parsed);
+                    errorReason = "Arquivo de save vazio.";
+                    return false;
                 }
 
-                data = parsed;
-                _lastLoadedOrSaved = parsed;
+                var candidate = JsonUtility.FromJson<SaveGameData>(json);
+                if (candidate == null)
+                {
+                    errorReason = "Falha ao desserializar JSON.";
+                    return false;
+                }
+
+                int loadedVersion = candidate.schemaVersion;
+                if (loadedVersion <= 0 || loadedVersion > SaveGameData.CurrentSchemaVersion)
+                {
+                    errorReason = $"Versao de schema invalida ou incompativel (version={loadedVersion}).";
+                    return false;
+                }
+
+                // GATE 4: Para schema v3+, exige checksum SHA-256 integro
+                if (loadedVersion >= 3)
+                {
+                    if (!VerifyChecksum(candidate))
+                    {
+                        errorReason = "Checksum SHA-256 invalido (arquivo corrompido ou adulterado).";
+                        return false;
+                    }
+                }
+                else
+                {
+                    migrated = true;
+                }
+
+                if (!candidate.MigrateIfNeeded())
+                {
+                    errorReason = $"Falha na migracao do schema v{loadedVersion}.";
+                    return false;
+                }
+
+                parsed = candidate;
                 return true;
             }
             catch (Exception ex)
             {
-                Debug.LogWarning($"[SaveSystem] Save corrompido ou incompativel detectado ({ex.Message}). Aplicando fallback seguro!");
-                QuarantineCorruptFile(path);
-                _lastLoadedOrSaved = null;
-                OnCorruptSaveFallback?.Invoke(ex.Message);
+                errorReason = ex.Message;
                 return false;
             }
+        }
+
+        private static bool HasLegacyGameplayPlayerPrefs()
+        {
+            return PlayerPrefs.HasKey("CONCERTO_POWERS_UNLOCKED")
+                || PlayerPrefs.HasKey("CONCERTO_CS03_PLAYED")
+                || PlayerPrefs.HasKey("CONCERTO_CS04_PLAYED")
+                || PlayerPrefs.HasKey("CONCERTO_SECTOR_EXTERNO_UNLOCKED")
+                || PlayerPrefs.HasKey("CONCERTO_EAST_GATE_UNLOCKED")
+                || PlayerPrefs.HasKey("CONCERTO_ACT2_COMPLETED")
+                || PlayerPrefs.HasKey("CONCERTO_ACT3_COMPLETED");
+        }
+
+        private static void MergeAndPurgeLegacyGameplayPlayerPrefs(SaveGameData data)
+        {
+            if (data == null || !HasLegacyGameplayPlayerPrefs()) return;
+            if (PlayerPrefs.GetInt("CONCERTO_POWERS_UNLOCKED", 0) == 1) data.powersUnlocked = true;
+            if (PlayerPrefs.GetInt("CONCERTO_CS03_PLAYED", 0) == 1) data.cs03Played = true;
+            if (PlayerPrefs.GetInt("CONCERTO_CS04_PLAYED", 0) == 1) data.cs04Played = true;
+            if (PlayerPrefs.GetInt("CONCERTO_SECTOR_EXTERNO_UNLOCKED", 0) == 1) data.sectorDoorUnlocked = true;
+            if (PlayerPrefs.GetInt("CONCERTO_EAST_GATE_UNLOCKED", 0) == 1) data.eastGateUnlocked = true;
+            if (PlayerPrefs.GetInt("CONCERTO_ACT2_COMPLETED", 0) == 1) data.act2Completed = true;
+            if (PlayerPrefs.GetInt("CONCERTO_ACT3_COMPLETED", 0) == 1) data.act3Completed = true;
+
+            PlayerPrefs.DeleteKey("CONCERTO_POWERS_UNLOCKED");
+            PlayerPrefs.DeleteKey("CONCERTO_CS03_PLAYED");
+            PlayerPrefs.DeleteKey("CONCERTO_CS04_PLAYED");
+            PlayerPrefs.DeleteKey("CONCERTO_SECTOR_EXTERNO_UNLOCKED");
+            PlayerPrefs.DeleteKey("CONCERTO_EAST_GATE_UNLOCKED");
+            PlayerPrefs.DeleteKey("CONCERTO_ACT2_COMPLETED");
+            PlayerPrefs.DeleteKey("CONCERTO_ACT3_COMPLETED");
+            PlayerPrefs.Save();
         }
 
         /// <summary>
@@ -224,10 +379,10 @@ namespace Studio.Game.Save
                 if (!data.unlockedPowerIds.Contains("estase")) data.unlockedPowerIds.Add("estase");
             }
 
-            WriteAtomic(SaveFilePath, data);
+            WriteAtomic(SaveFilePath, data, rotateBackups: true);
             _lastLoadedOrSaved = data;
             OnGameSaved?.Invoke(data);
-            Debug.Log($"[SaveSystem] Jogo salvo em {SaveFilePath} (cp={data.currentCheckpointId}, obj='{data.currentObjective}', cells={data.energyCells}, anomActive={data.act2AnomaliesActive}, resolved={data.resolvedAnomalyIds.Count})");
+            Debug.Log($"[SaveSystem] Jogo salvo atomicamente em {SaveFilePath} (v{data.schemaVersion}, sha256={data.payloadChecksum.Substring(0, 8)}..., cp={data.currentCheckpointId}, obj='{data.currentObjective}')");
             return data;
         }
 
@@ -235,9 +390,14 @@ namespace Studio.Game.Save
         {
             _lastLoadedOrSaved = null;
             _pendingContinueLoad = false;
+            _wasLastLoadRecoveredFromBackup = false;
+            _lastRecoveredSlotName = string.Empty;
+            _pendingRecoveryNotice = string.Empty;
             try
             {
                 if (File.Exists(SaveFilePath)) File.Delete(SaveFilePath);
+                if (File.Exists(Backup1FilePath)) File.Delete(Backup1FilePath);
+                if (File.Exists(Backup2FilePath)) File.Delete(Backup2FilePath);
                 string tmp = SaveFilePath + ".tmp";
                 if (File.Exists(tmp)) File.Delete(tmp);
             }
@@ -393,16 +553,51 @@ namespace Studio.Game.Save
             return true;
         }
 
-        private static void WriteAtomic(string path, SaveGameData data)
+        /// <summary>
+        /// GATE 1 (Escrita Atomica) + GATE 3 (Rotacao de 3 Slots) + GATE 4 (Checksum SHA-256).
+        /// Grava em .tmp com Flush(true), valida o arquivo temporario, rotaciona bak1->bak2 e atual->bak1,
+        /// e so entao renomeia .tmp para o destino final.
+        /// </summary>
+        private static void WriteAtomic(string path, SaveGameData data, bool rotateBackups = true)
         {
             string dir = Path.GetDirectoryName(path);
             if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
 
+            data.schemaVersion = SaveGameData.CurrentSchemaVersion;
+            data.payloadChecksum = ComputeChecksum(data);
+
             string json = JsonUtility.ToJson(data, prettyPrint: true);
             string tmpPath = path + ".tmp";
-            File.WriteAllText(tmpPath, json);
-            if (File.Exists(path)) File.Delete(path);
+
+            byte[] bytes = Encoding.UTF8.GetBytes(json);
+            using (var fs = new FileStream(tmpPath, FileMode.Create, FileAccess.Write, FileShare.None))
+            {
+                fs.Write(bytes, 0, bytes.Length);
+                fs.Flush(flushToDisk: true);
+            }
+
+            // Verifica integridade do .tmp antes de tocar no save atual
+            if (!TryLoadSlot(tmpPath, out _, out string tmpErr, out _))
+                throw new IOException($"Falha na verificacao pos-escrita do arquivo temporario: {tmpErr}");
+
+            // Rotaciona 3 slots somente se o save atual existir e estiver integro
+            if (rotateBackups && File.Exists(path) && TryLoadSlot(path, out _, out _, out _))
+            {
+                string bak1 = BuildSlotPath(path, ".bak1");
+                string bak2 = BuildSlotPath(path, ".bak2");
+                if (File.Exists(bak1))
+                {
+                    if (File.Exists(bak2)) File.Delete(bak2);
+                    File.Move(bak1, bak2);
+                }
+                File.Move(path, bak1);
+            }
+            else if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+
             File.Move(tmpPath, path);
         }
 

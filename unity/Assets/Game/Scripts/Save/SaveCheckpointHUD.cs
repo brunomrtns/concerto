@@ -55,6 +55,7 @@ namespace Studio.Game.Save
         {
             if (saveIndicatorGroup != null) saveIndicatorGroup.alpha = 0f;
             SaveSystem.OnGameSaved += HandleGameSaved;
+            SaveSystem.OnBackupRecovered += HandleBackupRecovered;
         }
 
         private void Start()
@@ -79,11 +80,18 @@ namespace Studio.Game.Save
             {
                 SaveSystem.TryApplyPendingLoadToWorkshop();
             }
+
+            string pendingNotice = SaveSystem.ConsumePendingRecoveryNotice();
+            if (!string.IsNullOrEmpty(pendingNotice))
+            {
+                ShowBannerMessage(pendingNotice, 3.8f);
+            }
         }
 
         private void OnDestroy()
         {
             SaveSystem.OnGameSaved -= HandleGameSaved;
+            SaveSystem.OnBackupRecovered -= HandleBackupRecovered;
             if (_cs01 != null) _cs01.OnCutsceneEnded -= OnCS01Ended;
             if (_cs02 != null) _cs02.OnCutscene02Ended -= OnCS02Ended;
             if (_cs03 != null) _cs03.OnCutscene03Ended -= OnCS03Ended;
@@ -104,16 +112,26 @@ namespace Studio.Game.Save
 
         private void HandleGameSaved(SaveGameData data)
         {
-            if (saveIndicatorGroup == null || !isActiveAndEnabled) return;
-            if (_flashRoutine != null) StopCoroutine(_flashRoutine);
-            _flashRoutine = StartCoroutine(ShowSubtleIndicator());
+            ShowBannerMessage("● SALVO", Mathf.Max(0.4f, indicatorDurationSec));
         }
 
-        private IEnumerator ShowSubtleIndicator()
+        private void HandleBackupRecovered(string slotName, string reason)
         {
-            if (saveIndicatorText != null) saveIndicatorText.text = "● SALVO";
+            ShowBannerMessage($"! BACKUP RECUPERADO ({slotName})", 3.8f);
+        }
+
+        private void ShowBannerMessage(string message, float holdSec)
+        {
+            if (saveIndicatorGroup == null || !isActiveAndEnabled) return;
+            if (_flashRoutine != null) StopCoroutine(_flashRoutine);
+            _flashRoutine = StartCoroutine(ShowSubtleIndicator(message, holdSec));
+        }
+
+        private IEnumerator ShowSubtleIndicator(string message, float holdSec)
+        {
+            if (saveIndicatorText != null) saveIndicatorText.text = message;
             saveIndicatorGroup.alpha = 1f;
-            yield return new WaitForSecondsRealtime(Mathf.Max(0.4f, indicatorDurationSec));
+            yield return new WaitForSecondsRealtime(holdSec);
             float t = 0f;
             while (t < 0.25f)
             {
