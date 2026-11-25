@@ -1,0 +1,16 @@
+﻿=====================================================================
+CONCERTO — RELATORIO DE SCANNER Z-FIGHTING (TODAS AS CENAS)
+Data: 2026-11-25 17:28:41 | Tolerancia coplanar: 0,0040m | Area min: 0,040m2
+=====================================================================
+
+[CENA] MainMenu (Assets/Game/Scenes/MainMenu.unity) — Total: 0 (Coplanar=0, Duplicatas=0, JuntasParede=0)
+
+[CENA] Caldeiral (Assets/Game/Scenes/Caldeiral.unity) — Total: 0 (Coplanar=0, Duplicatas=0, JuntasParede=0)
+
+[CENA] SetorExterno (Assets/Game/Scenes/SetorExterno.unity) — Total: 0 (Coplanar=0, Duplicatas=0, JuntasParede=0)
+
+[CENA] Epicentro (Assets/Game/Scenes/Epicentro.unity) — Total: 0 (Coplanar=0, Duplicatas=0, JuntasParede=0)
+
+=====================================================================
+RESUMO GLOBAL: TOTAL=0 | COPLANAR=0 | DUPLICATAS=0 | JUNTAS_PAREDE=0
+=====================================================================
