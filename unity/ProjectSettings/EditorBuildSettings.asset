@@ -35,5 +35,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Game/Scenes/CombateGddArena.unity
     guid: 3b1cf5b5d2258ae4faa2276d42ace24f
+  - enabled: 1
+    path: Assets/Game/Scenes/EconomiaTioHorarioDemo.unity
+    guid: a88697f0d626244499dd08d4f62578eb
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
