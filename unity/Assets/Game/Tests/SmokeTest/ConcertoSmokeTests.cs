@@ -1627,5 +1627,85 @@ namespace Studio.Tests.SmokeTest
 
             Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_27: {string.Join(" | ", _consoleErrors)}");
         }
+
+        // (z) Fuso Vitralha (GATES 1-8): 7 beats + plataformas luz refratada (Re-Sincronia) + Boss Estufa Viva (arena dual-state + Contratempo + reinicio <=8s) + Reliquia Ponteiro Maior (Sopro Estendido 14m/0.30s) + Consequencia + Save JSON!
+        [UnityTest]
+        public IEnumerator Smoke_28_VitralhaGoldenRouteBossRelicAndPersistence()
+        {
+            yield return LoadSceneAndVerifyCleanConsole("Vitralha");
+
+            var vitT   = GameType("Studio.Game.Vitralha.VitralhaFusoController");
+            var bossT  = GameType("Studio.Game.Vitralha.VitralhaEstufaVivaBoss");
+            var locoT  = GameType("Studio.Game.Animation.DezLocomotionController");
+            var saveT  = GameType("Studio.Game.Save.SaveSystem");
+            var hitT   = GameType("Studio.Game.Tool.ToolHitInfo");
+            var zoneT  = GameType("Studio.Game.Resync.ResyncZoneController");
+            var stateE = GameType("Studio.Game.Resync.ResyncState");
+
+            var vit  = UnityEngine.Object.FindAnyObjectByType(vitT);
+            var boss = UnityEngine.Object.FindAnyObjectByType(bossT);
+            var loco = UnityEngine.Object.FindAnyObjectByType(locoT) as Component;
+            Assert.IsNotNull(vit,  "VitralhaFusoController obrigatorio em Vitralha.");
+            Assert.IsNotNull(boss, "VitralhaEstufaVivaBoss obrigatorio em Vitralha.");
+            Assert.IsNotNull(loco, "DezLocomotionController obrigatorio em Vitralha.");
+
+            string tmpSave = Path.Combine(Path.GetTempPath(), $"concerto_smoke28_{Guid.NewGuid():N}.json");
+            var mSetPath = saveT.GetMethod("SetCustomPathForTests");
+            mSetPath.Invoke(null, new object[] { tmpSave });
+
+            try
+            {
+                // 1. Beat 1: Feixe de luz refratada alterna via Re-Sincronia (GATE 3)
+                var entryZone = vitT.GetField("entryLightStationZone").GetValue(vit);
+                Assert.IsNotNull(entryZone, "Zona Re-Sincronia do Beat 1 obrigatoria.");
+                zoneT.GetMethod("ApplySavedStateImmediate").Invoke(entryZone, new object[] { Enum.Parse(stateE, "Restaurado") });
+                vitT.GetMethod("ReachBeat").Invoke(vit, new object[] { 0, true });
+                vitT.GetMethod("ReachBeat").Invoke(vit, new object[] { 1, true });
+                vitT.GetMethod("ReachBeat").Invoke(vit, new object[] { 2, true });
+                vitT.GetMethod("ReachBeat").Invoke(vit, new object[] { 3, true });
+
+                // 2. Beat 5: Boss A Estufa Viva — reinicio <= 8s no Posto de Reparo, luta 3 fases (arena muda estado + Contratempo!) (GATE 4)
+                bossT.GetMethod("RestartEncounterAtRepairStation").Invoke(boss, new object[] { loco.gameObject });
+                Assert.Less((float)bossT.GetProperty("LastRestartDurationSec").GetValue(boss), 8.0f, "Reinicio do boss deve ser <= 8s.");
+
+                object hit6 = Activator.CreateInstance(hitT);
+                hitT.GetField("Damage").SetValue(hit6, 6f);
+                var mDmg = bossT.GetMethod("ApplyDamage");
+                mDmg.Invoke(boss, new object[] { hit6 }); // derruba para 50% -> Fase 2 (arena flip + guarda refratada)
+                Assert.AreEqual(2, (int)bossT.GetProperty("CurrentPhase").GetValue(boss));
+                Assert.IsTrue((bool)bossT.GetProperty("ArenaStateFlippedMidFight").GetValue(boss), "Arena do boss deve mudar de estado no meio da luta.");
+                Assert.IsTrue((bool)bossT.GetProperty("IsParryShieldActive").GetValue(boss), "Fase 2 deve exigir Contratempo.");
+
+                // Contratempo quebra Fase 2 -> Fase 3 vulneravel -> derrota boss
+                Assert.IsTrue((bool)bossT.GetMethod("ApplyContratempoParry").Invoke(boss, null));
+                mDmg.Invoke(boss, new object[] { hit6 });
+                Assert.IsFalse((bool)bossT.GetProperty("IsAlive").GetValue(boss), "Boss Estufa Viva deve ser derrotado apos Contratempo.");
+                Assert.IsTrue((bool)vitT.GetProperty("BossDefeated").GetValue(vit));
+
+                // 3. Beat 6: Reliquia Ponteiro Maior -> Sopro Estendido (14m / 0.30s) (GATE 5)
+                Assert.IsTrue((bool)vitT.GetMethod("CollectRelicPonteiroMaior").Invoke(vit, new object[] { loco }));
+                Assert.IsTrue((bool)locoT.GetProperty("HasRelicPonteiroMaior").GetValue(loco), "Reliquia deve liberar Sopro Estendido.");
+                Assert.IsTrue((bool)locoT.GetMethod("TryTriggerDash").Invoke(loco, new object[] { Vector3.forward }));
+                Assert.IsTrue((bool)locoT.GetProperty("IsExtendedSoproActive").GetValue(loco), "Sopro Estendido deve ativar com a Reliquia.");
+
+                // 4. Beat 7: Consequencia (rio volta + evento 'alaga Maresia') + Save JSON persiste tudo (GATES 6-8)
+                yield return (IEnumerator)vitT.GetMethod("PlayConsequenceRiverCutsceneAndRegisterEvent").Invoke(vit, null);
+                Assert.IsTrue((bool)vitT.GetProperty("ConsequenceCutscenePlayed").GetValue(vit));
+                Assert.IsTrue((bool)vitT.GetProperty("MaresiaFloodEventRegistered").GetValue(vit));
+
+                var loadArgs = new object[] { null };
+                Assert.IsTrue((bool)saveT.GetMethod("TryLoad").Invoke(null, loadArgs));
+                string rawJson = File.ReadAllText(tmpSave);
+                StringAssert.Contains("\"relicPonteiroMaiorUnlocked\": true", rawJson);
+                StringAssert.Contains("evt_cost_vitralha_flood_maresia", rawJson);
+            }
+            finally
+            {
+                mSetPath.Invoke(null, new object[] { null });
+                if (File.Exists(tmpSave)) File.Delete(tmpSave);
+            }
+
+            Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_28: {string.Join(" | ", _consoleErrors)}");
+        }
     }
 }

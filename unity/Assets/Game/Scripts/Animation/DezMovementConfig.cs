@@ -123,5 +123,8 @@ namespace Studio.Game.Animation
         public float cravaMolaDiveSpeed = 15.0f;
         public int cravaMolaDamage = 2;
         public float cravaMolaShockwaveRadius = 3.0f;
+        [Tooltip("Sopro Estendido (Reliquia Ponteiro Maior — Vitralha): dash 14m em 0,30s atravessando feixes longos (GDD 04 §1).")]
+        public float extendedDashDistanceM = 14.0f;
+        public float extendedDashDurationSec = 0.30f;
     }
 }

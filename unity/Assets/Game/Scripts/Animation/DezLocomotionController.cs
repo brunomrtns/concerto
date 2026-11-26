@@ -121,6 +121,13 @@ namespace Studio.Game.Animation
         public int CravaMolaImpactCount { get; private set; }
         public int BrokenFragileCrestsCount { get; private set; }
 
+        // Reliquia Ponteiro Maior -> Sopro Estendido (Vitralha GATE 5: dash 14m em 0,30s atravessando feixes longos)
+        public bool HasRelicPonteiroMaior { get; set; }
+        public bool IsExtendedSoproActive { get; private set; }
+        public bool CanPassLightBeamsNow => IsExtendedSoproActive;
+        public int ExtendedSoproTriggerCount { get; private set; }
+        private float _activeDashSpeed;
+
         // Inputs programaticos extras para Martelada Aerea / Crava-Mola
         public bool ScriptedAttackHeld { get; set; }
         public bool ScriptedAttackPressed { get; set; }
@@ -340,14 +347,22 @@ namespace Studio.Game.Animation
             preferredDir.y = 0f;
             _dashDir = preferredDir.sqrMagnitude > 0.01f ? preferredDir.normalized : transform.forward;
             _isDashing = true;
-            _dashTimer = Cfg.dashDurationSec;
+
+            bool useExtended = HasRelicPonteiroMaior;
+            IsExtendedSoproActive = useExtended;
+            _dashTimer = useExtended ? Cfg.extendedDashDurationSec : Cfg.dashDurationSec;
             _dashFovKickTimer = Mathf.Min(0.20f, Cfg.dashFovKickDurationSec);
             _dashCooldownUntil = Time.time + Cfg.dashCooldownSec;
 
-            float effectiveDashSpeed = canceledWallRun ? Mathf.Max(Cfg.dashSpeed, WallRunEntrySpeed * 1.35f) : Cfg.dashSpeed;
+            float baseDashSpeed = useExtended
+                ? (Cfg.extendedDashDistanceM / Mathf.Max(0.05f, Cfg.extendedDashDurationSec))
+                : Cfg.dashSpeed;
+            _activeDashSpeed = canceledWallRun ? Mathf.Max(baseDashSpeed, WallRunEntrySpeed * 1.35f) : baseDashSpeed;
+            if (useExtended) ExtendedSoproTriggerCount++;
+
             transform.rotation = Quaternion.LookRotation(_dashDir, Vector3.up);
-            _horizVelocity = _dashDir * effectiveDashSpeed;
-            _currentSpeed = effectiveDashSpeed;
+            _horizVelocity = _dashDir * _activeDashSpeed;
+            _currentSpeed = _activeDashSpeed;
             if (_verticalVel < 0f) _verticalVel = 0f;
 
             if (thrusterParticles != null)
@@ -507,11 +522,13 @@ namespace Studio.Game.Animation
             if (_isDashing)
             {
                 _dashTimer -= dt;
-                _horizVelocity = _dashDir * cfg.dashSpeed;
-                _currentSpeed = cfg.dashSpeed;
+                float spd = _activeDashSpeed > 0.1f ? _activeDashSpeed : cfg.dashSpeed;
+                _horizVelocity = _dashDir * spd;
+                _currentSpeed = spd;
                 if (_dashTimer <= 0f)
                 {
                     _isDashing = false;
+                    IsExtendedSoproActive = false;
                     _horizVelocity = _dashDir * (wantRun ? cfg.runSpeed : cfg.walkSpeed);
                     _currentSpeed = _horizVelocity.magnitude;
                 }

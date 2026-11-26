@@ -14,6 +14,7 @@ using Studio.Game.Powers;
 using Studio.Game.Repair;
 using Studio.Game.Resync;
 using Studio.Game.Tool;
+using Studio.Game.Vitralha;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -366,6 +367,11 @@ namespace Studio.Game.Save
                 hub.CopyStateToSave(data.restoredFusoIds, data.appliedBalanceEvents);
             }
 
+            // 4e. Fuso Vitralha — beats, boss, reliquia Ponteiro Maior e consequencia (GATE 7 & 8)
+            var vit = VitralhaFusoController.Instance;
+            if (vit != null)
+                vit.CopyToSave(data);
+
             // 5. Cutscenes assistidas, porta do Setor Externo & Missao "Sinal"
             data.cs01Played = true;
             if (data.act1Completed) data.cs02Played = true;
@@ -580,6 +586,10 @@ namespace Studio.Game.Save
             // 7. Hub A Orquestra & Linha do Equilibrio (GATE 5)
             if (HubOrquestraController.Instance != null)
                 HubOrquestraController.Instance.RestoreStateFromSave(data.restoredFusoIds, data.appliedBalanceEvents);
+
+            // 8. Fuso Vitralha — restaura beats, reliquia Ponteiro Maior e estado do rio
+            if (VitralhaFusoController.Instance != null)
+                VitralhaFusoController.Instance.RestoreFromSave(data);
 
             _lastLoadedOrSaved = data;
             OnGameLoaded?.Invoke(data);

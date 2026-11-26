@@ -91,6 +91,12 @@ namespace Studio.Game.Save
         public List<string> restoredFusoIds = new List<string>();
         public List<string> appliedBalanceEvents = new List<string>();
 
+        [Header("Fuso Vitralha — Progresso, Beats e Reliquia Ponteiro Maior")]
+        public int vitralhaBeatIndex;
+        public bool vitralhaBossDefeated;
+        public bool relicPonteiroMaiorUnlocked;
+        public bool vitralhaRiverRestored;
+
         public bool MigrateIfNeeded()
         {
             if (schemaVersion <= 0 || schemaVersion > CurrentSchemaVersion)
