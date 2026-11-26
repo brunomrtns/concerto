@@ -1987,5 +1987,87 @@ namespace Studio.Tests.SmokeTest
 
             Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_31: {string.Join(" | ", _consoleErrors)}");
         }
+
+        // (ad) Combate GDD 04 §2 (GATES 1-6): Pressao (100/25s/+30 melee) + Faisca (12m/0.4s/20p) + 5 inimigos canon (Trabalhadora, Espelho, Coletora, Censor-Patrulha, Censor-Pesado) + Finalizador CONCERTO + morte parafusos/molas + ondas <= 2 tipos!
+        [UnityTest]
+        public IEnumerator Smoke_32_GddCombatPressureFaiscaAndAll5CanonEnemiesCounterplayAndFinisher()
+        {
+            yield return LoadSceneAndVerifyCleanConsole("CombateGddArena");
+
+            var presT = GameType("Studio.Game.Combat.PressureResourceSystem");
+            var faisT = GameType("Studio.Game.Combat.FaiscaRangedController");
+            var dirT  = GameType("Studio.Game.Combat.GddCombatWaveDirector");
+            var trabT = GameType("Studio.Game.Combat.FerrugemTrabalhadoraEnemy");
+            var espT  = GameType("Studio.Game.Combat.FerrugemEspelhoEnemy");
+            var colT  = GameType("Studio.Game.Combat.FerrugemColetoraEnemy");
+            var patT  = GameType("Studio.Game.Combat.CensorPatrulhaEnemy");
+            var pesT  = GameType("Studio.Game.Combat.CensorPesadoEnemy");
+
+            var pres = UnityEngine.Object.FindAnyObjectByType(presT);
+            var fais = UnityEngine.Object.FindAnyObjectByType(faisT);
+            var dir  = UnityEngine.Object.FindAnyObjectByType(dirT);
+            Assert.IsNotNull(pres);
+            Assert.IsNotNull(fais);
+            Assert.IsNotNull(dir);
+
+            // GATE 5: Invariante de no maximo 2 tipos de inimigo simultaneos por onda + 2-4 rotas de verticalidade
+            Assert.IsTrue((bool)dirT.GetMethod("ValidateAllWavesMaxTwoTypes").Invoke(dir, null), "Nenhuma onda pode ter mais que 2 tipos simultaneos.");
+            int routes = (int)dirT.GetField("verticalityRouteCount").GetValue(dir);
+            Assert.GreaterOrEqual(routes, 2);
+            Assert.LessOrEqual(routes, 4);
+
+            // GATE 1: Pressao (100 pts, 25/s regen, +30 melee) + Faisca (12m, 0.4s CD, 20 Pressao)
+            Assert.AreEqual(100f, (float)presT.GetProperty("CurrentPressure").GetValue(pres), 0.1f);
+            Assert.IsTrue((bool)faisT.GetMethod("TryFireFaisca").Invoke(fais, new object[] { Vector3.forward, null }));
+            Assert.AreEqual(80f, (float)presT.GetProperty("CurrentPressure").GetValue(pres), 0.5f, "Faisca deve custar 20 Pressao.");
+            Assert.IsFalse((bool)faisT.GetMethod("TryFireFaisca").Invoke(fais, new object[] { Vector3.forward, null }), "Cooldown de 0.4s deve bloquear disparo imediato.");
+            faisT.GetMethod("AdvanceCooldownForTest").Invoke(fais, new object[] { 0.45f });
+            presT.GetMethod("SetPressureForTest").Invoke(pres, new object[] { 40f });
+            presT.GetMethod("OnMeleeHitConnected").Invoke(pres, null);
+            Assert.AreEqual(70f, (float)presT.GetProperty("CurrentPressure").GetValue(pres), 0.5f, "Golpe melee deve gerar +30 Pressao.");
+
+            // GATE 2, 3, 4: Contra-jogo dos 5 inimigos canon + Finalizador CONCERTO + morte com parafusos/molas (ZERO sangue)
+            var trab = UnityEngine.Object.FindAnyObjectByType(trabT);
+            Assert.AreEqual(0.8f, (float)trabT.GetProperty("TelegraphDurationSec").GetValue(trab), 0.01f);
+            trabT.GetMethod("BeginTelegraph").Invoke(trab, null);
+            Assert.IsTrue((bool)trabT.GetProperty("JointGlowActive").GetValue(trab));
+            Assert.IsTrue((bool)trabT.GetMethod("ExecuteHammerSwingAfterTelegraph").Invoke(trab, null));
+
+            // Ferrugem-Espelho (1.2s carga -> Contratempo reflete Faisca -> atordoa -> Finalizador CONCERTO)
+            var esp = UnityEngine.Object.FindAnyObjectByType(espT);
+            Assert.AreEqual(1.2f, (float)espT.GetProperty("TelegraphDurationSec").GetValue(esp), 0.01f);
+            espT.GetMethod("BeginTelegraph").Invoke(esp, null);
+            Assert.IsTrue((bool)espT.GetMethod("ApplyContratempoReflectedFaisca").Invoke(esp, new object[] { 3f }));
+            Assert.IsTrue((bool)espT.GetProperty("IsStunned").GetValue(esp));
+            Assert.IsTrue((bool)espT.GetMethod("ExecuteConcertoFinisher").Invoke(esp, null), "Finalizador CONCERTO deve executar inimigo atordoado.");
+            Assert.GreaterOrEqual((int)espT.GetProperty("TuningNoteParticlesSpawned").GetValue(esp), 1);
+            Assert.GreaterOrEqual((int)espT.GetProperty("BoltsAndSpringsSpawnedOnDeath").GetValue(esp), 1);
+            Assert.IsFalse((bool)espT.GetProperty("HasBloodEffect").GetValue(esp), "Morte nunca pode ter sangue.");
+
+            // Ferrugem-Coletora (bolha absorve Faisca -> Crava-Mola quebra bolha e atordoa)
+            var col = UnityEngine.Object.FindAnyObjectByType(colT);
+            Assert.IsFalse((bool)colT.GetMethod("ApplyFaiscaHit").Invoke(col, new object[] { 1.5f }), "Bolha da Coletora bloqueia Faisca.");
+            Assert.IsTrue((bool)colT.GetMethod("ApplyCravaMolaBubbleBreak").Invoke(col, null), "Crava-Mola deve quebrar a bolha da Coletora.");
+            Assert.IsFalse((bool)colT.GetProperty("IsShieldBubbleActive").GetValue(col));
+            Assert.IsTrue((bool)colT.GetProperty("IsStunned").GetValue(col));
+
+            // Censor-Patrulha (combo 2 + giro -> parry no 2o golpe atordoa)
+            var pat = UnityEngine.Object.FindAnyObjectByType(patT);
+            patT.GetMethod("AdvanceComboStep").Invoke(pat, new object[] { 1 });
+            Assert.IsFalse((bool)patT.GetMethod("ApplyParryOnSecondComboHit").Invoke(pat, null), "Parry do 2o golpe nao dispara no 1o golpe.");
+            patT.GetMethod("AdvanceComboStep").Invoke(pat, new object[] { 2 });
+            Assert.IsTrue((bool)patT.GetMethod("ApplyParryOnSecondComboHit").Invoke(pat, null), "Parry no 2o golpe deve quebrar Censor-Patrulha.");
+            Assert.IsTrue((bool)patT.GetProperty("IsStunned").GetValue(pat));
+
+            // Censor-Pesado (IMUNE a Faisca -> Martelada Aerea na nuca quebra armadura e atordoa)
+            var pes = UnityEngine.Object.FindAnyObjectByType(pesT);
+            Assert.IsFalse((bool)pesT.GetMethod("ApplyFaiscaHit").Invoke(pes, new object[] { 1.5f }), "Censor-Pesado DEVE ser imune a Faisca.");
+            Assert.GreaterOrEqual((int)pesT.GetProperty("BlockedFaiscaShotsCount").GetValue(pes), 1);
+            Assert.IsTrue((bool)pesT.GetMethod("ApplyMarteladaAereaNapeHit").Invoke(pes, new object[] { 3f }), "Martelada Aerea na nuca deve quebrar Censor-Pesado.");
+            Assert.IsFalse((bool)pesT.GetProperty("IsHeavyArmorIntact").GetValue(pes));
+            Assert.IsTrue((bool)pesT.GetProperty("IsStunned").GetValue(pes));
+
+            Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_32: {string.Join(" | ", _consoleErrors)}");
+        }
     }
 }
