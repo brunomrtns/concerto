@@ -96,6 +96,17 @@ namespace Studio.Game.Animation
         public int ReboteTriggerCount { get; private set; }
         public void ResetReboteCharge() { HasReboteCharge = true; }
 
+        // Estado Corrimao / Wall-Run (GATE 2 + GATE 5 FOV +6 deg)
+        public bool IsWallRunning { get; private set; }
+        public float WallRunElapsedSec { get; private set; }
+        public float WallRunEntrySpeed { get; private set; }
+        public int WallRunTriggerCount { get; private set; }
+        public int WallRunSoproCancelCount { get; private set; }
+        public float HighSpeedFovBonusDeg { get; private set; }
+        private Vector3 _wallRunNormal;
+        private Vector3 _wallRunTangent;
+        private float _wallRunExitCooldownUntil;
+
         // Coyote Time + Jump Buffer
         private float _coyoteTimer;
         private float _jumpBufferTimer;
@@ -297,6 +308,16 @@ namespace Studio.Game.Animation
             if (_isDashing || _isMantling || Time.time < _dashCooldownUntil)
                 return false;
 
+            bool canceledWallRun = IsWallRunning;
+            if (IsWallRunning)
+            {
+                IsWallRunning = false;
+                WallRunSoproCancelCount++;
+                _wallRunExitCooldownUntil = Time.time + 0.25f;
+                // Conserva momentum do wall-run na direcao da parede + leve afastamento
+                preferredDir = (_wallRunTangent + _wallRunNormal * 0.25f).normalized;
+            }
+
             preferredDir.y = 0f;
             _dashDir = preferredDir.sqrMagnitude > 0.01f ? preferredDir.normalized : transform.forward;
             _isDashing = true;
@@ -304,9 +325,10 @@ namespace Studio.Game.Animation
             _dashFovKickTimer = Mathf.Min(0.20f, Cfg.dashFovKickDurationSec);
             _dashCooldownUntil = Time.time + Cfg.dashCooldownSec;
 
+            float effectiveDashSpeed = canceledWallRun ? Mathf.Max(Cfg.dashSpeed, WallRunEntrySpeed * 1.35f) : Cfg.dashSpeed;
             transform.rotation = Quaternion.LookRotation(_dashDir, Vector3.up);
-            _horizVelocity = _dashDir * Cfg.dashSpeed;
-            _currentSpeed = Cfg.dashSpeed;
+            _horizVelocity = _dashDir * effectiveDashSpeed;
+            _currentSpeed = effectiveDashSpeed;
             if (_verticalVel < 0f) _verticalVel = 0f;
 
             if (thrusterParticles != null)
@@ -340,6 +362,8 @@ namespace Studio.Game.Animation
                 _coyoteTimer = cfg.coyoteTimeSec;
                 _jumpCutApplied = false;
                 HasReboteCharge = true; // GDD 04 §1: Rebote reseta ao tocar o chao
+                IsWallRunning = false;
+                WallRunElapsedSec = 0f;
                 if (!_wasGrounded && _lastAirVy < -2.0f)
                 {
                     if (_currentSpeed > 2.0f)
@@ -546,6 +570,32 @@ namespace Studio.Game.Animation
                 }
             }
 
+            // GATE 2: Corrimao (Wall-Run 2,5s max, desliza 1,2 m/s ao expirar, mantem velocidade de entrada)
+            if (!grounded && !_isDashing && !_isMantling && CanUseCorrimao && Time.time >= _wallRunExitCooldownUntil)
+            {
+                if (TryUpdateCorrimaoWallRun(dt, desiredDir, cfg))
+                {
+                    // Jump durante wall-run: salta para longe da parede mantendo momentum
+                    if (_jumpBufferTimer > 0f)
+                    {
+                        IsWallRunning = false;
+                        _wallRunExitCooldownUntil = Time.time + 0.22f;
+                        _verticalVel = Mathf.Sqrt(cfg.jumpHeight * -2f * cfg.gravity);
+                        _horizVelocity = (_wallRunTangent * WallRunEntrySpeed) + (_wallRunNormal * 3.8f);
+                        _jumpBufferTimer = 0f;
+                        if (_anim != null) _anim.SetTrigger("Jump");
+                    }
+                }
+            }
+            else if (IsWallRunning && (grounded || _isDashing))
+            {
+                IsWallRunning = false;
+            }
+
+            // GATE 5: FOV +6 deg em alta velocidade (sem tremer)
+            float targetSpeedFov = (_currentSpeed > cfg.runSpeed * 1.05f || IsWallRunning || _isDashing) ? cfg.highSpeedFovBonusDeg : 0f;
+            HighSpeedFovBonusDeg = Mathf.MoveTowards(HighSpeedFovBonusDeg, targetSpeedFov, 24f * dt);
+
             Vector3 totalMove = (_horizVelocity + Vector3.up * _verticalVel) * dt;
 
             // Anti-tunneling matematico no Dash / alta velocidade: CapsuleCast sweep antes de _cc.Move()
@@ -662,6 +712,57 @@ namespace Studio.Game.Animation
             }
             cam.transform.position = _camSmoothPos;
             cam.transform.LookAt(pivot);
+        }
+
+        private bool TryUpdateCorrimaoWallRun(float dt, Vector3 desiredDir, DezMovementConfig cfg)
+        {
+            Vector3 probeOrigin = transform.position + Vector3.up * 0.72f;
+            Vector3 fwd = desiredDir.sqrMagnitude > 0.04f ? desiredDir.normalized : transform.forward;
+            Vector3 right = Vector3.Cross(Vector3.up, fwd).normalized;
+            int mask = Studio.Game.Collision.CollisionMatrixBootstrap.SolidWorldMask;
+
+            RaycastHit wallHit = default;
+            bool foundWall = Physics.Raycast(probeOrigin, right, out wallHit, 0.85f, mask, QueryTriggerInteraction.Ignore)
+                          || Physics.Raycast(probeOrigin, -right, out wallHit, 0.85f, mask, QueryTriggerInteraction.Ignore);
+
+            if (!foundWall || Mathf.Abs(wallHit.normal.y) > 0.25f)
+            {
+                IsWallRunning = false;
+                return false;
+            }
+
+            Vector3 n = new Vector3(wallHit.normal.x, 0f, wallHit.normal.z).normalized;
+            Vector3 t1 = Vector3.Cross(n, Vector3.up).normalized;
+            Vector3 tangent = Vector3.Dot(t1, fwd) >= 0f ? t1 : -t1;
+
+            if (!IsWallRunning)
+            {
+                IsWallRunning = true;
+                WallRunElapsedSec = 0f;
+                WallRunEntrySpeed = Mathf.Max(cfg.runSpeed, _horizVelocity.magnitude);
+                WallRunTriggerCount++;
+                HasReboteCharge = true; // GDD 04 §1: Rebote reseta na parede!
+                if (thrusterParticles != null)
+                {
+                    thrusterParticles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                    thrusterParticles.Play();
+                }
+                if (jumpTakeoffClip != null)
+                    PlaySurfaceSfx(jumpTakeoffClip, 0.48f, 1.08f, 1.16f);
+            }
+
+            _wallRunNormal = n;
+            _wallRunTangent = tangent;
+            WallRunElapsedSec += dt;
+
+            // Mantem velocidade de entrada ao longo da parede
+            _horizVelocity = _wallRunTangent * WallRunEntrySpeed;
+            _currentSpeed = WallRunEntrySpeed;
+            transform.rotation = Quaternion.LookRotation(_wallRunTangent, Vector3.up);
+
+            // Ate 2,5s corre reto; ao expirar desliza 1,2 m/s para baixo (GDD 04 §1)
+            _verticalVel = (WallRunElapsedSec <= cfg.wallRunMaxDurationSec) ? 0f : -cfg.wallRunExpiredSlideSpeed;
+            return true;
         }
 
         private void OnControllerColliderHit(ControllerColliderHit hit)

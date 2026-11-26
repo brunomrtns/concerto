@@ -1384,5 +1384,71 @@ namespace Studio.Tests.SmokeTest
 
             Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_23: {string.Join(" | ", _consoleErrors)}");
         }
+
+        // (v) GDD 04 §1 — GATE 2 & 5: Corrimao (wall-run 2,5s, deslize 1,2 m/s, mantem velocidade, cancela com Sopro + FOV +6 deg)
+        [UnityTest]
+        public IEnumerator Smoke_24_GddCorrimaoWallRunAndSoproCancel()
+        {
+            yield return LoadSceneAndVerifyCleanConsole("Caldeiral");
+
+            var cs01T = GameType("Studio.Game.Cutscenes.CutsceneManager");
+            var locoT = GameType("Studio.Game.Animation.DezLocomotionController");
+            var cs01 = UnityEngine.Object.FindAnyObjectByType(cs01T);
+            if (cs01 != null && (bool)cs01T.GetProperty("IsPlaying").GetValue(cs01))
+                cs01T.GetMethod("SkipCutscene").Invoke(cs01, null);
+            yield return null;
+
+            var loco = UnityEngine.Object.FindAnyObjectByType(locoT) as Component;
+            var cc = loco.GetComponent<CharacterController>();
+            Assert.IsNotNull(loco);
+
+            // Cria parede de teste limpa em zona aberta para validar Corrimao + cancel Sopro
+            var wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            wall.name = "Smoke24_WallRunTestWall";
+            wall.transform.position = new Vector3(14.0f, 2.5f, -11.0f);
+            wall.transform.localScale = new Vector3(14.0f, 5.0f, 0.5f);
+
+            locoT.GetProperty("UseScriptedInput").SetValue(loco, true);
+            locoT.GetProperty("DevUnlockAllGddAbilities").SetValue(loco, true);
+            locoT.GetProperty("ScriptedRun").SetValue(loco, true);
+
+            try
+            {
+                cc.enabled = false;
+                loco.transform.position = new Vector3(9.0f, 1.4f, -11.65f); // ao lado da parede, no ar
+                cc.enabled = true;
+                locoT.GetProperty("ScriptedMoveDir").SetValue(loco, Vector3.right);
+
+                float t = 0f;
+                bool sawWallRun = false;
+                while (t < 0.8f)
+                {
+                    yield return null;
+                    t += Time.deltaTime;
+                    if ((bool)locoT.GetProperty("IsWallRunning").GetValue(loco))
+                        sawWallRun = true;
+                }
+
+                Assert.IsTrue(sawWallRun, "Dez deve engatar Corrimao (wall-run) ao correr no ar paralelo a parede.");
+                Assert.GreaterOrEqual((int)locoT.GetProperty("WallRunTriggerCount").GetValue(loco), 1);
+                Assert.Greater((float)locoT.GetProperty("HighSpeedFovBonusDeg").GetValue(loco), 1.0f, "FOV +6 deg deve ativar em alta velocidade.");
+
+                // Cancela Corrimao com Sopro (Dash) mantendo momentum
+                locoT.GetProperty("ScriptedDash").SetValue(loco, true);
+                yield return null;
+                yield return null;
+                Assert.GreaterOrEqual((int)locoT.GetProperty("WallRunSoproCancelCount").GetValue(loco), 1, "Sopro deve cancelar Corrimao conservando momentum.");
+            }
+            finally
+            {
+                locoT.GetProperty("ScriptedMoveDir").SetValue(loco, Vector3.zero);
+                locoT.GetProperty("ScriptedRun").SetValue(loco, false);
+                locoT.GetProperty("UseScriptedInput").SetValue(loco, false);
+                locoT.GetProperty("DevUnlockAllGddAbilities").SetValue(loco, false);
+                UnityEngine.Object.Destroy(wall);
+            }
+
+            Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_24: {string.Join(" | ", _consoleErrors)}");
+        }
     }
 }
