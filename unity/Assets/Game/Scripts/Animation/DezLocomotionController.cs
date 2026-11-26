@@ -107,6 +107,20 @@ namespace Studio.Game.Animation
         private Vector3 _wallRunTangent;
         private float _wallRunExitCooldownUntil;
 
+        // Estado Martelada Aerea (GATE 3: segurar ataque no ar 0,6s -> mergulho dano 3 + choque 3m + i-frames na queda)
+        public bool IsAirHammerCharging { get; private set; }
+        public bool IsAirHammerDiving { get; private set; }
+        public bool IsAirHammerInvulnerable => IsAirHammerDiving;
+        public int AirHammerImpactCount { get; private set; }
+        public int LastAirSlamDamage { get; private set; }
+        public float LastAirSlamRadius { get; private set; }
+        private float _airHammerChargeTimer;
+
+        // Inputs programaticos extras para Martelada Aerea / Crava-Mola
+        public bool ScriptedAttackHeld { get; set; }
+        public bool ScriptedAttackPressed { get; set; }
+        public bool ScriptedDownHeld { get; set; }
+
         // Coyote Time + Jump Buffer
         private float _coyoteTimer;
         private float _jumpBufferTimer;
@@ -359,6 +373,15 @@ namespace Studio.Game.Animation
             bool grounded = _cc.isGrounded;
             if (grounded)
             {
+                if (IsAirHammerDiving)
+                {
+                    TriggerAirSlamShockwave(cfg.airHammerDamage, cfg.airHammerShockwaveRadius, breakFragileCrests: false);
+                    IsAirHammerDiving = false;
+                    AirHammerImpactCount++;
+                }
+                IsAirHammerCharging = false;
+                _airHammerChargeTimer = 0f;
+
                 _coyoteTimer = cfg.coyoteTimeSec;
                 _jumpCutApplied = false;
                 HasReboteCharge = true; // GDD 04 §1: Rebote reseta ao tocar o chao
@@ -592,6 +615,41 @@ namespace Studio.Game.Animation
                 IsWallRunning = false;
             }
 
+            // GATE 3: Martelada Aerea — segurar ataque no ar 0,6s -> mergulho dano 3 + choque 3m + i-frames na queda
+            bool attackHeld = UseScriptedInput ? ScriptedAttackHeld : (Input.GetMouseButton(0) || Input.GetKey(KeyCode.J) || Input.GetKey(KeyCode.JoystickButton2));
+            if (!grounded && !IsWallRunning && !_isMantling && CanUseMarteladaAerea)
+            {
+                if (IsAirHammerDiving)
+                {
+                    _horizVelocity *= 0.65f;
+                    _verticalVel = -18.5f;
+                }
+                else if (attackHeld)
+                {
+                    IsAirHammerCharging = true;
+                    _airHammerChargeTimer += dt;
+                    if (_verticalVel < -1.5f) _verticalVel = -1.5f; // leve suspensao durante carga de 0,6s
+                    if (_airHammerChargeTimer >= cfg.airHammerChargeSec)
+                    {
+                        IsAirHammerCharging = false;
+                        IsAirHammerDiving = true;
+                        _verticalVel = -18.5f;
+                        if (thrusterParticles != null)
+                        {
+                            thrusterParticles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                            thrusterParticles.Play();
+                        }
+                        if (jumpTakeoffClip != null)
+                            PlaySurfaceSfx(jumpTakeoffClip, 0.72f, 0.72f, 0.80f);
+                    }
+                }
+                else
+                {
+                    IsAirHammerCharging = false;
+                    _airHammerChargeTimer = 0f;
+                }
+            }
+
             // GATE 5: FOV +6 deg em alta velocidade (sem tremer)
             float targetSpeedFov = (_currentSpeed > cfg.runSpeed * 1.05f || IsWallRunning || _isDashing) ? cfg.highSpeedFovBonusDeg : 0f;
             HighSpeedFovBonusDeg = Mathf.MoveTowards(HighSpeedFovBonusDeg, targetSpeedFov, 24f * dt);
@@ -712,6 +770,44 @@ namespace Studio.Game.Animation
             }
             cam.transform.position = _camSmoothPos;
             cam.transform.LookAt(pivot);
+        }
+
+        private void TriggerAirSlamShockwave(int damage, float radius, bool breakFragileCrests)
+        {
+            LastAirSlamDamage = damage;
+            LastAirSlamRadius = radius;
+
+            // Dano em area (3m) em inimigos IDamageable no raio
+            var cols = Physics.OverlapSphere(transform.position, radius, ~0, QueryTriggerInteraction.Collide);
+            for (int i = 0; i < cols.Length; i++)
+            {
+                var c = cols[i];
+                if (c == null || c.transform.root == transform.root) continue;
+                var dmgTarget = c.GetComponentInParent<Studio.Game.Tool.IDamageable>();
+                if (dmgTarget != null && dmgTarget.IsAlive)
+                {
+                    Vector3 pushDir = (c.transform.position - transform.position);
+                    pushDir.y = 0f;
+                    if (pushDir.sqrMagnitude < 0.01f) pushDir = transform.forward;
+                    dmgTarget.ApplyDamage(new Studio.Game.Tool.ToolHitInfo
+                    {
+                        Damage = damage,
+                        HitPoint = c.transform.position,
+                        KnockbackDir = pushDir.normalized,
+                        IsHeavy = true
+                    });
+                }
+            }
+
+            if (thrusterParticles != null)
+            {
+                thrusterParticles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                thrusterParticles.Play();
+            }
+            if (jumpTakeoffClip != null)
+                PlaySurfaceSfx(jumpTakeoffClip, 0.85f, 0.62f, 0.70f);
+            if (Studio.Game.Combat.GameFeelJuiceController.Instance != null)
+                Studio.Game.Combat.GameFeelJuiceController.Instance.TriggerLandingSquashAndDust(transform.position);
         }
 
         private bool TryUpdateCorrimaoWallRun(float dt, Vector3 desiredDir, DezMovementConfig cfg)

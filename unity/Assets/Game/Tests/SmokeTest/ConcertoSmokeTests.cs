@@ -1450,5 +1450,60 @@ namespace Studio.Tests.SmokeTest
 
             Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_24: {string.Join(" | ", _consoleErrors)}");
         }
+
+        // (w) GDD 04 §1 — GATE 3: Martelada Aerea (segurar ataque 0,6s no ar -> mergulho com i-frames -> choque 3m dano 3)
+        [UnityTest]
+        public IEnumerator Smoke_25_GddMarteladaAereaChargeDiveAndIFrames()
+        {
+            yield return LoadSceneAndVerifyCleanConsole("Caldeiral");
+
+            var cs01T = GameType("Studio.Game.Cutscenes.CutsceneManager");
+            var locoT = GameType("Studio.Game.Animation.DezLocomotionController");
+            var cs01 = UnityEngine.Object.FindAnyObjectByType(cs01T);
+            if (cs01 != null && (bool)cs01T.GetProperty("IsPlaying").GetValue(cs01))
+                cs01T.GetMethod("SkipCutscene").Invoke(cs01, null);
+            yield return null;
+
+            var loco = UnityEngine.Object.FindAnyObjectByType(locoT) as Component;
+            var cc = loco.GetComponent<CharacterController>();
+            Assert.IsNotNull(loco);
+
+            locoT.GetProperty("UseScriptedInput").SetValue(loco, true);
+            locoT.GetProperty("DevUnlockAllGddAbilities").SetValue(loco, true);
+
+            try
+            {
+                // Posiciona no ar e segura ataque por > 0.6s
+                cc.enabled = false;
+                loco.transform.position = new Vector3(-28.0f, 3.8f, -18.0f);
+                cc.enabled = true;
+                locoT.GetProperty("ScriptedAttackHeld").SetValue(loco, true);
+
+                bool sawCharging = false;
+                bool sawInvulnDive = false;
+                float t = 0f;
+                while (t < 2.2f && (int)locoT.GetProperty("AirHammerImpactCount").GetValue(loco) == 0)
+                {
+                    yield return null;
+                    t += Time.deltaTime;
+                    if ((bool)locoT.GetProperty("IsAirHammerCharging").GetValue(loco)) sawCharging = true;
+                    if ((bool)locoT.GetProperty("IsAirHammerInvulnerable").GetValue(loco)) sawInvulnDive = true;
+                }
+
+                Assert.IsTrue(sawCharging, "Martelada Aerea deve entrar em carga de 0,6s ao segurar ataque no ar.");
+                Assert.IsTrue(sawInvulnDive, "Martelada Aerea deve conceder i-frames durante a queda.");
+                Assert.GreaterOrEqual((int)locoT.GetProperty("AirHammerImpactCount").GetValue(loco), 1, "Martelada Aerea deve disparar impacto ao tocar o chao.");
+                Assert.AreEqual(3, (int)locoT.GetProperty("LastAirSlamDamage").GetValue(loco), "Dano da Martelada Aerea deve ser 3 (GDD 04 §1).");
+                Assert.AreEqual(3.0f, (float)locoT.GetProperty("LastAirSlamRadius").GetValue(loco), 0.01f, "Raio de choque deve ser 3m (GDD 04 §1).");
+            }
+            finally
+            {
+                locoT.GetProperty("ScriptedAttackHeld").SetValue(loco, false);
+                locoT.GetProperty("UseScriptedInput").SetValue(loco, false);
+                locoT.GetProperty("DevUnlockAllGddAbilities").SetValue(loco, false);
+            }
+
+            Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_25: {string.Join(" | ", _consoleErrors)}");
+        }
     }
 }
