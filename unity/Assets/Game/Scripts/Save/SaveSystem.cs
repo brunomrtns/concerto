@@ -11,6 +11,7 @@ using Studio.Game.Onboarding;
 using Studio.Game.Parts;
 using Studio.Game.Powers;
 using Studio.Game.Repair;
+using Studio.Game.Resync;
 using Studio.Game.Tool;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -344,6 +345,17 @@ namespace Studio.Game.Save
                 econ.CopyPurchasedUpgradesTo(data.purchasedUpgradeIds);
             }
 
+            // 4c. Re-Sincronia — persiste estado de cada zona ativa no JSON versionado (GATE 4)
+            if (data.resyncZoneStates == null) data.resyncZoneStates = new System.Collections.Generic.List<string>();
+            data.resyncZoneStates.Clear();
+            var resyncZones = ResyncZoneController.AllZones;
+            for (int i = 0; i < resyncZones.Count; i++)
+            {
+                var z = resyncZones[i];
+                if (z != null && !string.IsNullOrEmpty(z.zoneId))
+                    data.resyncZoneStates.Add($"{z.zoneId}:{(int)z.currentState}");
+            }
+
             // 5. Cutscenes assistidas, porta do Setor Externo & Missao "Sinal"
             data.cs01Played = true;
             if (data.act1Completed) data.cs02Played = true;
@@ -535,6 +547,25 @@ namespace Studio.Game.Save
 
             if (!string.IsNullOrEmpty(data.currentObjective))
                 ObjectiveSystem.Set(data.currentObjective);
+
+            // 6. Re-Sincronia — restaura estado salvo de cada zona (GATE 4)
+            if (data.resyncZoneStates != null)
+            {
+                for (int i = 0; i < data.resyncZoneStates.Count; i++)
+                {
+                    string entry = data.resyncZoneStates[i];
+                    if (string.IsNullOrEmpty(entry)) continue;
+                    int sep = entry.IndexOf(':');
+                    if (sep <= 0 || sep >= entry.Length - 1) continue;
+                    string zId = entry.Substring(0, sep);
+                    if (int.TryParse(entry.Substring(sep + 1), out int stateInt))
+                    {
+                        var z = ResyncZoneController.FindZoneById(zId);
+                        if (z != null)
+                            z.ApplySavedStateImmediate((ResyncState)stateInt);
+                    }
+                }
+            }
 
             _lastLoadedOrSaved = data;
             OnGameLoaded?.Invoke(data);

@@ -1236,5 +1236,98 @@ namespace Studio.Tests.SmokeTest
 
             Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_21: {string.Join(" | ", _consoleErrors)}");
         }
+
+        // (t) Re-Sincronia (GDD 04 §1 + GATES 1-5): alternar -> wireframe 0.8s -> colisao/rota muda (geometria identica) -> inimigo atordoa 1s -> cooldown 6s respeitado -> save JSON restaura!
+        [UnityTest]
+        public IEnumerator Smoke_22_ResyncDualStateGhostStunCooldownAndSave()
+        {
+            yield return LoadSceneAndVerifyCleanConsole("Caldeiral");
+
+            var cs01T = GameType("Studio.Game.Cutscenes.CutsceneManager");
+            var cs01 = UnityEngine.Object.FindAnyObjectByType(cs01T);
+            if (cs01 != null && (bool)cs01T.GetProperty("IsPlaying").GetValue(cs01))
+                cs01T.GetMethod("SkipCutscene").Invoke(cs01, null);
+            yield return null;
+
+            var zoneT   = GameType("Studio.Game.Resync.ResyncZoneController");
+            var stateE  = GameType("Studio.Game.Resync.ResyncState");
+            var dualT   = GameType("Studio.Game.Resync.ResyncDualStateObject");
+            var saveT   = GameType("Studio.Game.Save.SaveSystem");
+            var enemyT  = GameType("Studio.Game.Combat.EstilhacoEnemy");
+            var baseEnT = GameType("Studio.Game.Combat.ManifestationEnemyBase");
+
+            var zone = zoneT.GetMethod("FindZoneById").Invoke(null, new object[] { "caldeiral_demo_resync" }) as Component;
+            Assert.IsNotNull(zone, "Zona demo 'caldeiral_demo_resync' deve existir em Caldeiral.");
+
+            // Confirma numeros canonicos do GDD 04 §1
+            Assert.AreEqual(0.8f, (float)zoneT.GetField("TransitionDurationSec").GetValue(null), 0.001f);
+            Assert.AreEqual(1.0f, (float)zoneT.GetField("EnemyStunDurationSec").GetValue(null), 0.001f);
+            Assert.AreEqual(6.0f, (float)zoneT.GetField("CooldownSec").GetValue(null), 0.001f);
+
+            // Spawna 1 inimigo dentro do raio da bolha para validar atordoamento de 1s
+            var enemyGo = new GameObject("Smoke22_ResyncTestEnemy");
+            enemyGo.transform.position = zone.transform.position + new Vector3(1.5f, 0.2f, 1.5f);
+            var enemyComp = enemyGo.AddComponent(enemyT);
+            yield return null;
+
+            var managedList = zoneT.GetField("managedObjects").GetValue(zone) as System.Collections.IList;
+            Assert.GreaterOrEqual(managedList.Count, 2, "Zona demo deve conter >= 2 usos distintos (feixe + plataforma).");
+            var obj0 = managedList[0] as Component;
+            var obj1 = managedList[1] as Component;
+            var meshBefore0 = dualT.GetProperty("SharedGeometryMesh").GetValue(obj0);
+            var meshBefore1 = dualT.GetProperty("SharedGeometryMesh").GetValue(obj1);
+            Assert.IsTrue((bool)dualT.GetProperty("IsSolidNow").GetValue(obj0), "Em Desincronizado, objetos iniciais devem estar solidos.");
+
+            // 1. Dispara Re-Sincronia -> wireframe fantasma ativo + inimigo atordoado + cooldown bloqueando re-disparo imediato
+            Assert.IsTrue((bool)zoneT.GetMethod("TryTriggerResync").Invoke(zone, null), "Primeira ativacao deve suceder.");
+            yield return null;
+            Assert.IsTrue((bool)zoneT.GetProperty("IsGhostPreviewActive").GetValue(zone), "Escrita fantasma (wireframe) deve estar ativa durante os 0.8s.");
+            Assert.IsTrue((bool)dualT.GetProperty("IsShowingGhostWireframe").GetValue(obj0), "Objeto deve exibir wireframe fantasma.");
+            Assert.GreaterOrEqual((int)zoneT.GetProperty("LastPulseStunnedEnemies").GetValue(zone), 1, "Inimigo no raio deve ser atordoado.");
+            Assert.AreEqual("Stagger", baseEnT.GetProperty("State").GetValue(enemyComp).ToString(), "Inimigo deve entrar em Stagger (1s).");
+
+            // Cooldown 6s respeitado: tentar re-disparar agora DEVE retornar false
+            Assert.IsFalse((bool)zoneT.GetMethod("TryTriggerResync").Invoke(zone, null), "Cooldown de 6s deve impedir re-ativacao imediata.");
+
+            // Aguarda concluir os 0.8s da transicao
+            float w = 0f;
+            while ((bool)zoneT.GetProperty("IsTransitioning").GetValue(zone) && w < 2.0f)
+            {
+                yield return null;
+                w += Time.deltaTime;
+            }
+
+            Assert.AreEqual(Enum.Parse(stateE, "Restaurado"), zoneT.GetField("currentState").GetValue(zone), "Zona deve estar em Restaurado.");
+            Assert.IsFalse((bool)dualT.GetProperty("IsSolidNow").GetValue(obj0), "Feixe de luz deve ficar atravessavel em Restaurado.");
+            Assert.IsFalse((bool)dualT.GetProperty("IsSolidNow").GetValue(obj1), "Plataforma Desync deve desmaterializar em Restaurado.");
+            // Regra de ouro GDD 05 §2: geometria IDENTICA entre estados
+            Assert.AreSame(meshBefore0, dualT.GetProperty("SharedGeometryMesh").GetValue(obj0), "Geometria deve permanecer identica entre estados.");
+            Assert.AreSame(meshBefore1, dualT.GetProperty("SharedGeometryMesh").GetValue(obj1), "Geometria deve permanecer identica entre estados.");
+
+            // 2. Persistencia no Save JSON versionado (GATE 4)
+            string tmpSave = Path.Combine(Path.GetTempPath(), $"concerto_smoke22_{Guid.NewGuid():N}.json");
+            var mSetPath = saveT.GetMethod("SetCustomPathForTests");
+            mSetPath.Invoke(null, new object[] { tmpSave });
+            try
+            {
+                saveT.GetMethod("Save").Invoke(null, new object[] { "cp_resync_test", (Vector3?)zone.transform.position, (float?)0f });
+                // Forca estado contrario na memoria e recarrega do JSON
+                zoneT.GetMethod("ApplySavedStateImmediate").Invoke(zone, new object[] { Enum.Parse(stateE, "Desincronizado") });
+                Assert.AreEqual(Enum.Parse(stateE, "Desincronizado"), zoneT.GetField("currentState").GetValue(zone));
+
+                var loadArgs = new object[] { null };
+                Assert.IsTrue((bool)saveT.GetMethod("TryLoad").Invoke(null, loadArgs), "TryLoad deve carregar o save JSON.");
+                saveT.GetMethod("ApplyLoadedStateToCurrentScene").Invoke(null, new object[] { loadArgs[0] });
+                Assert.AreEqual(Enum.Parse(stateE, "Restaurado"), zoneT.GetField("currentState").GetValue(zone), "Save JSON deve restaurar estado Restaurado da zona.");
+            }
+            finally
+            {
+                mSetPath.Invoke(null, new object[] { null });
+                if (File.Exists(tmpSave)) File.Delete(tmpSave);
+                UnityEngine.Object.Destroy(enemyGo);
+            }
+
+            Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_22: {string.Join(" | ", _consoleErrors)}");
+        }
     }
 }

@@ -84,6 +84,9 @@ namespace Studio.Game.Save
         public bool powersUnlocked;
         public List<string> unlockedPowerIds = new List<string>();
 
+        [Header("Re-Sincronia — Estados por Zona (GDD 04 §1)")]
+        public List<string> resyncZoneStates = new List<string>();
+
         public bool MigrateIfNeeded()
         {
             if (schemaVersion <= 0 || schemaVersion > CurrentSchemaVersion)
@@ -95,6 +98,7 @@ namespace Studio.Game.Save
             if (completedDialogueIds == null) completedDialogueIds = new List<string>();
             if (completedOnboardingSteps == null) completedOnboardingSteps = new List<string>();
             if (purchasedUpgradeIds == null) purchasedUpgradeIds = new List<string>();
+            if (resyncZoneStates == null) resyncZoneStates = new List<string>();
             if (string.IsNullOrEmpty(activeToolModeId)) activeToolModeId = "mode_concertar";
 
             // Migracao v1 -> v2 (FIX 3): traz flags legados de PlayerPrefs para o JSON versionado
