@@ -1329,5 +1329,60 @@ namespace Studio.Tests.SmokeTest
 
             Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_22: {string.Join(" | ", _consoleErrors)}");
         }
+
+        // (u) GDD 04 §1 — GATE 1: Rebote (pulo duplo +3,5m, 1 por pulo, reseta no chao/parede/garra, atras de flag de progressao)
+        [UnityTest]
+        public IEnumerator Smoke_23_GddReboteDoubleJumpAndReset()
+        {
+            yield return LoadSceneAndVerifyCleanConsole("Caldeiral");
+
+            var cs01T = GameType("Studio.Game.Cutscenes.CutsceneManager");
+            var locoT = GameType("Studio.Game.Animation.DezLocomotionController");
+            var cs01 = UnityEngine.Object.FindAnyObjectByType(cs01T);
+            if (cs01 != null && (bool)cs01T.GetProperty("IsPlaying").GetValue(cs01))
+                cs01T.GetMethod("SkipCutscene").Invoke(cs01, null);
+            yield return null;
+
+            var loco = UnityEngine.Object.FindAnyObjectByType(locoT) as Component;
+            Assert.IsNotNull(loco);
+            locoT.GetProperty("UseScriptedInput").SetValue(loco, true);
+            locoT.GetProperty("DevUnlockAllGddAbilities").SetValue(loco, true);
+
+            try
+            {
+                float startY = loco.transform.position.y;
+                // 1o pulo
+                locoT.GetProperty("ScriptedJump").SetValue(loco, true);
+                float t = 0f;
+                while (t < 0.30f) { yield return null; t += Time.deltaTime; }
+
+                // 2o pulo no ar (Rebote +3,5m)
+                float midAirY = loco.transform.position.y;
+                locoT.GetProperty("ScriptedJump").SetValue(loco, true);
+                float peakY = midAirY;
+                t = 0f;
+                while (t < 0.70f)
+                {
+                    yield return null;
+                    t += Time.deltaTime;
+                    if (loco.transform.position.y > peakY) peakY = loco.transform.position.y;
+                }
+
+                Assert.GreaterOrEqual((int)locoT.GetProperty("ReboteTriggerCount").GetValue(loco), 1, "Rebote deve disparar no ar.");
+                Assert.IsFalse((bool)locoT.GetProperty("HasReboteCharge").GetValue(loco), "Rebote deve consumir a carga ate tocar chao/parede/garra.");
+                Assert.Greater(peakY - startY, 3.2f, $"Pulo + Rebote (+3.5m) deve elevar Dez > 3.2m (obtido={(peakY - startY):F2}m).");
+
+                // Reset por parede/garra
+                locoT.GetMethod("ResetReboteCharge").Invoke(loco, null);
+                Assert.IsTrue((bool)locoT.GetProperty("HasReboteCharge").GetValue(loco), "ResetReboteCharge deve restaurar carga.");
+            }
+            finally
+            {
+                locoT.GetProperty("UseScriptedInput").SetValue(loco, false);
+                locoT.GetProperty("DevUnlockAllGddAbilities").SetValue(loco, false);
+            }
+
+            Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_23: {string.Join(" | ", _consoleErrors)}");
+        }
     }
 }

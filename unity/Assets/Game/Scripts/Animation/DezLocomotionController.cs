@@ -79,6 +79,23 @@ namespace Studio.Game.Animation
         public int WallSlideCount { get; private set; }
         public float CurrentFovKickDeg { get; private set; }
 
+        // GDD 04 §1 — Flags de progressao (liberadas por Reliquias; em dev todas liberaveis via DevUnlockAllGddAbilities)
+        public bool UnlockRebote { get; set; }
+        public bool UnlockCorrimao { get; set; }
+        public bool UnlockMarteladaAerea { get; set; }
+        public bool UnlockCravaMola { get; set; }
+        public bool DevUnlockAllGddAbilities { get; set; }
+
+        public bool CanUseRebote => DevUnlockAllGddAbilities || UnlockRebote;
+        public bool CanUseCorrimao => DevUnlockAllGddAbilities || UnlockCorrimao;
+        public bool CanUseMarteladaAerea => DevUnlockAllGddAbilities || UnlockMarteladaAerea;
+        public bool CanUseCravaMola => DevUnlockAllGddAbilities || UnlockCravaMola;
+
+        // Estado Rebote (GATE 1)
+        public bool HasReboteCharge { get; private set; } = true;
+        public int ReboteTriggerCount { get; private set; }
+        public void ResetReboteCharge() { HasReboteCharge = true; }
+
         // Coyote Time + Jump Buffer
         private float _coyoteTimer;
         private float _jumpBufferTimer;
@@ -322,6 +339,7 @@ namespace Studio.Game.Animation
             {
                 _coyoteTimer = cfg.coyoteTimeSec;
                 _jumpCutApplied = false;
+                HasReboteCharge = true; // GDD 04 §1: Rebote reseta ao tocar o chao
                 if (!_wasGrounded && _lastAirVy < -2.0f)
                 {
                     if (_currentSpeed > 2.0f)
@@ -466,7 +484,7 @@ namespace Studio.Game.Animation
                 }
             }
 
-            // 5. Pulo com Coyote Time + Input Buffer + Corte de Altura + Queda Firme
+            // 5. Pulo com Coyote Time + Input Buffer + Rebote (Pulo Duplo +3,5m — GDD 04 §1)
             if (_jumpBufferTimer > 0f && _coyoteTimer > 0f && !_isDashing)
             {
                 _verticalVel = Mathf.Sqrt(cfg.jumpHeight * -2f * cfg.gravity);
@@ -478,6 +496,26 @@ namespace Studio.Game.Animation
                 if (jumpTakeoffClip != null)
                 {
                     PlaySurfaceSfx(jumpTakeoffClip, 0.58f, 0.96f, 1.06f);
+                    JumpSfxTriggerCount++;
+                }
+            }
+            else if (_jumpBufferTimer > 0f && !grounded && _coyoteTimer <= 0f && !_isDashing && CanUseRebote && HasReboteCharge)
+            {
+                // GATE 1: Rebote — pulo duplo +3,5m, dispara clipe real no Animator (zero animacao procedural de ossos) + particula/som
+                _verticalVel = Mathf.Sqrt(cfg.reboteJumpHeight * -2f * cfg.gravity);
+                HasReboteCharge = false;
+                _jumpBufferTimer = 0f;
+                _jumpCutApplied = false;
+                ReboteTriggerCount++;
+                if (_anim != null) _anim.SetTrigger("Jump");
+                if (thrusterParticles != null)
+                {
+                    thrusterParticles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                    thrusterParticles.Play();
+                }
+                if (jumpTakeoffClip != null)
+                {
+                    PlaySurfaceSfx(jumpTakeoffClip, 0.68f, 1.18f, 1.28f);
                     JumpSfxTriggerCount++;
                 }
             }

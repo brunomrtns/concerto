@@ -105,5 +105,23 @@ namespace Studio.Game.Animation
 
         [Header("Seguranca Anti-Limbo")]
         public float killFloorY = -3.0f;
+
+        [Header("Movimentacao GDD 04 §1 (Rebote, Corrimao, Martelada Aerea, Crava-Mola)")]
+        [Tooltip("Rebote (pulo duplo): +3,5m de altura adicional (GDD 04 §1).")]
+        public float reboteJumpHeight = 3.5f;
+        [Tooltip("Corrimao (wall-run): duracao maxima 2,5s (GDD 04 §1).")]
+        public float wallRunMaxDurationSec = 2.5f;
+        [Tooltip("Corrimao (wall-run): deslize vertical ao expirar = 1,2 m/s (GDD 04 §1).")]
+        public float wallRunExpiredSlideSpeed = 1.2f;
+        [Tooltip("FOV extra em alta velocidade (+6 graus — GDD 04 §1).")]
+        public float highSpeedFovBonusDeg = 6.0f;
+        [Tooltip("Martelada Aerea: segurar ataque no ar por 0,6s (GDD 04 §1).")]
+        public float airHammerChargeSec = 0.6f;
+        public int airHammerDamage = 3;
+        public float airHammerShockwaveRadius = 3.0f;
+        [Tooltip("Crava-Mola: baixo+ataque no ar -> mergulho 15 m/s + choque 3m + dano 2 (GDD 04 §1).")]
+        public float cravaMolaDiveSpeed = 15.0f;
+        public int cravaMolaDamage = 2;
+        public float cravaMolaShockwaveRadius = 3.0f;
     }
 }
