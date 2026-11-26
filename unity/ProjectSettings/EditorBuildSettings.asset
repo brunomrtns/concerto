@@ -32,5 +32,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Game/Scenes/Retrogrado.unity
     guid: d9d575b9ac188aa4185d7c9124f488dd
+  - enabled: 1
+    path: Assets/Game/Scenes/CombateGddArena.unity
+    guid: 3b1cf5b5d2258ae4faa2276d42ace24f
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
