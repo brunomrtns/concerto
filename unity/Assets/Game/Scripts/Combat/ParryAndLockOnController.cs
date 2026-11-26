@@ -32,12 +32,18 @@ namespace Studio.Game.Combat
         public AudioClip parryClangClip;
         public AudioClip parryReverseClip;
 
+        [Header("Reliquia Aro -> Aro-Escudo (Retrogrado GATE 3)")]
+        public float aroEscudoFaiscaRadius = 6.0f;
+
         public bool IsParryWindowActive => _parryWindowTimer > 0f;
         public float ParryCooldownRemaining => _parryCooldownTimer;
         public ManifestationEnemyBase CurrentLockTarget { get; private set; }
         public int SuccessfulParryCount { get; private set; }
         public int ReflectedProjectileCount { get; private set; }
         public int LockSwitchCount { get; private set; }
+        public bool HasRelicAroEscudo { get; set; }
+        public int AroEscudoFaiscaReflectCount { get; private set; }
+        public int LastAroEscudoFaiscaTargetsHit { get; private set; }
 
         public event Action<string> OnParrySucceeded;
 
@@ -118,6 +124,9 @@ namespace Studio.Game.Combat
 
         private void PlayParryJuice(string kind)
         {
+            if (HasRelicAroEscudo)
+                TriggerAroEscudoFaiscaReflect();
+
             if (_audio != null)
             {
                 float sc = _audio.outputAudioMixerGroup != null ? 1f : GameSettingsManager.SfxVolume;
@@ -126,6 +135,24 @@ namespace Studio.Game.Combat
             }
             StartCoroutine(RunParryFreeze());
             OnParrySucceeded?.Invoke(kind);
+        }
+
+        private void TriggerAroEscudoFaiscaReflect()
+        {
+            AroEscudoFaiscaReflectCount++;
+            int hitCount = 0;
+            var enemies = FindObjectsByType<ManifestationEnemyBase>(FindObjectsSortMode.None);
+            for (int i = 0; i < enemies.Length; i++)
+            {
+                var e = enemies[i];
+                if (e != null && e.IsAlive && Vector3.Distance(transform.position, e.transform.position) <= aroEscudoFaiscaRadius)
+                {
+                    e.ApplyParryStagger(parryStaggerDurationSec);
+                    hitCount++;
+                }
+            }
+            LastAroEscudoFaiscaTargetsHit = hitCount;
+            Debug.Log($"[CombatV2] ARO-ESCUDO: Faisca refletida em area (raio {aroEscudoFaiscaRadius:F1}m, alvos atingidos={hitCount})!");
         }
 
         private IEnumerator RunParryFreeze()

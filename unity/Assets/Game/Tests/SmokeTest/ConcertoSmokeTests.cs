@@ -1897,5 +1897,95 @@ namespace Studio.Tests.SmokeTest
 
             Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_30: {string.Join(" | ", _consoleErrors)}");
         }
+
+        // (ac) Fuso Retrogrado (GATES 1-5): areia cai PARA CIMA + janelas invertidas que existem CADA VEZ MAIS conforme se espera + Boss O Arquivista-Mor (antecipa padroes repetidos; quebra com padroes ineditos + Contratempo) + Reliquia Aro-Escudo (parry reflete Faisca em area) + Ruinas pre-Fratura + custo comico leve + Save JSON!
+        [UnityTest]
+        public IEnumerator Smoke_31_RetrogradoReverseSandInvertedPlatformsArquivistaAroEscudoAndRuins()
+        {
+            yield return LoadSceneAndVerifyCleanConsole("Retrogrado");
+
+            var retT   = GameType("Studio.Game.Retrogrado.RetrogradoFusoController");
+            var revT   = GameType("Studio.Game.Retrogrado.RetrogradoReverseTimeSystem");
+            var platT  = GameType("Studio.Game.Retrogrado.ReverseWindowPlatform");
+            var bossT  = GameType("Studio.Game.Retrogrado.RetrogradoBossArquivistaMor");
+            var parryT = GameType("Studio.Game.Combat.ParryAndLockOnController");
+            var saveT  = GameType("Studio.Game.Save.SaveSystem");
+
+            var ret   = UnityEngine.Object.FindAnyObjectByType(retT);
+            var rev   = UnityEngine.Object.FindAnyObjectByType(revT);
+            var boss  = UnityEngine.Object.FindAnyObjectByType(bossT);
+            var parry = UnityEngine.Object.FindAnyObjectByType(parryT) as Component;
+            Assert.IsNotNull(ret,   "RetrogradoFusoController obrigatorio em Retrogrado.");
+            Assert.IsNotNull(rev,   "RetrogradoReverseTimeSystem obrigatorio em Retrogrado.");
+            Assert.IsNotNull(boss,  "RetrogradoBossArquivistaMor obrigatorio em Retrogrado.");
+            Assert.IsNotNull(parry, "ParryAndLockOnController obrigatorio em Retrogrado.");
+
+            string tmpSave = Path.Combine(Path.GetTempPath(), $"concerto_smoke31_{Guid.NewGuid():N}.json");
+            var mSetPath = saveT.GetMethod("SetCustomPathForTests");
+            mSetPath.Invoke(null, new object[] { tmpSave });
+
+            try
+            {
+                // 1. GATE 1: Tempo Reverso — areia cai PARA CIMA (+Y) + janelas invertidas ganham solidez conforme espera!
+                var plats = revT.GetField("reversePlatforms").GetValue(rev) as System.Collections.IList;
+                Assert.GreaterOrEqual(plats.Count, 3, "Retrogrado deve possuir >= 3 plataformas de janela invertida.");
+                var plat0 = plats[0];
+                platT.GetMethod("ResetToZero").Invoke(plat0, null);
+                Assert.IsFalse((bool)platT.GetProperty("IsSolid").GetValue(plat0), "Plataforma invertida comeca desmaterializada.");
+
+                revT.GetMethod("TickReverseTime").Invoke(rev, new object[] { 1.5f });
+                Assert.Greater((float)revT.GetProperty("RisingSandDeltaYAccumulated").GetValue(rev), 0f, "Areia deve cair PARA CIMA (+Y).");
+                Assert.IsTrue((bool)revT.GetProperty("FootprintsFadeAheadOfPlayer").GetValue(rev), "Pegadas devem desmanchar a frente.");
+                Assert.IsTrue((bool)platT.GetProperty("IsSolid").GetValue(plat0), "Plataforma invertida deve existir/solidificar apos esperar.");
+                retT.GetMethod("ReachBeat").Invoke(ret, new object[] { 2, true });
+
+                // 2. GATE 4: Boss O Arquivista-Mor — antecipa padrao repetido; quebra usando padroes ineditos + Contratempo!
+                bossT.GetMethod("RestartEncounterAtRepairStation").Invoke(boss, new object[] { parry.gameObject });
+                Assert.Less((float)bossT.GetProperty("LastRestartDurationSec").GetValue(boss), 8.0f, "Reinicio do Arquivista-Mor deve ser <= 8s.");
+
+                Assert.IsTrue((bool)bossT.GetMethod("TryStrikeWithPattern").Invoke(boss, new object[] { "Sopro" }), "1o padrao inedito deve acertar.");
+                Assert.AreEqual(2, (int)bossT.GetProperty("CurrentPhase").GetValue(boss));
+                Assert.IsTrue((bool)bossT.GetProperty("IsParryGateActive").GetValue(boss));
+                Assert.IsTrue((bool)bossT.GetMethod("ApplyContratempoParry").Invoke(boss, null), "Contratempo abre Fase 3.");
+
+                // Tentar repetir 'Sopro' DEVE ser antecipado e bloqueado!
+                Assert.IsFalse((bool)bossT.GetMethod("TryStrikeWithPattern").Invoke(boss, new object[] { "Sopro" }), "Arquivista-Mor deve antecipar e bloquear padrao repetido.");
+                Assert.GreaterOrEqual((int)bossT.GetProperty("AnticipatedBlockCount").GetValue(boss), 1);
+
+                // Variar para 2 novos padroes ineditos quebra e derrota o boss
+                Assert.IsTrue((bool)bossT.GetMethod("TryStrikeWithPattern").Invoke(boss, new object[] { "Rebote" }));
+                Assert.IsTrue((bool)bossT.GetMethod("TryStrikeWithPattern").Invoke(boss, new object[] { "CravaMola" }));
+                Assert.IsTrue((bool)bossT.GetProperty("IsDefeated").GetValue(boss));
+                Assert.IsTrue((bool)retT.GetProperty("BossDefeated").GetValue(ret));
+
+                // 3. GATE 3: Reliquia Aro -> Aro-Escudo (parry reflete Faisca em area via Contratempo)
+                Assert.IsTrue((bool)retT.GetMethod("CollectRelicAroEscudo").Invoke(ret, new object[] { parry }));
+                Assert.IsTrue((bool)parryT.GetProperty("HasRelicAroEscudo").GetValue(parry));
+                Assert.IsTrue((bool)parryT.GetMethod("TryTriggerParry").Invoke(parry, null));
+                Assert.IsTrue((bool)parryT.GetMethod("TryInterceptMeleeAttack").Invoke(parry, new object[] { null }));
+                Assert.GreaterOrEqual((int)parryT.GetProperty("AroEscudoFaiscaReflectCount").GetValue(parry), 1, "Aro-Escudo deve refletir Faisca em area no Contratempo.");
+
+                // 4. GATE 2 & 5: Pos-conserto revela Ruinas pre-Fratura (Outros Relogios) + custo comico leve Caldeiral + Save JSON
+                Assert.IsTrue((bool)retT.GetMethod("RevealPreFractureRuinsAndApplyComicCost").Invoke(ret, null));
+                Assert.IsTrue((bool)retT.GetProperty("PreFractureRuinsRevealed").GetValue(ret));
+                Assert.IsTrue((bool)retT.GetProperty("CaldeiralCosmeticUndoApplied").GetValue(ret));
+
+                var loadArgs = new object[] { null };
+                Assert.IsTrue((bool)saveT.GetMethod("TryLoad").Invoke(null, loadArgs));
+                string rawJson = File.ReadAllText(tmpSave);
+                StringAssert.Contains("\"retrogradoBossDefeated\": true", rawJson);
+                StringAssert.Contains("\"relicAroEscudoUnlocked\": true", rawJson);
+                StringAssert.Contains("\"retrogradoRuinsRevealed\": true", rawJson);
+                StringAssert.Contains("\"caldeiralCosmeticsUndoneComic\": true", rawJson);
+                StringAssert.Contains("evt_cost_retrogrado_undo_caldeiral", rawJson);
+            }
+            finally
+            {
+                mSetPath.Invoke(null, new object[] { null });
+                if (File.Exists(tmpSave)) File.Delete(tmpSave);
+            }
+
+            Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_31: {string.Join(" | ", _consoleErrors)}");
+        }
     }
 }

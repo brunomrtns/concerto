@@ -111,6 +111,13 @@ namespace Studio.Game.Save
         public bool ecodiaCityAwake;
         public int ecodiaMemoryQuestsCleared;
 
+        [Header("Fuso Retrogrado — Tempo Reverso, Arquivista-Mor, Aro-Escudo & Ruinas Pre-Fratura")]
+        public int retrogradoBeatIndex;
+        public bool retrogradoBossDefeated;
+        public bool relicAroEscudoUnlocked;
+        public bool retrogradoRuinsRevealed;
+        public bool caldeiralCosmeticsUndoneComic;
+
         public bool MigrateIfNeeded()
         {
             if (schemaVersion <= 0 || schemaVersion > CurrentSchemaVersion)

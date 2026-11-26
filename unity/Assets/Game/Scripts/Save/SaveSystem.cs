@@ -15,6 +15,7 @@ using Studio.Game.Parts;
 using Studio.Game.Powers;
 using Studio.Game.Repair;
 using Studio.Game.Resync;
+using Studio.Game.Retrogrado;
 using Studio.Game.Tool;
 using Studio.Game.Vitralha;
 using UnityEngine;
@@ -384,6 +385,11 @@ namespace Studio.Game.Save
             if (eco != null)
                 eco.CopyToSave(data);
 
+            // 4h. Fuso Retrogrado — tempo reverso, Arquivista-Mor, Aro-Escudo e ruinas pre-Fratura
+            var ret = RetrogradoFusoController.Instance;
+            if (ret != null)
+                ret.CopyToSave(data);
+
             // 5. Cutscenes assistidas, porta do Setor Externo & Missao "Sinal"
             data.cs01Played = true;
             if (data.act1Completed) data.cs02Played = true;
@@ -610,6 +616,10 @@ namespace Studio.Game.Save
             // 10. Fuso Ecodia — restaura loop 6s, Eco Dez, Micra e cidade acordada
             if (EcodiaFusoController.Instance != null)
                 EcodiaFusoController.Instance.RestoreFromSave(data);
+
+            // 11. Fuso Retrogrado — restaura tempo reverso, Arquivista-Mor, Aro-Escudo e ruinas pre-Fratura
+            if (RetrogradoFusoController.Instance != null)
+                RetrogradoFusoController.Instance.RestoreFromSave(data);
 
             _lastLoadedOrSaved = data;
             OnGameLoaded?.Invoke(data);
