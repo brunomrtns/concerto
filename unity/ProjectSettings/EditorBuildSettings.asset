@@ -29,5 +29,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Game/Scenes/Ecodia.unity
     guid: 3ace1bbb631ac8445b7c8c606ce983a5
+  - enabled: 1
+    path: Assets/Game/Scenes/Retrogrado.unity
+    guid: d9d575b9ac188aa4185d7c9124f488dd
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
