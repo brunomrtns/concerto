@@ -1505,5 +1505,65 @@ namespace Studio.Tests.SmokeTest
 
             Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_25: {string.Join(" | ", _consoleErrors)}");
         }
+
+        // (x) GDD 04 §1 — GATE 4 & 6: Crava-Mola (baixo+ataque no ar -> mergulho 15 m/s + choque 3m + dano 2 + quebra crista fragil na zona de treino)
+        [UnityTest]
+        public IEnumerator Smoke_26_GddCravaMolaDiveAndBreaksFragileCrest()
+        {
+            yield return LoadSceneAndVerifyCleanConsole("Caldeiral");
+
+            var cs01T   = GameType("Studio.Game.Cutscenes.CutsceneManager");
+            var locoT   = GameType("Studio.Game.Animation.DezLocomotionController");
+            var zoneT   = GameType("Studio.Game.Animation.GddMovementTrainingZone");
+            var crestT  = GameType("Studio.Game.Animation.FragileCrestTarget");
+
+            var cs01 = UnityEngine.Object.FindAnyObjectByType(cs01T);
+            if (cs01 != null && (bool)cs01T.GetProperty("IsPlaying").GetValue(cs01))
+                cs01T.GetMethod("SkipCutscene").Invoke(cs01, null);
+            yield return null;
+
+            var loco = UnityEngine.Object.FindAnyObjectByType(locoT) as Component;
+            var cc = loco.GetComponent<CharacterController>();
+            var zone = zoneT.GetProperty("Instance").GetValue(null);
+            Assert.IsNotNull(zone, "Zona de treino diegetica GddMovementTrainingZone deve existir em Caldeiral.");
+            var crest = zoneT.GetProperty("TrainingFragileCrest").GetValue(zone) as Component;
+            Assert.IsNotNull(crest, "Crista fragil deve existir na zona de treino.");
+            crestT.GetMethod("ResetCrest").Invoke(crest, null);
+
+            locoT.GetProperty("UseScriptedInput").SetValue(loco, true);
+            locoT.GetProperty("DevUnlockAllGddAbilities").SetValue(loco, true);
+
+            try
+            {
+                // Posiciona Dez no ar acima da crista fragil, aguarda 1 frame no ar e dispara baixo + ataque
+                cc.enabled = false;
+                loco.transform.position = crest.transform.position + new Vector3(0f, 3.2f, 0f);
+                cc.enabled = true;
+                yield return null;
+                locoT.GetProperty("ScriptedDownHeld").SetValue(loco, true);
+                locoT.GetProperty("ScriptedAttackPressed").SetValue(loco, true);
+
+                float t = 0f;
+                while (t < 1.8f && (int)locoT.GetProperty("CravaMolaImpactCount").GetValue(loco) == 0)
+                {
+                    yield return null;
+                    t += Time.deltaTime;
+                }
+
+                Assert.GreaterOrEqual((int)locoT.GetProperty("CravaMolaImpactCount").GetValue(loco), 1, "Crava-Mola deve impactar o chao.");
+                Assert.AreEqual(2, (int)locoT.GetProperty("LastAirSlamDamage").GetValue(loco), "Dano do Crava-Mola deve ser 2 (GDD 04 §1).");
+                Assert.AreEqual(3.0f, (float)locoT.GetProperty("LastAirSlamRadius").GetValue(loco), 0.01f, "Raio da onda de choque deve ser 3m (GDD 04 §1).");
+                Assert.IsTrue((bool)crestT.GetProperty("IsBroken").GetValue(crest), "Crista fragil deve ser quebrada pelo Crava-Mola.");
+            }
+            finally
+            {
+                locoT.GetProperty("ScriptedDownHeld").SetValue(loco, false);
+                locoT.GetProperty("ScriptedAttackPressed").SetValue(loco, false);
+                locoT.GetProperty("UseScriptedInput").SetValue(loco, false);
+                locoT.GetProperty("DevUnlockAllGddAbilities").SetValue(loco, false);
+            }
+
+            Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_26: {string.Join(" | ", _consoleErrors)}");
+        }
     }
 }

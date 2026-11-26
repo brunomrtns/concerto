@@ -116,6 +116,11 @@ namespace Studio.Game.Animation
         public float LastAirSlamRadius { get; private set; }
         private float _airHammerChargeTimer;
 
+        // Estado Crava-Mola (GATE 4: baixo+ataque no ar -> mergulho 15 m/s + choque 3m + dano 2 + quebra cristas frageis)
+        public bool IsCravaMolaDiving { get; private set; }
+        public int CravaMolaImpactCount { get; private set; }
+        public int BrokenFragileCrestsCount { get; private set; }
+
         // Inputs programaticos extras para Martelada Aerea / Crava-Mola
         public bool ScriptedAttackHeld { get; set; }
         public bool ScriptedAttackPressed { get; set; }
@@ -379,6 +384,12 @@ namespace Studio.Game.Animation
                     IsAirHammerDiving = false;
                     AirHammerImpactCount++;
                 }
+                if (IsCravaMolaDiving)
+                {
+                    TriggerAirSlamShockwave(cfg.cravaMolaDamage, cfg.cravaMolaShockwaveRadius, breakFragileCrests: true);
+                    IsCravaMolaDiving = false;
+                    CravaMolaImpactCount++;
+                }
                 IsAirHammerCharging = false;
                 _airHammerChargeTimer = 0f;
 
@@ -615,9 +626,37 @@ namespace Studio.Game.Animation
                 IsWallRunning = false;
             }
 
+            // GATE 4: Crava-Mola — baixo + ataque no ar -> mergulho 15 m/s + choque 3m + dano 2 + quebra cristas frageis
+            bool downHeld = UseScriptedInput ? ScriptedDownHeld : (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetAxisRaw("Vertical") < -0.6f);
+            bool attackDown = UseScriptedInput ? ScriptedAttackPressed : (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.J) || Input.GetKeyDown(KeyCode.JoystickButton2));
+            if (UseScriptedInput) ScriptedAttackPressed = false;
+
+            if (!grounded && !IsWallRunning && !_isMantling && !IsAirHammerDiving && CanUseCravaMola)
+            {
+                if (IsCravaMolaDiving)
+                {
+                    _horizVelocity *= 0.65f;
+                    _verticalVel = -cfg.cravaMolaDiveSpeed; // 15 m/s exato (GDD 04 §1)
+                }
+                else if (downHeld && attackDown)
+                {
+                    IsCravaMolaDiving = true;
+                    IsAirHammerCharging = false;
+                    _airHammerChargeTimer = 0f;
+                    _verticalVel = -cfg.cravaMolaDiveSpeed;
+                    if (thrusterParticles != null)
+                    {
+                        thrusterParticles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                        thrusterParticles.Play();
+                    }
+                    if (jumpTakeoffClip != null)
+                        PlaySurfaceSfx(jumpTakeoffClip, 0.78f, 0.80f, 0.90f);
+                }
+            }
+
             // GATE 3: Martelada Aerea — segurar ataque no ar 0,6s -> mergulho dano 3 + choque 3m + i-frames na queda
             bool attackHeld = UseScriptedInput ? ScriptedAttackHeld : (Input.GetMouseButton(0) || Input.GetKey(KeyCode.J) || Input.GetKey(KeyCode.JoystickButton2));
-            if (!grounded && !IsWallRunning && !_isMantling && CanUseMarteladaAerea)
+            if (!grounded && !IsWallRunning && !_isMantling && !IsCravaMolaDiving && CanUseMarteladaAerea)
             {
                 if (IsAirHammerDiving)
                 {
@@ -796,6 +835,15 @@ namespace Studio.Game.Animation
                         KnockbackDir = pushDir.normalized,
                         IsHeavy = true
                     });
+                }
+                if (breakFragileCrests)
+                {
+                    var crest = c.GetComponentInParent<FragileCrestTarget>();
+                    if (crest != null && !crest.IsBroken)
+                    {
+                        crest.BreakCrest();
+                        BrokenFragileCrestsCount++;
+                    }
                 }
             }
 
