@@ -20,5 +20,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Game/Scenes/AOrquestra.unity
     guid: f6dc76dce0fba2d4696a6a19c6a0a41d
+  - enabled: 1
+    path: Assets/Game/Scenes/Vitralha.unity
+    guid: cac165b69955e90449f2fe18abfcb896
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
