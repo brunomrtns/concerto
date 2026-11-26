@@ -49,10 +49,12 @@ namespace Studio.Game.Powers
             }
         }
 
-        // Poderes registrados (lista extensivel para um 3o poder futuro)
+        // Poderes registrados (Eco Temporal + Estase + Micra [Reliquia Ponteiro Menor])
         private readonly List<DezPowerBase> _powers = new List<DezPowerBase>(4);
         private EcoTemporalPower _ecoPower;
         private EstasePower _stasisPower;
+        private MicraPower _micraPower;
+        private float _micraActiveTimer;
 
         // Estado runtime
         private bool _isUnlocked;
@@ -91,7 +93,12 @@ namespace Studio.Game.Powers
         public bool IsEcoDashing => _ecoDashTimer > 0f;
         public float EcoCooldownRemaining => _ecoPower != null ? _ecoPower.CooldownRemaining : 0f;
         public float StasisCooldownRemaining => _stasisPower != null ? _stasisPower.CooldownRemaining : 0f;
-        public float DezTimeScale => 1.0f; // Regra canonica: Estase NUNCA desacelera o Dez!
+        public bool HasRelicPonteiroMenor { get; private set; }
+        public bool IsMicraActive => _micraActiveTimer > 0f;
+        public float MicraCooldownRemaining => _micraPower != null ? _micraPower.CooldownRemaining : 0f;
+        public int MicraActivationCount { get; private set; }
+        public int RegisteredPowerCount => _powers.Count;
+        public float DezTimeScale => 1.0f; // Regra canonica: Estase/Micra NUNCA desaceleram o Dez!
         public int EcoActivationCount { get; private set; }
         public int StasisActivationCount { get; private set; }
         public int AfterimageSpawnCount { get; private set; }
@@ -116,8 +123,10 @@ namespace Studio.Game.Powers
 
             _ecoPower = new EcoTemporalPower(Cfg);
             _stasisPower = new EstasePower(Cfg);
+            _micraPower = new MicraPower(Cfg);
             _powers.Add(_ecoPower);
             _powers.Add(_stasisPower);
+            _powers.Add(_micraPower);
 
             EnsureAudioSource();
             BuildDiscretePowersHud();
@@ -237,6 +246,31 @@ namespace Studio.Game.Powers
             return _stasisPower != null && _stasisPower.TryActivate(this);
         }
 
+        public void UnlockMicraRelic()
+        {
+            HasRelicPonteiroMenor = true;
+            _isUnlocked = true;
+        }
+
+        /// <summary>GATE 3 (Ecodia): Micra (2s camera lenta, cooldown 8s) — coexiste com Estase sem substitui-la.</summary>
+        public bool TriggerMicra()
+        {
+            if (!HasRelicPonteiroMenor) return false;
+            if (!CanUsePowersNow()) return false;
+            return _micraPower != null && _micraPower.TryActivate(this);
+        }
+
+        internal bool ExecuteMicraInternal()
+        {
+            var cfg = Cfg;
+            StasisFieldSystem.SpawnField(transform.position, cfg.micraRadius, cfg.micraWorldTimeScale, cfg.micraDurationSec);
+            _micraActiveTimer = cfg.micraDurationSec;
+            MicraActivationCount++;
+            PlayPowerSfx(stasisPulseClip, 0.85f, 1.18f);
+            StartCoroutine(SpawnStasisPulseRing(transform.position + Vector3.up * 0.9f, cfg.micraRadius));
+            return true;
+        }
+
         internal bool ExecuteEcoInternal()
         {
             // Combate v2 (#109): cancela recovery de ataque se Eco for ativado na janela de cancelamento
@@ -315,6 +349,8 @@ namespace Studio.Game.Powers
             // Atualiza cooldowns dos poderes registrados
             for (int i = 0; i < _powers.Count; i++)
                 _powers[i].TickCooldown(dt);
+            if (_micraActiveTimer > 0f)
+                _micraActiveTimer = Mathf.Max(0f, _micraActiveTimer - dt);
 
             // Atualiza i-frames do Eco Temporal
             if (_iFramesTimer > 0f)
@@ -355,6 +391,8 @@ namespace Studio.Game.Powers
                     TriggerEcoTemporal();
                 if (Input.GetKeyDown(Cfg.stasisKey))
                     TriggerEstase();
+                if (HasRelicPonteiroMenor && Input.GetKeyDown(Cfg.micraKey))
+                    TriggerMicra();
             }
 
             RefreshHud(canUse);

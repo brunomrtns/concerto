@@ -104,6 +104,13 @@ namespace Studio.Game.Save
         public bool relicPenduloUnlocked;
         public bool maresiaSeaThawed;
 
+        [Header("Fuso Ecodia — Loop 6s, Eco Dez, Reliquia Ponteiro Menor (Micra) & Cidade Acordada")]
+        public int ecodiaBeatIndex;
+        public bool ecodiaBossDefeated;
+        public bool relicPonteiroMenorUnlocked;
+        public bool ecodiaCityAwake;
+        public int ecodiaMemoryQuestsCleared;
+
         public bool MigrateIfNeeded()
         {
             if (schemaVersion <= 0 || schemaVersion > CurrentSchemaVersion)

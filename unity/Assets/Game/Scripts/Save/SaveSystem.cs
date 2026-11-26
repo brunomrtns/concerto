@@ -7,6 +7,7 @@ using Studio.Game.Anomalies;
 using Studio.Game.Combat;
 using Studio.Game.Cutscenes;
 using Studio.Game.Dialogue;
+using Studio.Game.Ecodia;
 using Studio.Game.Hub;
 using Studio.Game.Maresia;
 using Studio.Game.Onboarding;
@@ -378,6 +379,11 @@ namespace Studio.Game.Save
             if (mar != null)
                 mar.CopyToSave(data);
 
+            // 4g. Fuso Ecodia — loop 6s, Eco Dez, Reliquia Ponteiro Menor (Micra) e cidade acordada
+            var eco = EcodiaFusoController.Instance;
+            if (eco != null)
+                eco.CopyToSave(data);
+
             // 5. Cutscenes assistidas, porta do Setor Externo & Missao "Sinal"
             data.cs01Played = true;
             if (data.act1Completed) data.cs02Played = true;
@@ -600,6 +606,10 @@ namespace Studio.Game.Save
             // 9. Fuso Maresia — restaura beats, desvio alagado, Baleia de Ancora e Reliquia Pendulo
             if (MaresiaFusoController.Instance != null)
                 MaresiaFusoController.Instance.RestoreFromSave(data);
+
+            // 10. Fuso Ecodia — restaura loop 6s, Eco Dez, Micra e cidade acordada
+            if (EcodiaFusoController.Instance != null)
+                EcodiaFusoController.Instance.RestoreFromSave(data);
 
             _lastLoadedOrSaved = data;
             OnGameLoaded?.Invoke(data);

@@ -38,6 +38,17 @@ namespace Studio.Game.Powers
         public float stasisRadius = 15.0f;
         public Color stasisPulseColor = new Color(0.28f, 0.85f, 1.0f, 0.42f);
 
+        [Header("Micra (Reliquia Ponteiro Menor — 2s camera lenta, cooldown 8s; NAO substitui Estase)")]
+        public KeyCode micraKey = KeyCode.T;
+        [Tooltip("Duracao da camera lenta da Micra (2.0s exatos — GDD 03 §2.4).")]
+        public float micraDurationSec = 2.0f;
+        [Tooltip("Fator de camera lenta da Micra (0.35 = 35% velocidade).")]
+        [Range(0.15f, 0.65f)] public float micraWorldTimeScale = 0.35f;
+        [Tooltip("Cooldown da Micra (8.0s exatos — GDD 03 §2.4).")]
+        public float micraCooldownSec = 8.0f;
+        [Tooltip("Raio da bolha de Micra (m).")]
+        public float micraRadius = 22.0f;
+
         [Header("Desbloqueio Pos-Cutscene 3 (Hint Curta — NAO explica a origem)")]
         public string firstUnlockHintText = "O tempo vazou pelos seus dedos...  [ALT/C] Eco Temporal  |  [R] Estase";
         public float firstUnlockHintDurationSec = 4.8f;

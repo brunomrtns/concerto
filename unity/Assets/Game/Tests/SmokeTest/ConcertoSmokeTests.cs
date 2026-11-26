@@ -1802,5 +1802,100 @@ namespace Studio.Tests.SmokeTest
 
             Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_29: {string.Join(" | ", _consoleErrors)}");
         }
+
+        // (ab) Fuso Ecodia (GATES 1-5): loop 6s previsivel (bonde + porta no t=2s + anuncio) + Boss Eco Dez (moveset espelhado + piadas na ordem errada + Contratempo + reinicio <=8s) + Reliquia Ponteiro Menor (Micra 2s/8s SEM substituir Estase) + pos-conserto (3 micro-quests de memoria + Censores em tempo real) + Save JSON!
+        [UnityTest]
+        public IEnumerator Smoke_30_EcodiaLoop6sEcoDezMicraMemoryQuestsAndRealTimeCensors()
+        {
+            yield return LoadSceneAndVerifyCleanConsole("Ecodia");
+
+            var ecoT   = GameType("Studio.Game.Ecodia.EcodiaFusoController");
+            var loopT  = GameType("Studio.Game.Ecodia.EcodiaTimeLoopSystem");
+            var bossT  = GameType("Studio.Game.Ecodia.EcodiaBossEcoDez");
+            var powT   = GameType("Studio.Game.Powers.DezPowersController");
+            var saveT  = GameType("Studio.Game.Save.SaveSystem");
+
+            var eco  = UnityEngine.Object.FindAnyObjectByType(ecoT);
+            var loop = UnityEngine.Object.FindAnyObjectByType(loopT);
+            var boss = UnityEngine.Object.FindAnyObjectByType(bossT);
+            var pow  = UnityEngine.Object.FindAnyObjectByType(powT) as Component;
+            Assert.IsNotNull(eco,  "EcodiaFusoController obrigatorio em Ecodia.");
+            Assert.IsNotNull(loop, "EcodiaTimeLoopSystem obrigatorio em Ecodia.");
+            Assert.IsNotNull(boss, "EcodiaBossEcoDez obrigatorio em Ecodia.");
+            Assert.IsNotNull(pow,  "DezPowersController obrigatorio em Ecodia.");
+
+            string tmpSave = Path.Combine(Path.GetTempPath(), $"concerto_smoke30_{Guid.NewGuid():N}.json");
+            var mSetPath = saveT.GetMethod("SetCustomPathForTests");
+            mSetPath.Invoke(null, new object[] { tmpSave });
+
+            try
+            {
+                // 1. GATE 1: Loop deterministico de 6s — porta fechada em t=0.5s, abre em t=2.2s, bonde avanca e reseta apos 6s
+                loopT.GetMethod("SetLoopTimeForTest").Invoke(loop, new object[] { 0.5f });
+                Assert.IsFalse((bool)loopT.GetProperty("IsTimedDoorOpen").GetValue(loop), "Porta deve estar fechada antes de t=2.0s.");
+                var tramTr = loopT.GetField("tramTransform").GetValue(loop) as Transform;
+                float tramX0 = tramTr.position.x;
+
+                loopT.GetMethod("SetLoopTimeForTest").Invoke(loop, new object[] { 2.2f });
+                Assert.IsTrue((bool)loopT.GetProperty("IsTimedDoorOpen").GetValue(loop), "Porta deve abrir no t=2s.");
+                Assert.Greater(tramTr.position.x, tramX0, "Bonde deve se mover previsivelmente no loop de 6s.");
+
+                loopT.GetMethod("AdvanceLoop").Invoke(loop, new object[] { 6.0f });
+                Assert.GreaterOrEqual((int)loopT.GetProperty("LoopCycleCount").GetValue(loop), 1, "Ciclo de 6s deve completar e repetir.");
+                ecoT.GetMethod("ReachBeat").Invoke(eco, new object[] { 1, true });
+
+                // 2. GATE 4: Boss Eco Dez — espelha moveset + erra piadas na ordem errada + Contratempo na Fase 2 + reinicio <= 8s
+                bossT.GetMethod("RestartEncounterAtRepairStation").Invoke(boss, new object[] { pow.gameObject });
+                Assert.Less((float)bossT.GetProperty("LastRestartDurationSec").GetValue(boss), 8.0f, "Reinicio do Eco Dez deve ser <= 8s.");
+
+                Assert.IsTrue((bool)bossT.GetMethod("ApplyDamage").Invoke(boss, new object[] { 6f }));
+                Assert.AreEqual(2, (int)bossT.GetProperty("CurrentPhase").GetValue(boss));
+                Assert.IsTrue((bool)bossT.GetProperty("IsParryGateActive").GetValue(boss), "Fase 2 do Eco Dez exige Contratempo.");
+                Assert.IsFalse((bool)bossT.GetMethod("ApplyDamage").Invoke(boss, new object[] { 6f }), "Sem Contratempo, Fase 2 bloqueia dano.");
+
+                Assert.IsTrue((bool)bossT.GetMethod("ApplyContratempoParry").Invoke(boss, null));
+                Assert.IsTrue((bool)bossT.GetMethod("ApplyDamage").Invoke(boss, new object[] { 6f }));
+                Assert.IsTrue((bool)bossT.GetProperty("IsDefeated").GetValue(boss));
+                Assert.GreaterOrEqual((int)bossT.GetProperty("WrongOrderJokeCount").GetValue(boss), 2, "Eco Dez deve errar piadas na ordem errada.");
+                Assert.IsTrue((bool)ecoT.GetProperty("BossDefeated").GetValue(eco));
+
+                // 3. GATE 3: Reliquia Ponteiro Menor -> Micra (2s camera lenta, cooldown 8s) SEM substituir Estase!
+                Assert.IsTrue((bool)ecoT.GetMethod("CollectRelicPonteiroMenor").Invoke(eco, new object[] { pow }));
+                Assert.IsTrue((bool)powT.GetProperty("HasRelicPonteiroMenor").GetValue(pow));
+                Assert.AreEqual(3, (int)powT.GetProperty("RegisteredPowerCount").GetValue(pow), "Menu de poderes deve conter Eco + Estase + Micra (3 poderes).");
+
+                Assert.IsTrue((bool)powT.GetMethod("TriggerMicra").Invoke(pow, null), "Micra deve ativar apos Reliquia.");
+                Assert.IsTrue((bool)powT.GetProperty("IsMicraActive").GetValue(pow));
+                Assert.Greater((float)powT.GetProperty("MicraCooldownRemaining").GetValue(pow), 7.0f, "Cooldown da Micra deve ser 8s.");
+                Assert.IsTrue((bool)powT.GetMethod("TriggerEstase").Invoke(pow, null), "Estase DEVE continuar funcionando sem ser substituida pela Micra.");
+
+                // 4. GATE 2 & 5: Pos-conserto acorda cidade, Censores mudam para RealTimePatrol + 3 micro-quests de memoria + Save JSON
+                Assert.AreEqual("FrozenLoop6s", ecoT.GetProperty("CensorMode").GetValue(eco).ToString());
+                Assert.IsTrue((bool)ecoT.GetMethod("WakeCityAndActivateRealTimeCensors").Invoke(eco, null));
+                Assert.IsFalse((bool)loopT.GetProperty("IsLoopActive").GetValue(loop), "Loop de 6s deve cessar apos conserto.");
+                Assert.AreEqual("RealTimePatrol", ecoT.GetProperty("CensorMode").GetValue(eco).ToString(), "Censores devem mudar para patrulha em tempo real (custo do conserto).");
+
+                Assert.IsTrue((bool)ecoT.GetMethod("CompleteMemoryMicroQuest").Invoke(eco, new object[] { 0 }));
+                Assert.IsTrue((bool)ecoT.GetMethod("CompleteMemoryMicroQuest").Invoke(eco, new object[] { 1 }));
+                Assert.IsTrue((bool)ecoT.GetMethod("CompleteMemoryMicroQuest").Invoke(eco, new object[] { 2 }));
+                Assert.IsTrue((bool)ecoT.GetProperty("AllMemoryQuestsCompleted").GetValue(eco));
+
+                var loadArgs = new object[] { null };
+                Assert.IsTrue((bool)saveT.GetMethod("TryLoad").Invoke(null, loadArgs));
+                string rawJson = File.ReadAllText(tmpSave);
+                StringAssert.Contains("\"ecodiaBossDefeated\": true", rawJson);
+                StringAssert.Contains("\"relicPonteiroMenorUnlocked\": true", rawJson);
+                StringAssert.Contains("\"ecodiaCityAwake\": true", rawJson);
+                StringAssert.Contains("\"ecodiaMemoryQuestsCleared\": 3", rawJson);
+                StringAssert.Contains("evt_cost_ecodia_realtime_censors", rawJson);
+            }
+            finally
+            {
+                mSetPath.Invoke(null, new object[] { null });
+                if (File.Exists(tmpSave)) File.Delete(tmpSave);
+            }
+
+            Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_30: {string.Join(" | ", _consoleErrors)}");
+        }
     }
 }
