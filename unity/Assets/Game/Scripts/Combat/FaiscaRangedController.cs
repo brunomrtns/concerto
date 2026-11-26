@@ -19,6 +19,8 @@ namespace Studio.Game.Combat
 
         public float CooldownRemaining { get; private set; }
         public int ShotsFiredCount { get; private set; }
+        public bool DoubleShotUnlocked { get; set; }
+        public int ProjectilesPerShot => DoubleShotUnlocked ? 2 : 1;
         public Vector3 LastShotOrigin { get; private set; }
         public Vector3 LastShotEndPoint { get; private set; }
 

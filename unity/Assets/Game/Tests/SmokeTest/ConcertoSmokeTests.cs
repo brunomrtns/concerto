@@ -578,7 +578,7 @@ namespace Studio.Tests.SmokeTest
 
                 var migrated = loadArgs[0];
                 var dataT = migrated.GetType();
-                Assert.AreEqual(3, (int)dataT.GetField("schemaVersion").GetValue(migrated), "Schema deve migrar para v3.");
+                Assert.AreEqual((int)dataT.GetField("CurrentSchemaVersion").GetValue(null), (int)dataT.GetField("schemaVersion").GetValue(migrated), "Schema deve migrar para versao atual.");
                 Assert.AreEqual("Pecas Legado (3/5)", (string)dataT.GetField("currentObjective").GetValue(migrated));
                 Assert.AreEqual(7, (int)dataT.GetField("partsCollectedMask").GetValue(migrated));
                 Assert.AreEqual(4, (int)dataT.GetField("energyCells").GetValue(migrated));
@@ -2068,6 +2068,86 @@ namespace Studio.Tests.SmokeTest
             Assert.IsTrue((bool)pesT.GetProperty("IsStunned").GetValue(pes));
 
             Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_32: {string.Join(" | ", _consoleErrors)}");
+        }
+
+        // (ae) Economia Canon v4 (GATES 1-6): Segundos + 12 melhorias Tio Horario com efeito real + persistencia no reload + migracao save v3->v4 sem perda + 21 Memorias-Eco -> Epilogo Estendido + Remendos cosmeticos!
+        [UnityTest]
+        public IEnumerator Smoke_33_EconomiaSegundosTioHorarioUpgradesMemoriasEcoRemendosAndSaveMigration()
+        {
+            yield return LoadSceneAndVerifyCleanConsole("EconomiaTioHorarioDemo");
+
+            var econT  = GameType("Studio.Game.Economy.SegundosEconomySystem");
+            var presT  = GameType("Studio.Game.Combat.PressureResourceSystem");
+            var parryT = GameType("Studio.Game.Combat.ParryAndLockOnController");
+            var faisT  = GameType("Studio.Game.Combat.FaiscaRangedController");
+            var saveT  = GameType("Studio.Game.Save.SaveSystem");
+            var dataT  = GameType("Studio.Game.Save.SaveGameData");
+
+            var econ  = UnityEngine.Object.FindAnyObjectByType(econT);
+            var pres  = UnityEngine.Object.FindAnyObjectByType(presT);
+            var parry = UnityEngine.Object.FindAnyObjectByType(parryT);
+            var fais  = UnityEngine.Object.FindAnyObjectByType(faisT);
+            Assert.IsNotNull(econ);
+            Assert.IsNotNull(pres);
+            Assert.IsNotNull(parry);
+            Assert.IsNotNull(fais);
+
+            string tmpSave = Path.Combine(Path.GetTempPath(), $"concerto_smoke33_{Guid.NewGuid():N}.json");
+            var mSetPath = saveT.GetMethod("SetCustomPathForTests");
+            mSetPath.Invoke(null, new object[] { tmpSave });
+
+            try
+            {
+                // 1. GATE 1 & 2: Coletar Segundos -> comprar 2 melhorias -> efeitos REAIS ativos!
+                Assert.IsTrue((bool)econT.GetMethod("CollectFioDeTempo").Invoke(econ, new object[] { 350, "fio_smoke33_1" }));
+                Assert.AreEqual(350, (int)econT.GetProperty("SegundosBalance").GetValue(econ));
+
+                Assert.IsTrue((bool)econT.GetMethod("TryPurchaseUpgrade").Invoke(econ, new object[] { "upg_pressao_1" }), "Compra Pressao +25.");
+                Assert.IsTrue((bool)econT.GetMethod("TryPurchaseUpgrade").Invoke(econ, new object[] { "upg_contratempo_largo" }), "Compra Contratempo +0.06s.");
+                Assert.IsTrue((bool)econT.GetMethod("TryPurchaseUpgrade").Invoke(econ, new object[] { "upg_faisca_dupla" }), "Compra Faisca Dupla.");
+
+                Assert.AreEqual(125f, (float)presT.GetProperty("EffectiveMaxPressure").GetValue(pres), 0.1f, "Pressao maxima deve subir para 125.");
+                Assert.AreEqual(0.24f, (float)parryT.GetField("parryWindowSec").GetValue(parry), 0.005f, "Janela de Contratempo deve subir 0.18s -> 0.24s.");
+                Assert.AreEqual(2, (int)faisT.GetProperty("ProjectilesPerShot").GetValue(fais), "Faisca Dupla deve disparar 2 projeteis.");
+
+                // 2. GATE 3 & 4: 21 Memorias-Eco liberam Epilogo Estendido + Remendo por conquista + Remendo comprado (so visual)
+                var allMemIds = econT.GetField("CanonicalEchoMemoryIds").GetValue(null) as string[];
+                Assert.AreEqual(21, allMemIds.Length, "Devem existir exatamente 21 Memorias-Eco.");
+                for (int i = 0; i < allMemIds.Length; i++)
+                    Assert.IsTrue((bool)econT.GetMethod("CollectEchoMemory").Invoke(econ, new object[] { allMemIds[i] }));
+                Assert.IsTrue((bool)econT.GetProperty("ExtendedEpilogueUnlocked").GetValue(econ), "21/21 Memorias-Eco devem liberar Epilogo Estendido.");
+                Assert.IsTrue((bool)econT.GetMethod("EquipRemendo").Invoke(econ, new object[] { "remendo_mestre_relojoeiro", (econ as Component).gameObject }), "Remendo de conquista deve estar desbloqueado.");
+
+                // 3. Persistencia no Save JSON v4 + reload mantem tudo
+                saveT.GetMethod("Save").Invoke(null, new object[] { "cp_tio_horario", (Vector3?)Vector3.zero, (float?)0f });
+                var loadArgs = new object[] { null };
+                Assert.IsTrue((bool)saveT.GetMethod("TryLoad").Invoke(null, loadArgs));
+                Assert.AreEqual(4, (int)dataT.GetField("schemaVersion").GetValue(loadArgs[0]), "Save novo deve estar em schemaVersion=4.");
+                string rawJson = File.ReadAllText(tmpSave);
+                StringAssert.Contains("\"upg_contratempo_largo\"", rawJson);
+                StringAssert.Contains("\"extendedEpilogueUnlocked\": true", rawJson);
+
+                // 4. REGRA 3 (MIGRACAO OBRIGATORIA): Save antigo v3 com 15 pecas ganhas / 3 gastas migra para v4 com 150 / 30 Segundos sem perda!
+                string legacyV3 = @"{
+  ""schemaVersion"": 3,
+  ""sceneName"": ""Caldeiral"",
+  ""partsCurrencyEarned"": 15,
+  ""partsCurrencySpent"": 3,
+  ""payloadChecksum"": """"
+}";
+                var parsedV3 = JsonUtility.FromJson(legacyV3, dataT);
+                Assert.IsTrue((bool)dataT.GetMethod("MigrateIfNeeded").Invoke(parsedV3, null));
+                Assert.AreEqual(4, (int)dataT.GetField("schemaVersion").GetValue(parsedV3));
+                Assert.AreEqual(150, (int)dataT.GetField("segundosEarned").GetValue(parsedV3), "15 pecas legadas devem migrar para 150 Segundos.");
+                Assert.AreEqual(30, (int)dataT.GetField("segundosSpent").GetValue(parsedV3), "3 pecas gastas devem migrar para 30 Segundos.");
+            }
+            finally
+            {
+                mSetPath.Invoke(null, new object[] { null });
+                if (File.Exists(tmpSave)) File.Delete(tmpSave);
+            }
+
+            Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_33: {string.Join(" | ", _consoleErrors)}");
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Studio.Game.Save
     [Serializable]
     public sealed class SaveGameData
     {
-        public const int CurrentSchemaVersion = 3;
+        public const int CurrentSchemaVersion = 4;
 
         [Header("Metadados & Integridade (GATE 2 & GATE 4)")]
         public int schemaVersion = CurrentSchemaVersion;
@@ -118,6 +118,15 @@ namespace Studio.Game.Save
         public bool retrogradoRuinsRevealed;
         public bool caldeiralCosmeticsUndoneComic;
 
+        [Header("Economia Canon v4 — Segundos, Loja Tio Horario, 21 Memorias-Eco & Remendos")]
+        public int segundosEarned;
+        public int segundosSpent;
+        public List<string> tioHorarioUpgradeIds = new List<string>();
+        public List<string> collectedEchoMemoryIds = new List<string>();
+        public List<string> unlockedRemendoIds = new List<string>();
+        public string equippedRemendoId = string.Empty;
+        public bool extendedEpilogueUnlocked;
+
         public bool MigrateIfNeeded()
         {
             if (schemaVersion <= 0 || schemaVersion > CurrentSchemaVersion)
@@ -132,6 +141,10 @@ namespace Studio.Game.Save
             if (resyncZoneStates == null) resyncZoneStates = new List<string>();
             if (restoredFusoIds == null) restoredFusoIds = new List<string>();
             if (appliedBalanceEvents == null) appliedBalanceEvents = new List<string>();
+            if (tioHorarioUpgradeIds == null) tioHorarioUpgradeIds = new List<string>();
+            if (collectedEchoMemoryIds == null) collectedEchoMemoryIds = new List<string>();
+            if (unlockedRemendoIds == null) unlockedRemendoIds = new List<string>();
+            if (equippedRemendoId == null) equippedRemendoId = string.Empty;
             if (string.IsNullOrEmpty(activeToolModeId)) activeToolModeId = "mode_concertar";
 
             // Migracao v1 -> v2 (FIX 3): traz flags legados de PlayerPrefs para o JSON versionado
@@ -160,6 +173,15 @@ namespace Studio.Game.Save
                     act3Completed = true;
                 if (payloadChecksum == null)
                     payloadChecksum = string.Empty;
+            }
+
+            // Migracao v3 -> v4 (Economia Canon): converte pecas legadas em Segundos (1 peca = 10 Segundos) sem perda!
+            if (schemaVersion < 4)
+            {
+                if (segundosEarned == 0 && partsCurrencyEarned > 0)
+                    segundosEarned = partsCurrencyEarned * 10;
+                if (segundosSpent == 0 && partsCurrencySpent > 0)
+                    segundosSpent = partsCurrencySpent * 10;
             }
 
             schemaVersion = CurrentSchemaVersion;

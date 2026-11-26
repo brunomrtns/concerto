@@ -8,6 +8,7 @@ using Studio.Game.Combat;
 using Studio.Game.Cutscenes;
 using Studio.Game.Dialogue;
 using Studio.Game.Ecodia;
+using Studio.Game.Economy;
 using Studio.Game.Hub;
 using Studio.Game.Maresia;
 using Studio.Game.Onboarding;
@@ -390,6 +391,11 @@ namespace Studio.Game.Save
             if (ret != null)
                 ret.CopyToSave(data);
 
+            // 4i. Economia Canon v4 — Segundos, Loja do Tio Horario, 21 Memorias-Eco & Remendos
+            var segEcon = SegundosEconomySystem.Instance;
+            if (segEcon != null)
+                segEcon.CopyToSave(data);
+
             // 5. Cutscenes assistidas, porta do Setor Externo & Missao "Sinal"
             data.cs01Played = true;
             if (data.act1Completed) data.cs02Played = true;
@@ -620,6 +626,10 @@ namespace Studio.Game.Save
             // 11. Fuso Retrogrado — restaura tempo reverso, Arquivista-Mor, Aro-Escudo e ruinas pre-Fratura
             if (RetrogradoFusoController.Instance != null)
                 RetrogradoFusoController.Instance.RestoreFromSave(data);
+
+            // 12. Economia Canon v4 — restaura Segundos, melhorias Tio Horario, Memorias-Eco & Remendos
+            if (SegundosEconomySystem.Instance != null)
+                SegundosEconomySystem.Instance.RestoreFromSave(data);
 
             _lastLoadedOrSaved = data;
             OnGameLoaded?.Invoke(data);

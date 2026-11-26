@@ -17,9 +17,22 @@ namespace Studio.Game.Combat
         public static PressureResourceSystem Instance { get; private set; }
 
         public float CurrentPressure { get; private set; } = MaxPressure;
+        public float EffectiveMaxPressure => MaxPressure + _bonusMaxPressure;
+        public float EffectiveMeleeGain => MeleeHitPressureGain + _bonusMeleeGain;
         public int MeleeRegenTriggerCount { get; private set; }
 
+        private float _bonusMaxPressure;
+        private float _bonusMeleeGain;
+
         public event Action<float> OnPressureChanged;
+
+        public void ApplyEconomyBonuses(float bonusMax, float bonusMelee)
+        {
+            _bonusMaxPressure = Mathf.Max(0f, bonusMax);
+            _bonusMeleeGain = Mathf.Max(0f, bonusMelee);
+            CurrentPressure = Mathf.Min(EffectiveMaxPressure, CurrentPressure + _bonusMaxPressure);
+            OnPressureChanged?.Invoke(CurrentPressure);
+        }
 
         private void Awake()
         {
@@ -39,8 +52,8 @@ namespace Studio.Game.Combat
 
         public void TickRegen(float dt)
         {
-            if (dt <= 0f || CurrentPressure >= MaxPressure) return;
-            CurrentPressure = Mathf.Min(MaxPressure, CurrentPressure + PassiveRegenPerSec * dt);
+            if (dt <= 0f || CurrentPressure >= EffectiveMaxPressure) return;
+            CurrentPressure = Mathf.Min(EffectiveMaxPressure, CurrentPressure + PassiveRegenPerSec * dt);
             OnPressureChanged?.Invoke(CurrentPressure);
         }
 
@@ -56,14 +69,14 @@ namespace Studio.Game.Combat
 
         public void OnMeleeHitConnected()
         {
-            CurrentPressure = Mathf.Min(MaxPressure, CurrentPressure + MeleeHitPressureGain);
+            CurrentPressure = Mathf.Min(EffectiveMaxPressure, CurrentPressure + EffectiveMeleeGain);
             MeleeRegenTriggerCount++;
             OnPressureChanged?.Invoke(CurrentPressure);
         }
 
         public void SetPressureForTest(float value)
         {
-            CurrentPressure = Mathf.Clamp(value, 0f, MaxPressure);
+            CurrentPressure = Mathf.Clamp(value, 0f, EffectiveMaxPressure);
             OnPressureChanged?.Invoke(CurrentPressure);
         }
     }
