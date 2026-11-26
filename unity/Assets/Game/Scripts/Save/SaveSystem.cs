@@ -7,6 +7,7 @@ using Studio.Game.Anomalies;
 using Studio.Game.Combat;
 using Studio.Game.Cutscenes;
 using Studio.Game.Dialogue;
+using Studio.Game.Hub;
 using Studio.Game.Onboarding;
 using Studio.Game.Parts;
 using Studio.Game.Powers;
@@ -356,6 +357,15 @@ namespace Studio.Game.Save
                     data.resyncZoneStates.Add($"{z.zoneId}:{(int)z.currentState}");
             }
 
+            // 4d. Hub A Orquestra & Linha do Equilibrio (GATE 5)
+            var hub = HubOrquestraController.Instance;
+            if (hub != null)
+            {
+                if (data.restoredFusoIds == null) data.restoredFusoIds = new System.Collections.Generic.List<string>();
+                if (data.appliedBalanceEvents == null) data.appliedBalanceEvents = new System.Collections.Generic.List<string>();
+                hub.CopyStateToSave(data.restoredFusoIds, data.appliedBalanceEvents);
+            }
+
             // 5. Cutscenes assistidas, porta do Setor Externo & Missao "Sinal"
             data.cs01Played = true;
             if (data.act1Completed) data.cs02Played = true;
@@ -566,6 +576,10 @@ namespace Studio.Game.Save
                     }
                 }
             }
+
+            // 7. Hub A Orquestra & Linha do Equilibrio (GATE 5)
+            if (HubOrquestraController.Instance != null)
+                HubOrquestraController.Instance.RestoreStateFromSave(data.restoredFusoIds, data.appliedBalanceEvents);
 
             _lastLoadedOrSaved = data;
             OnGameLoaded?.Invoke(data);

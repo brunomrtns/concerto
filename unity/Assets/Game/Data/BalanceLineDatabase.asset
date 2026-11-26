@@ -1,0 +1,86 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e345bd9b737f264493dd6f9bbffea9c, type: 3}
+  m_Name: BalanceLineDatabase
+  m_EditorClassIdentifier: Assembly-CSharp::Studio.Game.Hub.BalanceLineDatabase
+  fusos:
+  - fusoId: caldeiral
+    displayName: Caldeiral
+    relicName: "Rel\xEDquia: Mola"
+    npcArrivalName: "Tio Hor\xE1rio"
+    graphNormalizedPos: {x: 0.2, y: 0.72}
+    connectedFusoIds:
+    - vitralha
+    - retrogrado
+    benefitDescription: "Energia est\xE1vel para A Orquestra (hub ganha NPCs e loja
+      de melhorias)."
+    costDescription: "Fuma\xE7a cessa -> c\xE9u limpo congela o Retr\xF3grado por
+      1 'dia'."
+    costTargetFusoId: retrogrado
+    worldBenefitEventId: evt_benefit_caldeiral_hub_power
+    worldCostEventId: evt_cost_caldeiral_freeze_retrogrado
+  - fusoId: vitralha
+    displayName: Vitralha
+    relicName: "Rel\xEDquia: Ponteiro Maior"
+    npcArrivalName: "V\xF3 Segunda"
+    graphNormalizedPos: {x: 0.22, y: 0.3}
+    connectedFusoIds:
+    - caldeiral
+    - maresia
+    benefitDescription: "Rio volta a correr -> novo acesso aqu\xE1tico em Mar\xE9sia."
+    costDescription: "Enchente alaga cavernas-habita\xE7\xE3o de Mar\xE9sia (quest
+      de desvio)."
+    costTargetFusoId: maresia
+    worldBenefitEventId: evt_benefit_vitralha_river_flow
+    worldCostEventId: evt_cost_vitralha_flood_maresia
+  - fusoId: maresia
+    displayName: "Mar\xE9sia"
+    relicName: "Rel\xEDquia: P\xEAndulo-\xC2ncora"
+    npcArrivalName: "Mec\xE2nico Brito"
+    graphNormalizedPos: {x: 0.5, y: 0.22}
+    connectedFusoIds:
+    - vitralha
+    - ecodia
+    benefitDescription: Mar degela -> rotas de barco entre fusos desbloqueadas.
+    costDescription: "Ondas soltas arrastam um peda\xE7o da Ecodia (pr\xE9dio-quebra-cabe\xE7a)."
+    costTargetFusoId: ecodia
+    worldBenefitEventId: evt_benefit_maresia_boat_routes
+    worldCostEventId: evt_cost_maresia_drift_ecodia
+  - fusoId: ecodia
+    displayName: Ecodia
+    relicName: "Rel\xEDquia: Diapas\xE3o"
+    npcArrivalName: Analista Luma
+    graphNormalizedPos: {x: 0.78, y: 0.3}
+    connectedFusoIds:
+    - maresia
+    - retrogrado
+    benefitDescription: "Habitantes saem do loop de 6 s (quests de mem\xF3ria abertas)."
+    costDescription: Sem o loop, os Censores passam a patrulhar em tempo real (dificuldade
+      sobe).
+    costTargetFusoId: ecodia
+    worldBenefitEventId: evt_benefit_ecodia_free_loop
+    worldCostEventId: evt_cost_ecodia_realtime_censors
+  - fusoId: retrogrado
+    displayName: "Retr\xF3grado"
+    relicName: "Rel\xEDquia: Ampulheta Invertida"
+    npcArrivalName: Engenheira Vera
+    graphNormalizedPos: {x: 0.8, y: 0.72}
+    connectedFusoIds:
+    - ecodia
+    - caldeiral
+    benefitDescription: "Areia-parada revela ru\xEDnas do pr\xE9-Fratura (lore +
+      desafios)."
+    costDescription: "O tempo reverso 'desfaz' melhorias cosm\xE9ticas em Caldeiral
+      (humor)."
+    costTargetFusoId: caldeiral
+    worldBenefitEventId: evt_benefit_retrogrado_ruins
+    worldCostEventId: evt_cost_retrogrado_undo_caldeiral

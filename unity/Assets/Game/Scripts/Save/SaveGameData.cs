@@ -87,6 +87,10 @@ namespace Studio.Game.Save
         [Header("Re-Sincronia — Estados por Zona (GDD 04 §1)")]
         public List<string> resyncZoneStates = new List<string>();
 
+        [Header("Hub A Orquestra & Linha do Equilibrio (GDD 01 §5)")]
+        public List<string> restoredFusoIds = new List<string>();
+        public List<string> appliedBalanceEvents = new List<string>();
+
         public bool MigrateIfNeeded()
         {
             if (schemaVersion <= 0 || schemaVersion > CurrentSchemaVersion)
@@ -99,6 +103,8 @@ namespace Studio.Game.Save
             if (completedOnboardingSteps == null) completedOnboardingSteps = new List<string>();
             if (purchasedUpgradeIds == null) purchasedUpgradeIds = new List<string>();
             if (resyncZoneStates == null) resyncZoneStates = new List<string>();
+            if (restoredFusoIds == null) restoredFusoIds = new List<string>();
+            if (appliedBalanceEvents == null) appliedBalanceEvents = new List<string>();
             if (string.IsNullOrEmpty(activeToolModeId)) activeToolModeId = "mode_concertar";
 
             // Migracao v1 -> v2 (FIX 3): traz flags legados de PlayerPrefs para o JSON versionado

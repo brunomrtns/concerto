@@ -1565,5 +1565,67 @@ namespace Studio.Tests.SmokeTest
 
             Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_26: {string.Join(" | ", _consoleErrors)}");
         }
+
+        // (y) Hub A Orquestra + Tela de Fusos + Linha do Equilibrio (GATES 1-6): abrir Tela de Fusos -> confirmar conserto -> grafo atualiza -> NPC chega + camada extra da marchinha -> Save JSON mantem tudo!
+        [UnityTest]
+        public IEnumerator Smoke_27_HubOrquestraTelaDeFusosNpcArrivalAndSave()
+        {
+            yield return LoadSceneAndVerifyCleanConsole("AOrquestra");
+
+            var hubT  = GameType("Studio.Game.Hub.HubOrquestraController");
+            var uiT   = GameType("Studio.Game.Hub.TelaDeFusosUI");
+            var saveT = GameType("Studio.Game.Save.SaveSystem");
+
+            var hub = UnityEngine.Object.FindAnyObjectByType(hubT);
+            var ui  = UnityEngine.Object.FindAnyObjectByType(uiT);
+            Assert.IsNotNull(hub, "HubOrquestraController obrigatorio em AOrquestra.");
+            Assert.IsNotNull(ui,  "TelaDeFusosUI obrigatoria em AOrquestra.");
+
+            int layersBefore = (int)hubT.GetProperty("ActiveMarchinhaLayers").GetValue(hub);
+            Assert.AreEqual(0, (int)hubT.GetProperty("ActiveNpcCount").GetValue(hub), "Antes de restaurar fusos, 0 NPCs chegaram.");
+
+            // 1. Abre Tela de Fusos, seleciona Vitralha (le beneficio/custo) e confirma conserto
+            uiT.GetMethod("Open").Invoke(ui, null);
+            Assert.IsTrue((bool)uiT.GetProperty("IsOpen").GetValue(ui), "Tela de Fusos deve abrir.");
+            uiT.GetMethod("SelectFuso").Invoke(ui, new object[] { "vitralha" });
+            Assert.IsTrue((bool)uiT.GetMethod("ConfirmSelectedFuso").Invoke(ui, null), "Confirmacao de conserto de Vitralha deve suceder.");
+            yield return null;
+
+            Assert.IsTrue((bool)hubT.GetMethod("IsFusoRestored").Invoke(hub, new object[] { "vitralha" }), "Grafo deve marcar Vitralha como restaurado.");
+            Assert.IsTrue((bool)hubT.GetMethod("HasWorldEvent").Invoke(hub, new object[] { "evt_benefit_vitralha_river_flow" }), "Evento de beneficio deve ser aplicado.");
+            Assert.IsTrue((bool)hubT.GetMethod("HasWorldEvent").Invoke(hub, new object[] { "evt_cost_vitralha_flood_maresia" }), "Evento de custo deve ser aplicado.");
+            Assert.AreEqual(1, (int)hubT.GetProperty("ActiveNpcCount").GetValue(hub), "NPC correspondente (Vo Segunda) deve chegar ao hub.");
+            Assert.Greater((int)hubT.GetProperty("ActiveMarchinhaLayers").GetValue(hub), layersBefore, "Camada extra da marchinha deve ativar.");
+
+            uiT.GetMethod("Close").Invoke(ui, null);
+            Assert.IsFalse((bool)uiT.GetProperty("IsOpen").GetValue(ui));
+
+            // 2. Persistencia no Save JSON + reload mantem estado do fuso, custo e NPC no hub (GATE 5 & 6)
+            string tmpSave = Path.Combine(Path.GetTempPath(), $"concerto_smoke27_{Guid.NewGuid():N}.json");
+            var mSetPath = saveT.GetMethod("SetCustomPathForTests");
+            mSetPath.Invoke(null, new object[] { tmpSave });
+            try
+            {
+                saveT.GetMethod("Save").Invoke(null, new object[] { "cp_hub_orquestra", (Vector3?)Vector3.zero, (float?)0f });
+                // Zera estado em memoria e recarrega do JSON
+                hubT.GetMethod("RestoreStateFromSave").Invoke(hub, new object[] { new System.Collections.Generic.List<string>(), new System.Collections.Generic.List<string>() });
+                Assert.AreEqual(0, (int)hubT.GetProperty("ActiveNpcCount").GetValue(hub));
+
+                var loadArgs = new object[] { null };
+                Assert.IsTrue((bool)saveT.GetMethod("TryLoad").Invoke(null, loadArgs));
+                saveT.GetMethod("ApplyLoadedStateToCurrentScene").Invoke(null, new object[] { loadArgs[0] });
+
+                Assert.IsTrue((bool)hubT.GetMethod("IsFusoRestored").Invoke(hub, new object[] { "vitralha" }), "Reload deve manter Vitralha restaurado.");
+                Assert.IsTrue((bool)hubT.GetMethod("HasWorldEvent").Invoke(hub, new object[] { "evt_cost_vitralha_flood_maresia" }), "Reload deve manter custos aplicados.");
+                Assert.AreEqual(1, (int)hubT.GetProperty("ActiveNpcCount").GetValue(hub), "Reload deve manter NPC no hub.");
+            }
+            finally
+            {
+                mSetPath.Invoke(null, new object[] { null });
+                if (File.Exists(tmpSave)) File.Delete(tmpSave);
+            }
+
+            Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_27: {string.Join(" | ", _consoleErrors)}");
+        }
     }
 }
