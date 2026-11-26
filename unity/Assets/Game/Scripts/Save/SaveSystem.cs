@@ -396,6 +396,11 @@ namespace Studio.Game.Save
             if (segEcon != null)
                 segEcon.CopyToSave(data);
 
+            // 4j. CS02 "A Oferta" (twist das 2 reliquias)
+            var csOferta = CutsceneAOfetaController.Instance;
+            if (csOferta != null)
+                csOferta.CopyToSave(data);
+
             // 5. Cutscenes assistidas, porta do Setor Externo & Missao "Sinal"
             data.cs01Played = true;
             if (data.act1Completed) data.cs02Played = true;
@@ -630,6 +635,10 @@ namespace Studio.Game.Save
             // 12. Economia Canon v4 — restaura Segundos, melhorias Tio Horario, Memorias-Eco & Remendos
             if (SegundosEconomySystem.Instance != null)
                 SegundosEconomySystem.Instance.RestoreFromSave(data);
+
+            // 13. CS02 "A Oferta" — restaura flag para nunca repetir apos reload
+            if (CutsceneAOfetaController.Instance != null)
+                CutsceneAOfetaController.Instance.RestoreFromSave(data);
 
             _lastLoadedOrSaved = data;
             OnGameLoaded?.Invoke(data);

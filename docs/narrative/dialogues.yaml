@@ -184,7 +184,8 @@ lines:
     subtitles: { "pt-BR": "Consertei um lado e molhei o outro.", "en": "I fixed one side and soaked the other." }
 
   # ------------------------------------------------------------------
-  # A OFERTA (CS02) — amostra
+  # A OFERTA (CS02) — O Twist do Meio de Jogo (GDD 01 §3 Ato 2)
+  # Tom: a tentação é real; o jogo NÃO diz que é mentira.
   # ------------------------------------------------------------------
   - id: cs02_iria_01
     scene: cs02/oferta
@@ -203,6 +204,42 @@ lines:
     max_duration_ms: 4000
     text: "Você tá... você tá guardando ela? Tudo esse tempo? Onde? ONDE?"
     subtitles: { "pt-BR": "Onde você tá guardando ela?", "en": "Where are you keeping her?" }
+
+  - id: cs02_iria_02
+    scene: cs02/oferta
+    character: iria
+    voice: iria
+    emotion: calmo-persuasivo
+    max_duration_ms: 6500
+    text: "No último segundo intacto da Corona. Sem dor, sem ferrugem. Traga as relíquias antes de quebrá-las — e eu abro a caixa."
+    subtitles: { "pt-BR": "No último segundo intacto da Corona. Traga as relíquias e eu abro a caixa.", "en": "In the last intact second of the Corona. Bring the relics and I open the case." }
+
+  - id: cs02_porca_01
+    scene: cs02/oferta
+    character: porca
+    voice: porca
+    emotion: apreensivo
+    max_duration_ms: 4500
+    text: "Dez... ela tá falando pelo Censor, mas... a voz não tremeu nem meio compasso."
+    subtitles: { "pt-BR": "A voz dela não tremeu nem meio compasso, Dez.", "en": "Her voice didn't waver half a beat, Dez." }
+
+  - id: cs02_iria_03
+    scene: cs02/oferta
+    character: iria
+    voice: iria
+    emotion: firme
+    max_duration_ms: 5500
+    text: "O mundo que você tenta remendar custa o mundo dela. Pense bem no que vale mais, Desidério."
+    subtitles: { "pt-BR": "Pense bem no que vale mais, Desidério.", "en": "Think carefully about what matters more, Desiderio." }
+
+  - id: cs02_dez_02
+    scene: cs02/oferta
+    character: dez
+    voice: dez
+    emotion: contido
+    max_duration_ms: 4500
+    text: "...Eu ouvi. Vamos continuar andando, Porca. Mas eu ouvi cada palavra."
+    subtitles: { "pt-BR": "Vamos continuar andando, Porca. Mas eu ouvi cada palavra.", "en": "Let's keep moving, Nut. But I heard every word." }
 
   # ------------------------------------------------------------------
   # BARKS (pool de gameplay)

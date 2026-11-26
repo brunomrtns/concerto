@@ -51,6 +51,7 @@ namespace Studio.Game.Save
         [Header("Flags de Cutscenes Assistidas & Portas")]
         public bool cs01Played;
         public bool cs02Played;
+        public bool cs02OfertaPlayed;
         public bool cs03Played;
         public bool cs04Played;
         public bool sectorDoorUnlocked;

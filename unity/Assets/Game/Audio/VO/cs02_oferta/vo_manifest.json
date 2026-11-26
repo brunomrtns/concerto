@@ -1,0 +1,77 @@
+{
+  "schema": "vo-manifest-v1",
+  "scene": "cs02_oferta",
+  "model": "tts_models/multilingual/multi-dataset/xtts_v2",
+  "device": "cuda",
+  "total_lines": 6,
+  "total_duration_sec": 55.237,
+  "lines": [
+    {
+      "id": "cs02_iria_01",
+      "character": "iria",
+      "display_name": "Iria",
+      "language": "pt",
+      "text": "Eu guardo todos os tempos, mecânico. Guardo também o dela. Devolva minhas relíquias... e devolvo sua irmã.",
+      "wav_file": "cs02_iria_01.wav",
+      "duration_sec": 13.19,
+      "sample_rate": 24000,
+      "peak_dbfs": -1.0
+    },
+    {
+      "id": "cs02_dez_01",
+      "character": "dez",
+      "display_name": "Dez",
+      "language": "pt",
+      "text": "Você tá... você tá guardando ela? Tudo esse tempo? Onde? ONDE?",
+      "wav_file": "cs02_dez_01.wav",
+      "duration_sec": 6.454,
+      "sample_rate": 24000,
+      "peak_dbfs": -1.0
+    },
+    {
+      "id": "cs02_iria_02",
+      "character": "iria",
+      "display_name": "Iria",
+      "language": "pt",
+      "text": "No último segundo intacto da Corona. Sem dor, sem ferrugem. Traga as relíquias antes de quebrá-las — e eu abro a caixa.",
+      "wav_file": "cs02_iria_02.wav",
+      "duration_sec": 12.887,
+      "sample_rate": 24000,
+      "peak_dbfs": -1.0
+    },
+    {
+      "id": "cs02_porca_01",
+      "character": "porca",
+      "display_name": "Porca",
+      "language": "pt",
+      "text": "Dez... ela tá falando pelo Censor, mas... a voz não tremeu nem meio compasso.",
+      "wav_file": "cs02_porca_01.wav",
+      "duration_sec": 5.464,
+      "sample_rate": 24000,
+      "peak_dbfs": -1.0
+    },
+    {
+      "id": "cs02_iria_03",
+      "character": "iria",
+      "display_name": "Iria",
+      "language": "pt",
+      "text": "O mundo que você tenta remendar custa o mundo dela. Pense bem no que vale mais, Desidério.",
+      "wav_file": "cs02_iria_03.wav",
+      "duration_sec": 10.87,
+      "sample_rate": 24000,
+      "peak_dbfs": -1.0
+    },
+    {
+      "id": "cs02_dez_02",
+      "character": "dez",
+      "display_name": "Dez",
+      "language": "pt",
+      "text": "...Eu ouvi. Vamos continuar andando, Porca. Mas eu ouvi cada palavra.",
+      "wav_file": "cs02_dez_02.wav",
+      "duration_sec": 6.372,
+      "sample_rate": 24000,
+      "peak_dbfs": -1.0
+    }
+  ],
+  "errors": []
+}

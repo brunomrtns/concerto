@@ -2149,5 +2149,74 @@ namespace Studio.Tests.SmokeTest
 
             Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_33: {string.Join(" | ", _consoleErrors)}");
         }
+
+        // (af) CS02 "A Oferta" (GATES 1-5): 2 reliquias -> dispara UMA vez -> trava gameplay -> skip bloqueado <3s e liberado >=3s -> pause real funciona -> libera limpo sem resetar missao -> flag persiste no Save JSON e reload nao repete!
+        [UnityTest]
+        public IEnumerator Smoke_34_Cs02AOfetaTriggerAt2RelicsSkipAfter3sPauseLockReleaseAndNoRepeat()
+        {
+            yield return LoadSceneAndVerifyCleanConsole("Cs02OfertaDemo");
+
+            var csT   = GameType("Studio.Game.Cutscenes.CutsceneAOfetaController");
+            var locoT = GameType("Studio.Game.Animation.DezLocomotionController");
+            var saveT = GameType("Studio.Game.Save.SaveSystem");
+            var objT  = GameType("Studio.Game.Dialogue.ObjectiveSystem");
+
+            var cs   = UnityEngine.Object.FindAnyObjectByType(csT);
+            var loco = UnityEngine.Object.FindAnyObjectByType(locoT) as Behaviour;
+            Assert.IsNotNull(cs);
+            Assert.IsNotNull(loco);
+
+            string tmpSave = Path.Combine(Path.GetTempPath(), $"concerto_smoke34_{Guid.NewGuid():N}.json");
+            var mSetPath = saveT.GetMethod("SetCustomPathForTests");
+            mSetPath.Invoke(null, new object[] { tmpSave });
+
+            try
+            {
+                // Regressao do bug da missao: define objetivo antes da cutscene e garante que NAO reseta depois
+                string expectedObj = "Coletar as Reliquias restantes";
+                objT.GetMethod("Set").Invoke(null, new object[] { expectedObj });
+
+                // 1 reliquia NAO dispara
+                Assert.IsFalse((bool)csT.GetMethod("EvaluateRelicCountTrigger").Invoke(cs, new object[] { 1 }), "Com 1 reliquia, CS02 A Oferta nao deve disparar.");
+                // 2 reliquias DISPARA
+                Assert.IsTrue((bool)csT.GetMethod("EvaluateRelicCountTrigger").Invoke(cs, new object[] { 2 }), "Ao coletar a 2a reliquia, CS02 A Oferta deve disparar.");
+                Assert.IsTrue((bool)csT.GetProperty("IsPlaying").GetValue(cs));
+                Assert.IsFalse(loco.enabled, "Gameplay (DezLocomotionController) deve ficar travado durante a cutscene.");
+
+                // Skip ANTES de 3s DEVE ser bloqueado
+                csT.GetMethod("AdvanceTimeForTest").Invoke(cs, new object[] { 1.5f });
+                Assert.IsFalse((bool)csT.GetMethod("TrySkip").Invoke(cs, null), "Skip deve ser bloqueado antes de 3.0s.");
+
+                // Pause real congela o tempo da cutscene
+                float tBeforePause = (float)csT.GetProperty("ElapsedSec").GetValue(cs);
+                csT.GetMethod("SetPaused").Invoke(cs, new object[] { true });
+                csT.GetMethod("AdvanceTimeForTest").Invoke(cs, new object[] { 2.0f });
+                Assert.AreEqual(tBeforePause, (float)csT.GetProperty("ElapsedSec").GetValue(cs), 0.001f, "Pause real deve congelar progresso da cutscene.");
+                csT.GetMethod("SetPaused").Invoke(cs, new object[] { false });
+
+                // Apos 3.0s -> Skip permitido -> libera gameplay limpo sem resetar objetivo!
+                csT.GetMethod("AdvanceTimeForTest").Invoke(cs, new object[] { 2.0f }); // total = 3.5s >= 3.0s
+                Assert.IsTrue((bool)csT.GetMethod("TrySkip").Invoke(cs, null), "Skip deve funcionar apos 3.0s.");
+                Assert.IsFalse((bool)csT.GetProperty("IsPlaying").GetValue(cs));
+                Assert.IsTrue(loco.enabled, "Gameplay deve liberar limpo ao fim da cutscene.");
+                Assert.AreEqual(expectedObj, objT.GetProperty("CurrentObjective").GetValue(null) as string, "Estado da missao/objetivo NAO pode resetar apos cutscene.");
+
+                // Persistencia no Save JSON + reload NAO repete a cutscene
+                var loadArgs = new object[] { null };
+                Assert.IsTrue((bool)saveT.GetMethod("TryLoad").Invoke(null, loadArgs));
+                string rawJson = File.ReadAllText(tmpSave);
+                StringAssert.Contains("\"cs02OfertaPlayed\": true", rawJson);
+                saveT.GetMethod("ApplyLoadedStateToCurrentScene").Invoke(null, new object[] { loadArgs[0] });
+                Assert.IsFalse((bool)csT.GetMethod("EvaluateRelicCountTrigger").Invoke(cs, new object[] { 2 }), "Reload NAO pode repetir CS02 A Oferta.");
+                Assert.AreEqual(1, (int)csT.GetProperty("TriggerCount").GetValue(cs));
+            }
+            finally
+            {
+                mSetPath.Invoke(null, new object[] { null });
+                if (File.Exists(tmpSave)) File.Delete(tmpSave);
+            }
+
+            Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_34: {string.Join(" | ", _consoleErrors)}");
+        }
     }
 }
