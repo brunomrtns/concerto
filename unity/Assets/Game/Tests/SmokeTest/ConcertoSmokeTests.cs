@@ -1707,5 +1707,100 @@ namespace Studio.Tests.SmokeTest
 
             Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_28: {string.Join(" | ", _consoleErrors)}");
         }
+
+        // (aa) Fuso Maresia (GATES 1-7): cristas 10m + desvio alagado (consequencia Vitralha) + rota alternativa sem Garra (Rebote+Sopro) + Boss Baleia de Ancora (Desferrujar 3 fases + Contratempo + reinicio <=8s) + Reliquia Pendulo (Garra 12m/8m/s + combo Garra->Sopro->Rebote) + mar degela/barco-drift + Save JSON!
+        [UnityTest]
+        public IEnumerator Smoke_29_MaresiaWavesBossDerustPenduloGrappleDetourAndDrift()
+        {
+            yield return LoadSceneAndVerifyCleanConsole("Maresia");
+
+            var marT  = GameType("Studio.Game.Maresia.MaresiaFusoController");
+            var bossT = GameType("Studio.Game.Maresia.MaresiaBaleiaAncoraBoss");
+            var locoT = GameType("Studio.Game.Animation.DezLocomotionController");
+            var saveT = GameType("Studio.Game.Save.SaveSystem");
+
+            var mar  = UnityEngine.Object.FindAnyObjectByType(marT);
+            var boss = UnityEngine.Object.FindAnyObjectByType(bossT);
+            var loco = UnityEngine.Object.FindAnyObjectByType(locoT) as Component;
+            Assert.IsNotNull(mar,  "MaresiaFusoController obrigatorio em Maresia.");
+            Assert.IsNotNull(boss, "MaresiaBaleiaAncoraBoss obrigatorio em Maresia.");
+            Assert.IsNotNull(loco, "DezLocomotionController obrigatorio em Maresia.");
+
+            string tmpSave = Path.Combine(Path.GetTempPath(), $"concerto_smoke29_{Guid.NewGuid():N}.json");
+            var mSetPath = saveT.GetMethod("SetCustomPathForTests");
+            mSetPath.Invoke(null, new object[] { tmpSave });
+
+            try
+            {
+                // 1. GATE 1 & 5: Beat 1-3 + Consequencia da Vitralha alaga cavernas -> quest de desvio jogavel (3 waypoints)
+                marT.GetMethod("ReachBeat").Invoke(mar, new object[] { 0, true });
+                marT.GetMethod("ReachBeat").Invoke(mar, new object[] { 1, true });
+                marT.GetMethod("SetVitralhaFloodConsequence").Invoke(mar, new object[] { true });
+                Assert.IsTrue((bool)marT.GetProperty("VitralhaFloodConsequenceActive").GetValue(mar), "Consequencia da Vitralha deve alagar as cavernas.");
+                Assert.IsTrue((bool)marT.GetMethod("ClearFloodDetourWaypoint").Invoke(mar, new object[] { 0 }));
+                Assert.IsTrue((bool)marT.GetMethod("ClearFloodDetourWaypoint").Invoke(mar, new object[] { 1 }));
+                Assert.IsTrue((bool)marT.GetMethod("ClearFloodDetourWaypoint").Invoke(mar, new object[] { 2 }));
+                Assert.IsTrue((bool)marT.GetProperty("FloodDetourQuestCompleted").GetValue(mar), "Quest de desvio alagado deve concluir apos 3 waypoints.");
+
+                // 2. GATE 2: Beat 4 — rota alternativa sem Garra (Rebote+Sopro quando Maresia e primeiro)
+                marT.GetMethod("MarkNoGrappleAlternateRouteCompleted").Invoke(mar, null);
+                Assert.IsTrue((bool)marT.GetProperty("UsedNoGrappleAlternateRoute").GetValue(mar));
+
+                // 3. GATE 3: Beat 5 — Boss A Baleia de Ancora (DESFERRUJAR 3 fases, Contratempo chave da Fase 2, reinicio <= 8s)
+                bossT.GetMethod("RestartEncounterAtRepairStation").Invoke(boss, new object[] { loco.gameObject });
+                Assert.Less((float)bossT.GetProperty("LastRestartDurationSec").GetValue(boss), 8.0f, "Reinicio do boss deve ser <= 8s.");
+
+                Assert.IsTrue((bool)bossT.GetMethod("ApplyDerustAction").Invoke(boss, null), "Fase 1: desferrujar primeira trava.");
+                Assert.AreEqual(2, (int)bossT.GetProperty("CurrentPhase").GetValue(boss));
+                Assert.IsTrue((bool)bossT.GetProperty("IsParryGateActive").GetValue(boss), "Fase 2 deve exigir Contratempo.");
+                Assert.IsFalse((bool)bossT.GetMethod("ApplyDerustAction").Invoke(boss, null), "Sem Contratempo, Fase 2 nao pode avancar.");
+
+                Assert.IsTrue((bool)bossT.GetMethod("ApplyContratempoParry").Invoke(boss, null), "Contratempo libera trava central.");
+                Assert.AreEqual(3, (int)bossT.GetProperty("CurrentPhase").GetValue(boss));
+                Assert.IsTrue((bool)bossT.GetMethod("ApplyDerustAction").Invoke(boss, null), "Fase 3: libera ultima trava.");
+                Assert.IsTrue((bool)bossT.GetProperty("IsDerusted").GetValue(boss), "Baleia de Ancora deve ser desferrujada (nao morta).");
+                Assert.IsTrue((bool)marT.GetProperty("BossDerusted").GetValue(mar));
+
+                // 4. GATE 4: Beat 6 — Reliquia Pendulo -> Garra (12m, 8m/s) + combo Garra -> Sopro -> Rebote conservando momentum
+                Assert.IsTrue((bool)marT.GetMethod("CollectRelicPendulo").Invoke(mar, new object[] { loco }));
+                Assert.IsTrue((bool)locoT.GetProperty("HasRelicPendulo").GetValue(loco), "Reliquia Pendulo deve liberar Garra.");
+
+                locoT.GetProperty("UseScriptedInput").SetValue(loco, true);
+                locoT.GetProperty("DevUnlockAllGddAbilities").SetValue(loco, true);
+                Vector3 anchorPos = loco.transform.position + new Vector3(0f, 5.5f, 7.0f); // 8.9m <= 12m, eleva bem o Dez
+                Assert.IsTrue((bool)locoT.GetMethod("TryTriggerGrapple").Invoke(loco, new object[] { anchorPos }), "Garra deve engatar ponto dentro de 12m.");
+                float gt = 0f;
+                while (gt < 0.25f) { yield return null; gt += Time.deltaTime; }
+                Assert.IsTrue((bool)locoT.GetMethod("TryTriggerDash").Invoke(loco, new object[] { Vector3.forward }), "Sopro deve cancelar Garra conservando momentum.");
+                float dt = 0f;
+                while ((bool)locoT.GetProperty("IsDashing").GetValue(loco) && dt < 0.6f) { yield return null; dt += Time.deltaTime; }
+                locoT.GetProperty("ScriptedJump").SetValue(loco, true);
+                for (int f = 0; f < 6; f++) yield return null;
+                locoT.GetProperty("UseScriptedInput").SetValue(loco, false);
+                Assert.GreaterOrEqual((int)locoT.GetProperty("GrappleTriggerCount").GetValue(loco), 1);
+                Assert.GreaterOrEqual((int)locoT.GetProperty("GrappleToSoproComboCount").GetValue(loco), 1);
+                Assert.GreaterOrEqual((int)locoT.GetProperty("ReboteTriggerCount").GetValue(loco), 1);
+
+                // 5. GATE 6 & 7: Beat 7 — Pos-conserto (mar degela + barco-drift) + Save JSON persiste tudo
+                Vector3 driftTarget = new Vector3(12f, 0.8f, 336f);
+                Assert.IsTrue((bool)marT.GetMethod("ActivateSeaThawAndBoatDrift").Invoke(mar, new object[] { driftTarget }));
+                Assert.IsTrue((bool)marT.GetProperty("SeaThawedBoatDriftActive").GetValue(mar));
+
+                var loadArgs = new object[] { null };
+                Assert.IsTrue((bool)saveT.GetMethod("TryLoad").Invoke(null, loadArgs));
+                string rawJson = File.ReadAllText(tmpSave);
+                StringAssert.Contains("\"maresiaBossDerusted\": true", rawJson);
+                StringAssert.Contains("\"relicPenduloUnlocked\": true", rawJson);
+                StringAssert.Contains("\"maresiaFloodDetourCleared\": true", rawJson);
+                StringAssert.Contains("\"maresiaSeaThawed\": true", rawJson);
+            }
+            finally
+            {
+                mSetPath.Invoke(null, new object[] { null });
+                if (File.Exists(tmpSave)) File.Delete(tmpSave);
+            }
+
+            Assert.IsEmpty(_consoleErrors, $"Erros no console durante Smoke_29: {string.Join(" | ", _consoleErrors)}");
+        }
     }
 }

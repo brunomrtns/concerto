@@ -97,6 +97,13 @@ namespace Studio.Game.Save
         public bool relicPonteiroMaiorUnlocked;
         public bool vitralhaRiverRestored;
 
+        [Header("Fuso Maresia — Progresso, Beats, Desvio Alagado e Reliquia Pendulo")]
+        public int maresiaBeatIndex;
+        public bool maresiaFloodDetourCleared;
+        public bool maresiaBossDerusted;
+        public bool relicPenduloUnlocked;
+        public bool maresiaSeaThawed;
+
         public bool MigrateIfNeeded()
         {
             if (schemaVersion <= 0 || schemaVersion > CurrentSchemaVersion)

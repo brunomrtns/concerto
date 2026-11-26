@@ -126,5 +126,8 @@ namespace Studio.Game.Animation
         [Tooltip("Sopro Estendido (Reliquia Ponteiro Maior — Vitralha): dash 14m em 0,30s atravessando feixes longos (GDD 04 §1).")]
         public float extendedDashDistanceM = 14.0f;
         public float extendedDashDurationSec = 0.30f;
+        [Tooltip("Garra / Pendulo (Reliquia Pendulo — Maresia): alcance 12m, puxa 8 m/s, swing com momentum circular (GDD 04 §1).")]
+        public float grappleRangeM = 12.0f;
+        public float grapplePullSpeed = 8.0f;
     }
 }

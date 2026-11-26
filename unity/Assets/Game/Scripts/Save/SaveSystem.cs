@@ -8,6 +8,7 @@ using Studio.Game.Combat;
 using Studio.Game.Cutscenes;
 using Studio.Game.Dialogue;
 using Studio.Game.Hub;
+using Studio.Game.Maresia;
 using Studio.Game.Onboarding;
 using Studio.Game.Parts;
 using Studio.Game.Powers;
@@ -372,6 +373,11 @@ namespace Studio.Game.Save
             if (vit != null)
                 vit.CopyToSave(data);
 
+            // 4f. Fuso Maresia — beats, desvio alagado, Baleia de Ancora, Reliquia Pendulo e degelo
+            var mar = MaresiaFusoController.Instance;
+            if (mar != null)
+                mar.CopyToSave(data);
+
             // 5. Cutscenes assistidas, porta do Setor Externo & Missao "Sinal"
             data.cs01Played = true;
             if (data.act1Completed) data.cs02Played = true;
@@ -590,6 +596,10 @@ namespace Studio.Game.Save
             // 8. Fuso Vitralha — restaura beats, reliquia Ponteiro Maior e estado do rio
             if (VitralhaFusoController.Instance != null)
                 VitralhaFusoController.Instance.RestoreFromSave(data);
+
+            // 9. Fuso Maresia — restaura beats, desvio alagado, Baleia de Ancora e Reliquia Pendulo
+            if (MaresiaFusoController.Instance != null)
+                MaresiaFusoController.Instance.RestoreFromSave(data);
 
             _lastLoadedOrSaved = data;
             OnGameLoaded?.Invoke(data);

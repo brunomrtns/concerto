@@ -128,6 +128,14 @@ namespace Studio.Game.Animation
         public int ExtendedSoproTriggerCount { get; private set; }
         private float _activeDashSpeed;
 
+        // Reliquia Pendulo -> Garra (Maresia GATE 4: alcance 12m, puxa 8 m/s, swing com momentum circular + combo Garra->Sopro->Rebote)
+        public bool HasRelicPendulo { get; set; }
+        public bool IsGrappling { get; private set; }
+        public int GrappleTriggerCount { get; private set; }
+        public int GrappleToSoproComboCount { get; private set; }
+        private Vector3 _grappleTargetPos;
+        private float _grappleTimer;
+
         // Inputs programaticos extras para Martelada Aerea / Crava-Mola
         public bool ScriptedAttackHeld { get; set; }
         public bool ScriptedAttackPressed { get; set; }
@@ -335,6 +343,7 @@ namespace Studio.Game.Animation
                 return false;
 
             bool canceledWallRun = IsWallRunning;
+            bool canceledGrapple = IsGrappling;
             if (IsWallRunning)
             {
                 IsWallRunning = false;
@@ -342,6 +351,14 @@ namespace Studio.Game.Animation
                 _wallRunExitCooldownUntil = Time.time + 0.25f;
                 // Conserva momentum do wall-run na direcao da parede + leve afastamento
                 preferredDir = (_wallRunTangent + _wallRunNormal * 0.25f).normalized;
+            }
+            if (IsGrappling)
+            {
+                IsGrappling = false;
+                GrappleToSoproComboCount++;
+                Vector3 toTarget = _grappleTargetPos - transform.position;
+                toTarget.y = 0f;
+                if (toTarget.sqrMagnitude > 0.01f) preferredDir = toTarget.normalized;
             }
 
             preferredDir.y = 0f;
@@ -357,7 +374,7 @@ namespace Studio.Game.Animation
             float baseDashSpeed = useExtended
                 ? (Cfg.extendedDashDistanceM / Mathf.Max(0.05f, Cfg.extendedDashDurationSec))
                 : Cfg.dashSpeed;
-            _activeDashSpeed = canceledWallRun ? Mathf.Max(baseDashSpeed, WallRunEntrySpeed * 1.35f) : baseDashSpeed;
+            _activeDashSpeed = (canceledWallRun || canceledGrapple) ? Mathf.Max(baseDashSpeed, Mathf.Max(WallRunEntrySpeed, Cfg.grapplePullSpeed) * 1.35f) : baseDashSpeed;
             if (useExtended) ExtendedSoproTriggerCount++;
 
             transform.rotation = Quaternion.LookRotation(_dashDir, Vector3.up);
@@ -706,6 +723,27 @@ namespace Studio.Game.Animation
                 }
             }
 
+            if (IsGrappling)
+            {
+                _grappleTimer -= dt;
+                Vector3 toT = _grappleTargetPos - transform.position;
+                float d = toT.magnitude;
+                if (_grappleTimer <= 0f || d <= 1.2f)
+                {
+                    IsGrappling = false;
+                }
+                else
+                {
+                    Vector3 pull = toT.normalized * cfg.grapplePullSpeed;
+                    // Com Reliquia Pendulo, adiciona arco pendular conservando momentum circular
+                    if (HasRelicPendulo)
+                        pull += Vector3.up * Mathf.Sin(Mathf.Clamp01(_grappleTimer) * Mathf.PI) * 2.2f;
+                    _horizVelocity = new Vector3(pull.x, 0f, pull.z);
+                    _verticalVel = pull.y;
+                    _currentSpeed = _horizVelocity.magnitude;
+                }
+            }
+
             // GATE 5: FOV +6 deg em alta velocidade (sem tremer)
             float targetSpeedFov = (_currentSpeed > cfg.runSpeed * 1.05f || IsWallRunning || _isDashing) ? cfg.highSpeedFovBonusDeg : 0f;
             HighSpeedFovBonusDeg = Mathf.MoveTowards(HighSpeedFovBonusDeg, targetSpeedFov, 24f * dt);
@@ -826,6 +864,23 @@ namespace Studio.Game.Animation
             }
             cam.transform.position = _camSmoothPos;
             cam.transform.LookAt(pivot);
+        }
+
+        public bool TryTriggerGrapple(Vector3 targetWorldPos)
+        {
+            float dist = Vector3.Distance(transform.position, targetWorldPos);
+            if (dist > Cfg.grappleRangeM + 0.25f || dist < 0.8f) return false;
+            _grappleTargetPos = targetWorldPos;
+            IsGrappling = true;
+            _grappleTimer = Mathf.Clamp(dist / Mathf.Max(1f, Cfg.grapplePullSpeed), 0.15f, 1.6f);
+            GrappleTriggerCount++;
+            ResetReboteCharge(); // GDD 04 §1: Rebote reseta na Garra!
+            Vector3 pullDir = (_grappleTargetPos - transform.position).normalized;
+            _horizVelocity = new Vector3(pullDir.x, 0f, pullDir.z) * Cfg.grapplePullSpeed;
+            _verticalVel = Mathf.Max(2.5f, pullDir.y * Cfg.grapplePullSpeed);
+            if (thrusterParticles != null) { thrusterParticles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear); thrusterParticles.Play(); }
+            if (jumpTakeoffClip != null) PlaySurfaceSfx(jumpTakeoffClip, 0.7f, 1.15f, 1.25f);
+            return true;
         }
 
         private void TriggerAirSlamShockwave(int damage, float radius, bool breakFragileCrests)
